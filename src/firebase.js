@@ -1,14 +1,12 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth, setPersistence, browserSessionPersistence } from "firebase/auth";
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyDcuVZNt1CvmvdMj0NcS3VVuytsd0LRax8",
   authDomain: "h4g-tft.firebaseapp.com",
+  databaseURL: "https://h4g-tft-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "h4g-tft",
   storageBucket: "h4g-tft.firebasestorage.app",
   messagingSenderId: "1055248379817",
@@ -18,7 +16,15 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const auth = getAuth(app);
 
-export { app };
-export { analytics };
+setPersistence(auth, browserSessionPersistence)
+  .then(() => {
+    console.log("Firebase authentication persistence set to session.");
+  })
+  .catch((error) => {
+    console.error("Error setting persistence:", error);
+  });
+
+export { auth };
+export default app;
