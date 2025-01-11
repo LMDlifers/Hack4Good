@@ -1,8 +1,11 @@
 <template>
   <div id="app">
     <nav>
-      <router-link to="/dashboard">Dashboard</router-link>
-      <router-link to="/admin">Admin Panel</router-link>
+      <div>Home</div>
+      <div class="nav-links">
+        <router-link to="/dashboard">Dashboard</router-link>
+        <router-link to="/admin">Admin Panel</router-link>
+      </div>
     </nav>
     <router-view></router-view>
   </div>
@@ -15,8 +18,5 @@ export default {
 </script>
 
 <style>
-nav {
-  display: flex;
-  gap: 10px;
-}
 </style>
+
