@@ -8,6 +8,7 @@
   
   <script>
   export default {
+    name: "AdminPanel",
     methods: {
       manageUsers() {
         console.log("Managing users...");

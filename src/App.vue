@@ -1,12 +1,14 @@
 <template>
   <div id="app">
     <nav>
-      <img src="@/assets/logo.png" class="clickable-logo" @click="goToDashboard">
+      <img src="@/assets/logo.png">
       <div class="nav-links">
         <router-link v-if="isLoggedIn && role === 'user'" to="/dashboard">Dashboard</router-link>
         <router-link v-if="isLoggedIn && role === 'user'" to="/requestproduct">Request Product</router-link>
-        <router-link v-if="isLoggedIn && role === 'admin'" to="/addproduct">Add Product</router-link>
+        <router-link v-if="isLoggedIn && role === 'user'" to="/shoppingcart">Cart</router-link>
         <router-link v-if="isLoggedIn && role === 'admin'" to="/admin">Admin Panel</router-link>
+        <router-link v-if="isLoggedIn && role === 'admin'" to="/addproduct">Add Product</router-link>
+        <router-link v-if="isLoggedIn && role === 'admin'" to="/manageuser">Manage Users</router-link>
         <router-link v-if="!isLoggedIn" to="/login">Login</router-link>
         <router-link v-if="!isLoggedIn" to="/signup">Sign Up</router-link>
         <button class="logout-button" v-if="isLoggedIn" @click="logout">Log Out</button>
@@ -49,20 +51,23 @@ export default {
     },
     // Fetch the user's role from Firebase
     async fetchUserRole(uid) {
-      const db = getDatabase();
-      const userRef = ref(db, `users/${uid}`);
-      try {
-        const snapshot = await get(userRef);
-        if (snapshot.exists()) {
-          this.role = snapshot.val().role; // Set the user's role
-          console.log("User role:", this.role);
-        } else {
-          console.log("No role found for this user.");
-        }
-      } catch (error) {
-        console.error("Error fetching user role:", error);
-      }
-    },
+  const db = getDatabase();
+  const userRef = ref(db, `users/${uid}`);
+  try {
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+      const userData = snapshot.val();
+      console.log("Fetched user data:", userData); // Log the fetched user data
+      this.role = userData.role; // Assign the role
+      console.log("User role set to:", this.role);
+    } else {
+      console.log("No data found for this user.");
+    }
+  } catch (error) {
+    console.error("Error fetching user role:", error);
+  }
+}
+
   },
   created() {
     // Listen for authentication state changes

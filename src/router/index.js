@@ -7,15 +7,19 @@ import AdminPanel from '@/components/AdminPanel.vue';
 import RequestProduct from '@/components/RequestProduct.vue';
 import History from '@/components/History.vue';
 import AddProduct from '@/components/AddProduct.vue';
+import ManageUser from '@/components/ManageUser.vue';
+import ShoppingCart from '@/components/ShoppingCart.vue';
 
 const routes = [
   { path: "/signup", name: "Signup", component: SignUp },
   { path: "/login", name: "Login", component: Login },
-  { path: '/admin', name: "Admin", component: AdminPanel },
+  { path: '/admin', name: "AdminPanel", component: AdminPanel },
   { path: "/dashboard", name: "Dashboard", component: Dashboard, meta: { requiresAuth: true }},
   { path: "/requestproduct", name: "RequestProduct", component: RequestProduct, meta: { requiresAuth: true }},
   { path: "/history", name: "History", component: History, meta: { requiresAuth: true }},
   { path: "/addproduct", name: "AddProduct", component: AddProduct, meta: { requiresAuth: true }},
+  { path: "/manageuser", name: "ManageUser", component: ManageUser, meta: { requiresAuth: true }},
+  { path: "/shoppingcart", name: "ShoppingCart", component: ShoppingCart, meta: { requiresAuth: true }}
 ];
 
 const router = createRouter({

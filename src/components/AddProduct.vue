@@ -1,5 +1,5 @@
 <template>
-    <div class="addproduct-container">
+    <div class="form-page box-shadow">
       <h1>Add New Product</h1>
       <form @submit.prevent="addProduct">
         <div>
@@ -12,35 +12,32 @@
             required
           />
         </div>
-        <div class="addproduct-inner-container">
-            <div>
-                <label for="pointsRequired">Points Required:</label>
-                <input
-                    id="pointsRequired"
-                    v-model.number="pointsRequired"
-                    type="number"
-                    placeholder="Enter points required"
-                    min="1"
-                    required
-                />
-            </div>
-            <div>
-                <label for="stock">Stock:</label>
-                <input
-                    id="stock"
-                    v-model.number="stock"
-                    type="number"
-                    placeholder="Enter stock quantity"
-                    min="0"
-                    required
-                />
-            </div>
+        <div>
+            <label for="pointsRequired">Points Required:</label>
+            <input
+                id="pointsRequired"
+                v-model.number="pointsRequired"
+                type="number"
+                placeholder="Enter points required"
+                min="1"
+                required
+            />
         </div>
-        
-        <button type="submit">Add Product</button>
+        <div>
+            <label for="stock">Stock:</label>
+            <input
+                id="stock"
+                v-model.number="stock"
+                type="number"
+                placeholder="Enter stock quantity"
+                min="0"
+                required
+            />
+        </div>
+        <button type="submit" class="w100">Add Product</button>
       </form>
     </div>
-    <div class="requested-container">
+    <div class="container">
         <h2>Available Products</h2>
             <table v-if="Object.keys(products).length > 0">
             <thead>
@@ -48,6 +45,8 @@
                 <th>Name</th>
                 <th>Points Required</th>
                 <th>Stock</th>
+                <th>Hidden</th>
+                <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,16 +54,21 @@
                 <td>{{ product.name }}</td>
                 <td>{{ product.pointsRequired }}</td>
                 <td>{{ product.stock }}</td>
+                <td>{{ product.hidden ? "Yes" : "No" }}</td>
+                <td>
+                    <button @click="toggleVisibility(id, product)">
+                    {{ product.hidden ? "Unhide" : "Hide" }}
+                    </button>
+                </td>
                 </tr>
             </tbody>
             </table>
             <p v-else>No products available.</p>
     </div>
-    
   </template>
   
 <script>
-import { getDatabase, ref, get, push } from "firebase/database";
+import { getDatabase, ref, get, push, update } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
 export default {
@@ -92,6 +96,7 @@ export default {
         name: this.productName,
         pointsRequired: this.pointsRequired,
         stock: this.stock,
+        hidden: false,
       };
 
       try {
@@ -112,8 +117,10 @@ export default {
 
       try {
         const snapshot = await get(productsRef);
+        console.log(snapshot);
         if (snapshot.exists()) {
-          this.products = snapshot.val(); // Store available products
+            snapshot.forEach(child => ({[child.key]: child.val()})); // Store available products
+            this.products = snapshot.val();
         } else {
           this.products = {}; // No products available
         }
@@ -122,7 +129,24 @@ export default {
         alert("An error occurred while fetching the products. Please try again.");
       }
     },
-  },
+    async toggleVisibility(productId, product) {
+      const db = getDatabase();
+      const productRef = ref(db, `products/${productId}`);
+
+      try {
+        // Toggle the `hidden` flag
+        await update(productRef, { hidden: !product.hidden });
+        alert(`Product "${product.name}" visibility updated.`);
+        await this.fetchProducts(); // Refresh the product list
+      } catch (error) {
+        console.error("Error updating product visibility:", error);
+        alert("An error occurred while updating product visibility. Please try again.");
+      }
+    },
+},
+
+
+  
   async mounted() {
     const auth = getAuth();
     const user = auth.currentUser;

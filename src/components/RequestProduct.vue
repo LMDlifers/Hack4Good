@@ -1,49 +1,47 @@
 <template>
-  <div class="request-container">
-    <h1>Request a Product</h1>
+  <div class="form-page box-shadow">
+    <h2>Request a Product</h2>
     <form @submit.prevent="requestProduct">
-      <div class="request-inner-container">
-        <label for="productName">Product Name:</label>
-        <input
-          id="productName"
-          v-model="productName"
-          type="text"
-          placeholder="Enter the product name"
-          required
-        />
-      </div>
-      <button type="submit">Request Product</button>
+      <label for="productName">Product Name:</label>
+      <input
+        id="productName"
+        v-model="productName"
+        type="text"
+        placeholder="Enter the product name"
+        required
+      />
+      <button type="submit" class="w100">Request Product</button>
     </form>
   </div>
-    <div class="requested-container">
-      <h2>List of Requested Products</h2>
-      <!-- Display list of requested products -->
-      <table v-if="requests.length > 0">
-        <colgroup>
-          <col style="width: 30%;" /> <!-- Adjust width of the first column -->
-          <col style="width: 40%;" /> <!-- Adjust width of the second column -->
-          <col style="width: 10%;" /> <!-- Adjust width of the third column -->
-          <col style="width: 20%;" /> <!-- Adjust width of the third column -->
-        </colgroup>
-        <thead>
-          <tr>
-            <th>Requester</th>
-            <th>Product Name</th>
-            <th>Status</th>
-            <th>Requested Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(request, index) in requests" :key="index">
-            <td>{{ request.username  }}</td>
-            <td>{{ request.productName }}</td>
-            <td>{{ request.status }}</td>
-            <td>{{ request.timestamp }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <p v-else>No product requests found.</p>
-    </div>
+  <div class="container">
+    <h2>List of Requested Products</h2>
+    <!-- Display list of requested products -->
+    <table v-if="requests.length > 0">
+      <colgroup>
+        <col style="width: 30%;" /> <!-- Adjust width of the first column -->
+        <col style="width: 40%;" /> <!-- Adjust width of the second column -->
+        <col style="width: 10%;" /> <!-- Adjust width of the third column -->
+        <col style="width: 20%;" /> <!-- Adjust width of the third column -->
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Requester</th>
+          <th>Product Name</th>
+          <th>Status</th>
+          <th>Requested Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(request, index) in requests" :key="index">
+          <td>{{ request.username  }}</td>
+          <td>{{ request.productName }}</td>
+          <td>{{ request.status }}</td>
+          <td>{{ new Date(request.timestamp).toLocaleString()}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p v-else>No product requests found.</p>
+  </div>
     
   
 </template>
