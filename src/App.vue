@@ -3,9 +3,9 @@
     <nav>
       <img src="@/assets/logo.png" class="clickable-logo" @click="goToDashboard">
       <div class="nav-links">
-        <router-link v-if="isLoggedIn" to="/dashboard">Dashboard</router-link>
-        <router-link v-if="isLoggedIn" to="/requestproduct">Request Product</router-link>
-        <!-- <router-link v-if="isLoggedIn" to="/products">Products</router-link> -->
+        <router-link v-if="isLoggedIn && role === 'user'" to="/dashboard">Dashboard</router-link>
+        <router-link v-if="isLoggedIn && role === 'user'" to="/requestproduct">Request Product</router-link>
+        <router-link v-if="isLoggedIn && role === 'admin'" to="/addproduct">Add Product</router-link>
         <router-link v-if="isLoggedIn && role === 'admin'" to="/admin">Admin Panel</router-link>
         <router-link v-if="!isLoggedIn" to="/login">Login</router-link>
         <router-link v-if="!isLoggedIn" to="/signup">Sign Up</router-link>

@@ -6,6 +6,7 @@ import SignUp from "@/components/SignUp.vue";
 import AdminPanel from '@/components/AdminPanel.vue';
 import RequestProduct from '@/components/RequestProduct.vue';
 import History from '@/components/History.vue';
+import AddProduct from '@/components/AddProduct.vue';
 
 const routes = [
   { path: "/signup", name: "Signup", component: SignUp },
@@ -14,6 +15,7 @@ const routes = [
   { path: "/dashboard", name: "Dashboard", component: Dashboard, meta: { requiresAuth: true }},
   { path: "/requestproduct", name: "RequestProduct", component: RequestProduct, meta: { requiresAuth: true }},
   { path: "/history", name: "History", component: History, meta: { requiresAuth: true }},
+  { path: "/addproduct", name: "AddProduct", component: AddProduct, meta: { requiresAuth: true }},
 ];
 
 const router = createRouter({

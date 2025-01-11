@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { getDatabase, ref, get } from "firebase/database";
+import { getDatabase, ref, get, update, push } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
 export default {
@@ -50,6 +50,58 @@ export default {
       );
     },
   },
+  methods: {
+    async redeemProduct(productId, product) {
+      const db = getDatabase();
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (!user) {
+        alert("Please log in to redeem products.");
+        return;
+      }
+
+      // Check if the user has enough points
+      if (this.userData.voucherPoints < product.pointsRequired) {
+        alert("You do not have enough points to redeem this product.");
+        return;
+      }
+
+      // Check if the product is in stock
+      if (product.stock <= 0) {
+        alert("This product is out of stock.");
+        return;
+      }
+
+      // Deduct points and reduce stock
+      this.userData.voucherPoints -= product.pointsRequired;
+      product.stock -= 1;
+
+      // Update Firebase database
+      const updates = {
+        [`/users/${user.uid}/voucherPoints`]: this.userData.voucherPoints,
+        [`/products/${productId}/stock`]: product.stock,
+      };
+
+      try {
+        await update(ref(db), updates);
+
+        // Add transaction history
+        const transactionRef = ref(db, `users/${user.uid}/transactions`);
+        await push(transactionRef, {
+          productId,
+          productName: product.name,
+          pointsUsed: product.pointsRequired,
+          timestamp: new Date().toISOString(),
+        });
+
+        alert(`Successfully redeemed ${product.name}!`);
+      } catch (error) {
+        console.error("Error redeeming product:", error);
+        alert("An error occurred while processing your request. Please try again.");
+      }
+    },
+  },
   async mounted() {
     const auth = getAuth();
     const user = auth.currentUser;
@@ -60,12 +112,13 @@ export default {
     }
 
     const db = getDatabase();
-    const userRef = ref(db, `users/${user.uid}`);
 
+    // Fetch user data
+    const userRef = ref(db, `users/${user.uid}`);
     try {
       const snapshot = await get(userRef);
       if (snapshot.exists()) {
-        this.userData = snapshot.val(); // Update userData with fetched data
+        this.userData = snapshot.val(); // Update user data with fetched data
       } else {
         console.error("No data available for the user.");
       }
@@ -73,8 +126,8 @@ export default {
       console.error("Error fetching user data:", error);
     }
 
-    const productsRef = ref(db, "products"); // Reference the "products" node
-
+    // Fetch products
+    const productsRef = ref(db, "products");
     try {
       const snapshot = await get(productsRef);
       if (snapshot.exists()) {
@@ -88,4 +141,5 @@ export default {
     }
   },
 };
+
 </script>

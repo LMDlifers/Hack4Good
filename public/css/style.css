@@ -144,8 +144,8 @@ a:hover {
   }
   
   .signup-page input {
-    width: 100%;
-    padding: 8px;
+    width: 90%;
+    padding: 10px 5% 10px 5%;
     margin-bottom: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -282,7 +282,7 @@ a:hover {
 .request-container button {
   padding: 10px;
   font-size: 16px;
-  background-color: #007bff;
+  background-color: #363779;
   color: white;
   border: none;
   border-radius: 5px;
@@ -291,8 +291,104 @@ a:hover {
 }
 
 .request-container button:hover {
-  background-color: #0056b3;
+  background-color: #1e1f52;
 }
 
+.requested-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+table {
+    width: 90%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  thead {
+    background-color: #363779;
+    color: white;
+  }
+  
+  th, td {
+    padding: 10px;
+    border-bottom: 1px solid #363779;
+    text-align: left;
+  }
+  
+  th {
+    font-weight: bold;
+  }
+  
+  p {
+    margin-top: 20px;
+    color: #666;
+  }
+
+  /* ADD PRODUCT */
+
+.addproduct-container {
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.addproduct-inner-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+    gap: 10px;
+}
+
+.addproduct-inner-container div {
+    display: flex;
+    flex-direction: column;
+}
+
+.addproduct-inner-container div input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 220px;
+  }
+
+.addproduct-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.addproduct-container label {
+  font-weight: bold;
+}
+
+.addproduct-container input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 480px;
+}
+
+.addproduct-container button {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #363779;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.addproduct-container button:hover {
+  background-color: #1e1f52;
+}
 
 
