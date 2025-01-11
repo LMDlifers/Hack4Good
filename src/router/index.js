@@ -1,20 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { getAuth } from "firebase/auth";
 import Dashboard from "@/components/Dashboard.vue";
-import Login from "@/components/Login.vue";
+import Login from "@/components/LoginPage.vue";
 import SignUp from "@/components/SignUp.vue";
 import AdminPanel from '@/components/AdminPanel.vue';
+import RequestProduct from '@/components/RequestProduct.vue';
+import History from '@/components/History.vue';
 
 const routes = [
   { path: "/signup", name: "Signup", component: SignUp },
   { path: "/login", name: "Login", component: Login },
-  { path: '/admin', component: AdminPanel },
-  { 
-    path: "/dashboard", 
-    name: "Dashboard", 
-    component: Dashboard, 
-    meta: { requiresAuth: true } // Protect this route
-  },
+  { path: '/admin', name: "Admin", component: AdminPanel },
+  { path: "/dashboard", name: "Dashboard", component: Dashboard, meta: { requiresAuth: true }},
+  { path: "/requestproduct", name: "RequestProduct", component: RequestProduct, meta: { requiresAuth: true }},
+  { path: "/history", name: "History", component: History, meta: { requiresAuth: true }},
 ];
 
 const router = createRouter({

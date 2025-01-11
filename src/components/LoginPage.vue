@@ -2,16 +2,10 @@
     <div class="login-page">
       <h2>Login</h2>
       <form @submit.prevent="login">
-        <div>
-          <label for="email">Email:</label>
-          <input v-model="email" type="email" id="email" placeholder="Enter your email" required />
-        </div>
-        
-        <div>
-          <label for="password">Password:</label>
-          <input v-model="password" type="password" id="password" placeholder="Enter your password" required />
-        </div>
-        
+        <label for="email">Email:</label>
+        <input v-model="email" type="email" id="email" placeholder="Enter your email" required />
+        <label for="password">Password:</label>
+        <input v-model="password" type="password" id="password" placeholder="Enter your password" required />
         <button type="submit">Login</button>
         <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
       </form>

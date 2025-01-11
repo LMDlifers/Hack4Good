@@ -58,6 +58,7 @@
           username: this.name,
           email: this.email,
           phoneNumber: this.phoneNumber, // Save phone number
+          voucherPoints: 0,
           role: "user", // Default role
         });
   
