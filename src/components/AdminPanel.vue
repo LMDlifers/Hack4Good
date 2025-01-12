@@ -3,6 +3,7 @@
 		<h2>Admin Panel</h2>
 		<button @click="manageUsers">Manage Users</button>
 		<button @click="approveRequests">Approve Requests</button>
+		<button @click="manageAuction">Manage Auction</button>
 	</div>
 </template>
 	
@@ -16,6 +17,10 @@
 			approveRequests() {
 				console.log("Approving requests...");
 			},
+			manageAuction() {
+				this.$router.push('/AdminAuction');
+				// console.log("Managing auction items...")
+			}
 		},
 	};
 </script>

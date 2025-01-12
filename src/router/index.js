@@ -11,6 +11,8 @@ import AddProduct from '@/components/AddProduct.vue';
 import ManageUser from '@/components/ManageUser.vue';
 import ShoppingCart from '@/components/ShoppingCart.vue';
 
+import AdminAuction from "@/components/AdminAuction.vue";
+
 const routes = [
   { path: "/signup", name: "Signup", component: SignUp },
   { path: "/login", name: "Login", component: Login },
@@ -21,7 +23,9 @@ const routes = [
   { path: "/history", name: "History", component: History, meta: { requiresAuth: true }},
   { path: "/addproduct", name: "AddProduct", component: AddProduct, meta: { requiresAuth: true }},
   { path: "/manageuser", name: "ManageUser", component: ManageUser, meta: { requiresAuth: true }},
-  { path: "/shoppingcart", name: "ShoppingCart", component: ShoppingCart, meta: { requiresAuth: true }}
+  { path: "/shoppingcart", name: "ShoppingCart", component: ShoppingCart, meta: { requiresAuth: true }},
+
+  { path: "/adminauction", name: "AdminAuction", component: AdminAuction },
 ];
 
 const router = createRouter({
