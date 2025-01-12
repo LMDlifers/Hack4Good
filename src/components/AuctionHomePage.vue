@@ -27,7 +27,7 @@
             class="auction-card"
           >
             <div class="auction-image">
-              <p v-if="item.imageError">Error loading content</p>
+              <p v-if="!item.image">No Image Available</p>
               <img v-else :src="item.image" alt="Auction Item" />
             </div>
   
@@ -45,49 +45,15 @@
     </div>
   </template>
   
-  
   <script>
+  import { getDatabase, ref, onValue } from "firebase/database";
+  
   export default {
     name: "AuctionHomePage",
     data() {
       return {
-        searchQuery: "", // Holds the search query
-        auctionItems: [
-          {
-            id: 1,
-            name: "Test",
-            creator: "0x13026c...C39E5",
-            imageError: true,
-            reservePrice: null,
-            highestBid: null,
-          },
-          {
-            id: 2,
-            name: "Februarius",
-            creator: "0xBaC1Cd...2ad745",
-            imageError: true,
-            reservePrice: null,
-            highestBid: null,
-          },
-          {
-            id: 3,
-            name: "Medhansh",
-            creator: "0xB6e397...D26bfc",
-            imageError: false,
-            image: "path/to/image.jpg",
-            reservePrice: null,
-            highestBid: null,
-          },
-          {
-            id: 4,
-            name: "Cricket Ball",
-            creator: "0xB6e397...D26bfc",
-            imageError: false,
-            image: "path/to/image2.jpg",
-            reservePrice: null,
-            highestBid: null,
-          },
-        ],
+        searchQuery: "",
+        auctionItems: [], // Initialize as an empty array
       };
     },
     computed: {
@@ -96,6 +62,24 @@
           item.name.toLowerCase().includes(this.searchQuery.toLowerCase())
         );
       },
+    },
+    created() {
+      const db = getDatabase();
+      const productsRef = ref(db, "products");
+  
+      // Listen for changes in the "products" reference
+      onValue(productsRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const products = snapshot.val();
+          this.auctionItems = Object.keys(products).map((key) => ({
+            id: key,
+            ...products[key],
+          }));
+        } else {
+          console.log("No products available.");
+          this.auctionItems = [];
+        }
+      });
     },
     methods: {
       onSearch() {
@@ -107,103 +91,103 @@
   
   <style scoped>
   /* General Styles */
-.auction-house {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* Main Header Styling */
-.main-header {
-  display: flex;
-  justify-content: space-between; /* Align search bar and title horizontally */
-  align-items: center; /* Align items vertically */
-  margin-bottom: 20px;
-}
-
-.title {
-  font-size: 2rem;
-  font-weight: bold;
-  margin: 0;
-}
-
-.search-wrapper {
-  width: 40%; /* Adjust width as needed */
-}
-
-.search-bar-main {
-  width: 100%;
-  padding: 10px 15px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  font-size: 16px;
-  outline: none;
-  transition: box-shadow 0.3s, border-color 0.3s;
-}
-
-.search-bar-main:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-.search-bar-main::placeholder {
-  color: #999;
-  font-style: italic;
-}
-
-/* Auction List Section */
-.auction-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid layout */
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.auction-card {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 300px;
-}
-
-.auction-image {
-  height: 150px;
-  background-color: #f4f4f4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 15px;
-  overflow: hidden;
-  border-radius: 8px;
-}
-
-.auction-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.auction-info {
-  text-align: left;
-  flex: 1;
-}
-
-.auction-info h3 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.auction-details {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #555;
-}
+  .auction-house {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Main Header Styling */
+  .main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .search-wrapper {
+    width: 40%;
+  }
+  
+  .search-bar-main {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 16px;
+    outline: none;
+    transition: box-shadow 0.3s, border-color 0.3s;
+  }
+  
+  .search-bar-main:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  
+  .search-bar-main::placeholder {
+    color: #999;
+    font-style: italic;
+  }
+  
+  /* Auction List Section */
+  .auction-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .auction-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 300px;
+  }
+  
+  .auction-image {
+    height: 150px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+  
+  .auction-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .auction-info {
+    text-align: left;
+    flex: 1;
+  }
+  
+  .auction-info h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .auction-details {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+  }
   </style>
   

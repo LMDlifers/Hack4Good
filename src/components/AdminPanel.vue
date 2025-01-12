@@ -19,7 +19,6 @@
 			},
 			manageAuction() {
 				this.$router.push('/AdminAuction');
-				// console.log("Managing auction items...")
 			}
 		},
 	};

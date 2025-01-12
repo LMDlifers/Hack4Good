@@ -39,13 +39,15 @@
 </template>
 
 <script>
+import { getDatabase, ref, push } from "firebase/database";
+
 export default {
-  name: 'AdminAuction',
+  name: "AdminAuction",
   data() {
     return {
       product: {
-        name: '',
-        creator: '',
+        name: "",
+        creator: "",
         reservePrice: null,
         image: null,
       },
@@ -64,17 +66,26 @@ export default {
       }
     },
     submitProduct() {
-      // Emit the product to the parent component
-      this.$emit('productUploaded', this.product);
+      const db = getDatabase(); // Initialize Firebase Database
+      const productsRef = ref(db, "products"); // Reference the "products" path
 
-      // Reset form after submission
-      this.uploadSuccess = true;
-      this.product = {
-        name: '',
-        creator: '',
-        reservePrice: null,
-        image: null,
-      };
+      // Push product data to Firebase
+      push(productsRef, this.product)
+        .then(() => {
+          this.uploadSuccess = true;
+          console.log("Product uploaded successfully!");
+
+          // Reset the form
+          this.product = {
+            name: "",
+            creator: "",
+            reservePrice: null,
+            image: null,
+          };
+        })
+        .catch((error) => {
+          console.error("Error uploading product:", error);
+        });
     },
   },
 };
