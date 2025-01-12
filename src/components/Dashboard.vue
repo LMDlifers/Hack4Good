@@ -9,7 +9,7 @@
 		</div>
 		<input class="search-bar" v-model="searchQuery" placeholder="Search for products..." />
 		<div class="products-container">
-			<div class="product box-shadow" v-for="product in filteredProducts" :key="product.id">
+			<div class="product bg-white" v-for="product in filteredProducts" :key="product.id">
 				<h3>{{ product.name }}</h3>
 				<div class="product-details">
 					<div>

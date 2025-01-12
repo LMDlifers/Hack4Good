@@ -1,5 +1,5 @@
 <template>
-    <body id="app" class="main">
+    <body id="app" class="main bg-lightgrey">
       <nav>
         <img src="@/assets/logo.png">
         <div class="nav-links">
@@ -7,7 +7,8 @@
 			<router-link v-if="isLoggedIn && role === 'user'" to="/preorder">Pre-Orders</router-link>
 			<router-link v-if="isLoggedIn && role === 'user'" to="/shoppingcart">Cart</router-link>
 			<router-link v-if="isLoggedIn && role === 'admin'" to="/admin">Admin Panel</router-link>
-			<router-link v-if="isLoggedIn && role === 'admin'" to="/addproduct">Add Product</router-link>
+			<router-link v-if="isLoggedIn && role === 'admin'" to="/auditpage">Audit</router-link>
+			<router-link v-if="isLoggedIn && role === 'admin'" to="/addproduct">Products</router-link>
 			<router-link v-if="isLoggedIn && role === 'admin'" to="/preorderadmin">Pre-Orders</router-link>
 			<router-link v-if="isLoggedIn && role === 'admin'" to="/manageuser">Manage Users</router-link>
 			<router-link v-if="!isLoggedIn" to="/login">Login</router-link>
@@ -20,9 +21,9 @@
       </nav>
       <router-view></router-view>
   </body>
-  <footer>
+	<footer>
       <p>&copy; 2025 MUHAMMADIYAH WELFARE HOME. All Rights Reserved.</p>
-    </footer>
+	</footer>
 
 </template>
 

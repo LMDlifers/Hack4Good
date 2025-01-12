@@ -15,7 +15,7 @@ html {
 }
 
 .main {
-  min-height: 90vh;
+  min-height: 95vh;
 }
 
 footer {
@@ -24,7 +24,6 @@ footer {
   height: auto;
   background: lightgrey;
   padding: 10px;
-  margin-top: 30px;
 }
 
 p {
@@ -48,7 +47,7 @@ nav {
     justify-content: space-around;
     align-items: center;
     height: 17vh;
-    background: lightblue;
+    background: white;
     margin-bottom: 20px;
 }
 
@@ -109,6 +108,7 @@ a:hover {
     margin: 0 auto;
     margin-bottom: 20px;
     padding: 20px;
+    background: white;
   }
   
   .form-page label {
@@ -138,15 +138,29 @@ a:hover {
     margin-top: 10px;
   }
 
-  .w100 {
+  .wmax {
     width: 100%;
   }
+
+  .whalf {
+    width: 50%;
+  }
   
+.gap-s {
+  gap: 1rem;
+}
+
  /* Shared Styles */
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  .container-end {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
   }
   
   .box-shadow {
@@ -179,7 +193,7 @@ a:hover {
   }
   
   table {
-    width: 90%;
+    width: 1200px;
     border-collapse: collapse;
     margin-top: 20px;
   }
@@ -265,3 +279,141 @@ a:hover {
     gap: 10px;
     margin-top: 10px;
   }
+
+  .modal {
+    position: relative;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    max-width: 400px;
+    width: 100%;
+  }
+  
+  .modal-content {
+    max-width: 400px;
+    margin: auto;
+  }
+  
+  .modal button {
+    margin-top: 10px;
+  }
+
+  .modal-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Dark transparent background */
+  }
+
+  .btn-grey {
+    background: lightgrey;
+  }
+
+  .btn-grey:hover {
+    background: grey;
+  }
+
+  .btn-round {
+    border-radius: 50%;
+    padding: 5px 10px;
+    height: 30px;
+    width: 30px;
+  }
+
+
+
+
+  .container-row {
+    display: flex;
+    flex-direction: row;
+  }
+
+
+  .padding-10 {
+    padding: 10px;
+  }
+
+  .padding-20 {
+    padding: 20px;
+  }
+
+.h100 {
+  height: 100px;
+}
+
+.h150 {
+  height: 150px;
+}
+
+.w100 {
+  width: 100px;
+}
+
+.w200 {
+  width: 200px;
+}
+
+.w500 {
+  width: 500px;
+}
+
+  .w1200 {
+    width: 1200px;
+  }
+
+  .margin-l-s {
+    margin-left: 10px;
+  }
+
+  .margin-t-s {
+    margin-top: 10px;
+  }
+
+  .bg-lightgrey {
+    background: rgb(245, 245, 245);
+  }
+
+  .bg-white {
+    background: white;
+  }
+
+
+  .center-vh {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .d-flex{
+    display: flex;
+  }
+
+  .align-items-center {
+    display: flex;
+    align-items: center;
+  }
+
+  .checkout-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+
+  

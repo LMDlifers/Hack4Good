@@ -1,5 +1,5 @@
 <template>
-	<div class="form-page box-shadow">
+	<div class="form-page">
 		<h2>Preorder a Product</h2>
 		<form @submit.prevent="preorderProduct">
 			<label for="productName">Select Product:</label>
@@ -19,7 +19,7 @@
 				placeholder="Enter quantity"
 				required
 			/>
-			<button type="submit" class="w100">Preorder Product</button>
+			<button type="submit" class="wmax">Preorder Product</button>
 		</form>
 	</div>
 	<div class="container">

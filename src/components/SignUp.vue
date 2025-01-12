@@ -1,5 +1,5 @@
 <template>
-	<div class="form-page box-shadow">
+	<div class="form-page">
 		<h2>Sign Up</h2>
 		<form @submit.prevent="signup">
 		<div>
@@ -18,7 +18,7 @@
 			<label for="phone">Phone Number:</label>
 			<input v-model="phoneNumber" type="text" id="phone" placeholder="Enter your phone number" required />
 		</div>
-		<button type="submit" class="w100">Sign Up</button>
+		<button type="submit" class="wmax">Sign Up</button>
 		<p v-if="errorMessage" class="error">{{ errorMessage }}</p>
 		</form>
 	</div>

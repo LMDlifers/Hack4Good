@@ -1,5 +1,5 @@
 <template>
-	<div class="form-page box-shadow">
+	<div class="form-page">
 		<h2>Login</h2>
 		<form @submit.prevent="login">
 		<div>
@@ -10,7 +10,7 @@
 			<label for="password">Password:</label>
 			<input v-model="password" type="password" id="password" placeholder="Enter your password" required />
 		</div>
-		<button type="submit" class="w100">Login</button>
+		<button type="submit" class="wmax">Login</button>
 		<p v-if="errorMessage" class="error">{{ errorMessage }}</p>
 		</form>
 	</div>

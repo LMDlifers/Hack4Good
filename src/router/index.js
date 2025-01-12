@@ -10,8 +10,7 @@ import History from '@/components/History.vue';
 import AddProduct from '@/components/AddProduct.vue';
 import ManageUser from '@/components/ManageUser.vue';
 import ShoppingCart from '@/components/ShoppingCart.vue';
-
-// added by Tony
+import AuditPage from '@/components/AuditPage.vue';
 import AdminAuction from "@/components/AdminAuction.vue";
 import AuctionHome from "@/components/AuctionHomePage.vue";
 
@@ -26,27 +25,26 @@ const routes = [
   { path: "/addproduct", name: "AddProduct", component: AddProduct, meta: { requiresAuth: true }},
   { path: "/manageuser", name: "ManageUser", component: ManageUser, meta: { requiresAuth: true }},
   { path: "/shoppingcart", name: "ShoppingCart", component: ShoppingCart, meta: { requiresAuth: true }},
-
-  // added by Tony
+  { path: "/auditpage", name: "AuditPage", component: AuditPage, meta: { requiresAuth: true }},
   { path: "/adminauction", name: "AdminAuction", component: AdminAuction },
   { path: "/auctionhome", name: "AuctionHome", component: AuctionHome },
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes,
+	history: createWebHistory(),
+	routes,
 });
 
 // Navigation guard to check authentication
 router.beforeEach((to, from, next) => {
-  const auth = getAuth();
-  const user = auth.currentUser;
+	const auth = getAuth();
+	const user = auth.currentUser;
 
-  if (to.matched.some(record => record.meta.requiresAuth) && !user) {
-    next({ name: "Login" }); // Redirect to login if not authenticated
-  } else {
-    next(); // Allow navigation
-  }
+	if (to.matched.some(record => record.meta.requiresAuth) && !user) {
+		next({ name: "Login" }); // Redirect to login if not authenticated
+	} else {
+		next(); // Allow navigation
+	}
 });
 
 export default router;

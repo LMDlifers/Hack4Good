@@ -571,3 +571,103 @@ export async function updatePreorderStatus(preorderId, newStatus) {
 	throw new Error("Failed to update preorder status: " + error.message);
 	}
 }
+
+export async function updateProductStock(productId, incrementAmount) {
+	const db = getDatabase();
+	const productRef = ref(db, `products/${productId}`);
+
+	try {
+		// Update the stock in Firebase
+		await update(productRef, {
+		stock: incrementAmount, // Increment stock
+		});
+
+		return `Stock increased by ${incrementAmount}.`;
+	} catch (error) {
+		throw new Error("Failed to update stock: " + error.message);
+	}
+}
+
+export async function deductProductStock(productId, quantity) {
+	const db = getDatabase();
+	const productRef = ref(db, `products/${productId}`);
+  
+	try {
+		// Fetch current stock
+		const snapshot = await get(productRef);
+		if (!snapshot.exists()) {
+		throw new Error("Product not found.");
+		}
+
+		const product = snapshot.val();
+
+		// Check if stock is sufficient
+		if (product.stock < quantity) {
+		throw new Error(
+			`Insufficient stock for product "${product.name}". Available stock: ${product.stock}`
+		);
+		}
+
+		// Deduct stock
+		await update(productRef, { stock: product.stock - quantity });
+	} catch (error) {
+		throw new Error("Failed to deduct product stock: " + error.message);
+	}
+}
+
+export async function updateProductDetails(productId, updatedProduct) {
+	const db = getDatabase();
+	const productRef = ref(db, `products/${productId}`);
+  
+	try {
+		await update(productRef, updatedProduct);
+	} catch (error) {
+		throw new Error("Failed to update product details: " + error.message);
+	}
+}
+
+export async function logAuditEntry(auditDetails) {
+	const db = getDatabase();
+	const auditRef = ref(db, "audit");
+
+	try {
+		await push(auditRef, {
+		...auditDetails,
+		timestamp: new Date().toISOString(), // Add a timestamp
+		});
+	} catch (error) {
+		throw new Error("Failed to log audit entry: " + error.message);
+	}
+}
+
+export async function fetchAuditLogs() {
+	const db = getDatabase();
+	const auditRef = ref(db, "audit");
+	const usersRef = ref(db, "users");
+
+	try {
+		// Fetch audit logs
+		const auditSnapshot = await get(auditRef);
+		if (!auditSnapshot.exists()) {
+		return [];
+		}
+
+		const audits = auditSnapshot.val();
+
+		// Fetch user data
+		const usersSnapshot = await get(usersRef);
+		const users = usersSnapshot.exists() ? usersSnapshot.val() : {};
+
+		// Map audit logs to include user names
+		return Object.entries(audits).map(([id, audit]) => {
+		const userName = users[audit.user]?.username || "Unknown User"; // Get user's name or fallback
+		return {
+			id,
+			...audit,
+			user: userName, // Replace UID with user's name
+		};
+		});
+	} catch (error) {
+		throw new Error("Failed to fetch audit logs: " + error.message);
+	}
+}

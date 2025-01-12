@@ -22,7 +22,7 @@
 					<option value="admin">Admin</option>
 				</select>
 			</div>
-			<button type="submit" class="w100">Create User</button>
+			<button type="submit" class="wmax">Create User</button>
 		</form>
 	</div>
 	<div class="container">
