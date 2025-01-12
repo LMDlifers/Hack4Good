@@ -93,7 +93,7 @@ export default {
 			preorders: [],
 			products: {},
 			currentPage: 1, // Current page for pagination
-			perPage: 1, // Number of items per page
+			perPage: 10, // Number of items per page
 			showPreorderModal: false, // Controls visibility of the modal
 		};
 	},
