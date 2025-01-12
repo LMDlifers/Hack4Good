@@ -3,6 +3,7 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
@@ -11,6 +12,19 @@ body {
 
 html {
     scroll-behavior: smooth;
+}
+
+.main {
+  min-height: 90vh;
+}
+
+footer {
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  background: lightgrey;
+  padding: 10px;
+  margin-top: 30px;
 }
 
 p {
@@ -104,8 +118,7 @@ a:hover {
   }
   
   .form-page input {
-    width: 90%;
-    padding: 10px 5% 10px 5%;
+    width: 100%;
     margin-bottom: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -113,7 +126,7 @@ a:hover {
 
   .form-page select {
     width: 100%;
-    padding: 10px 5% 10px 5%;
+    padding: 10px;
     margin-bottom: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -230,8 +243,8 @@ a:hover {
   }
   
   .product {
-    width: 235px;
-    height: 235px;
+    width: 275px;
+    height: 275px;
     padding: 20px;
   }
   
@@ -243,4 +256,12 @@ a:hover {
     display: flex;
     justify-content: space-between;
     font-size: 12px;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
   }

@@ -4,7 +4,8 @@ import Dashboard from "@/components/Dashboard.vue";
 import Login from "@/components/LoginPage.vue";
 import SignUp from "@/components/SignUp.vue";
 import AdminPanel from '@/components/AdminPanel.vue';
-import RequestProduct from '@/components/RequestProduct.vue';
+import PreOrder from '@/components/PreOrder.vue';
+import PreOrderAdmin from '@/components/PreOrderAdmin.vue';
 import History from '@/components/History.vue';
 import AddProduct from '@/components/AddProduct.vue';
 import ManageUser from '@/components/ManageUser.vue';
@@ -15,7 +16,8 @@ const routes = [
   { path: "/login", name: "Login", component: Login },
   { path: '/admin', name: "AdminPanel", component: AdminPanel },
   { path: "/dashboard", name: "Dashboard", component: Dashboard, meta: { requiresAuth: true }},
-  { path: "/requestproduct", name: "RequestProduct", component: RequestProduct, meta: { requiresAuth: true }},
+  { path: "/preorder", name: "PreOrder", component: PreOrder, meta: { requiresAuth: true }},
+  { path: "/preorderadmin", name: "PreOrderAdmin", component: PreOrderAdmin, meta: { requiresAuth: true }},
   { path: "/history", name: "History", component: History, meta: { requiresAuth: true }},
   { path: "/addproduct", name: "AddProduct", component: AddProduct, meta: { requiresAuth: true }},
   { path: "/manageuser", name: "ManageUser", component: ManageUser, meta: { requiresAuth: true }},
