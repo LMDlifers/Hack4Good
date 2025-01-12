@@ -1,65 +1,55 @@
 <template>
-    <div v-if="preorders.length > 0" class="container">
-      <h2>Preorder Management</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Status</th>
-            <th>Preorder Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(preorder, index) in paginatedPreorders" :key="index">
-            <td>{{ preorder.username }}</td>
-            <td>{{ preorder.productName }}</td>
-            <td>{{ preorder.quantity }}</td>
-            <td>
-              <select
-                v-model="preorder.status"
-                @change="updateStatus(preorder)"
-                :disabled="preorder.status === 'Delivered'"
-              >
-                <option>Pending</option>
-                <option>Approved</option>
-                <option>Rejected</option>
-                <option disabled>Delivered</option>
-              </select>
-            </td>
-            <td>{{ new Date(preorder.timestamp).toLocaleString() }}</td>
-            <td>
-              <button
-                v-if="preorder.status === 'Approved'"
-                @click="fulfillPreorder(preorder)"
-              >
-                Fulfill
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-  
-      <!-- Pagination -->
-      <div class="pagination">
-        <button :disabled="currentPage === 1" @click="changePage(currentPage - 1)">
-          Previous
-        </button>
-        <span>Page {{ currentPage }} of {{ totalPages }}</span>
-        <button
-          :disabled="currentPage === totalPages"
-          @click="changePage(currentPage + 1)"
-        >
-          Next
-        </button>
-      </div>
+  <div v-if="preorders.length > 0" class="container">
+    <h2>Preorder Management</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Status</th>
+          <th>Preorder Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(preorder, index) in paginatedPreorders" :key="index">
+          <td>{{ preorder.username }}</td>
+          <td>{{ preorder.productName }}</td>
+          <td>{{ preorder.quantity }}</td>
+          <td>{{ preorder.status }}</td>
+          <td>{{ new Date(preorder.timestamp).toLocaleString() }}</td>
+          <td>
+            <div v-if="preorder.status === 'Pending'">
+              <button @click="updateStatus(preorder, 'Approved')">Approve</button>
+              <button class="margin-l-s" @click="updateStatus(preorder, 'Rejected')">Reject</button>
+            </div>
+            <div v-else-if="preorder.status === 'Approved'">
+              <button @click="fulfillPreorder(preorder)">Fulfill</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button :disabled="currentPage === 1" @click="changePage(currentPage - 1)">
+        Previous
+      </button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button
+        :disabled="currentPage === totalPages"
+        @click="changePage(currentPage + 1)"
+      >
+        Next
+      </button>
     </div>
-    <p v-else>No preorders found.</p>
-  </template>
-  
-  <script>
+  </div>
+  <p v-else>No preorders found.</p>
+</template>
+
+<script>
 import {
   fetchAllPreorders,
   updatePreorderStatus,
@@ -93,10 +83,12 @@ export default {
         alert("Error fetching preorders: " + error.message);
       }
     },
-    async updateStatus(preorder) {
+    async updateStatus(preorder, status) {
       try {
+        preorder.status = status;
         await updatePreorderStatus(preorder.id, preorder.status);
-        alert(`Status updated to "${preorder.status}" for ${preorder.productName}`);
+        alert(`Status updated to "${status}" for ${preorder.productName}`);
+        this.fetchPreorders(); // Refresh the list of preorders
       } catch (error) {
         alert("Error updating status: " + error.message);
       }

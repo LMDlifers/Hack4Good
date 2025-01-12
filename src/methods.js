@@ -572,14 +572,14 @@ export async function updatePreorderStatus(preorderId, newStatus) {
 	}
 }
 
-export async function updateProductStock(productId, incrementAmount) {
+export async function updateProductStock(productId, stock, incrementAmount) {
 	const db = getDatabase();
 	const productRef = ref(db, `products/${productId}`);
 
 	try {
 		// Update the stock in Firebase
 		await update(productRef, {
-		stock: incrementAmount, // Increment stock
+		stock: stock + incrementAmount, // Increment stock
 		});
 
 		return `Stock increased by ${incrementAmount}.`;

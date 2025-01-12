@@ -66,7 +66,7 @@
 			<td>{{ product.hidden ? "Yes" : "No" }}</td>
 			<td>
 				<button @click="increaseStock(product.id, product.stock)" style="margin-right: 5px;">
-				Increase Stock
+					Increase Stock
 				</button>
 				<button @click="openEditModal(product.id, product)">Edit</button>
 			</td>
@@ -164,48 +164,48 @@ export default {
   },
   methods: {
 		async addProduct() {
-	if (!this.isAdmin) {
-		alert("You do not have permission to add products.");
-		return;
-	}
+			if (!this.isAdmin) {
+				alert("You do not have permission to add products.");
+				return;
+			}
 
-	const existingProduct = Object.values(this.products).find(
-		(product) => product.name.toLowerCase() === this.productName.toLowerCase()
-	);
-	if (existingProduct) {
-		alert("A product with this name already exists.");
-		return;
-	}
+			const existingProduct = Object.values(this.products).find(
+				(product) => product.name.toLowerCase() === this.productName.toLowerCase()
+			);
+			if (existingProduct) {
+				alert("A product with this name already exists.");
+				return;
+			}
 
-	const newProduct = {
-		name: this.productName,
-		pointsRequired: this.pointsRequired,
-		stock: this.stock,
-		hidden: false,
-	};
+			const newProduct = {
+				name: this.productName,
+				pointsRequired: this.pointsRequired,
+				stock: this.stock,
+				hidden: false,
+			};
 
-	try {
-		const message = await addProductToDatabase(newProduct);
-		alert(message);
+			try {
+				const message = await addProductToDatabase(newProduct);
+				alert(message);
 
-		// Log the product addition in the audit table
-		const auth = getAuth();
-		const currentUser = auth.currentUser;
-		if (currentUser) {
-		await logAuditEntry({
-			type: "inventory",
-			user: currentUser.uid, // Log the current user's UID
-			details: `Added a new product: ${newProduct.name} (Points: ${newProduct.pointsRequired}, Stock: ${newProduct.stock})`,
-		});
-		}
+				// Log the product addition in the audit table
+				const auth = getAuth();
+				const currentUser = auth.currentUser;
+				if (currentUser) {
+				await logAuditEntry({
+					type: "inventory",
+					user: currentUser.uid, // Log the current user's UID
+					details: `Added a new product: ${newProduct.name} (Points: ${newProduct.pointsRequired}, Stock: ${newProduct.stock})`,
+				});
+				}
 
-		this.productName = "";
-		this.pointsRequired = null;
-		this.stock = null;
-		this.fetchProducts(); // Refresh product list
-	} catch (error) {
-		alert(error.message);
-	}
+				this.productName = "";
+				this.pointsRequired = null;
+				this.stock = null;
+				this.fetchProducts(); // Refresh product list
+			} catch (error) {
+				alert(error.message);
+			}
 	},
     async fetchProducts() {
       try {
@@ -255,8 +255,7 @@ export default {
         alert(error.message);
       }
     },
-  },
-    async toggleVisibility(productId, product) {
+	async toggleVisibility(productId, product) {
       try {
         const message = await toggleProductVisibility(productId, product.hidden);
         alert(message);
@@ -290,7 +289,7 @@ export default {
 
       try {
         // Update the product stock
-        const message = await updateProductStock(productId, stock + incrementAmount);
+        const message = await updateProductStock(productId, stock, incrementAmount);
         alert(message);
 
         // Log the stock increase in the audit table
@@ -309,6 +308,8 @@ export default {
         alert(error.message);
       }
     },
+  },
+   
 
   async mounted() {
     try {
