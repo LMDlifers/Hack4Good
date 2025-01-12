@@ -1,124 +1,160 @@
 <template>
-	<div class="form-page box-shadow">
-		<h2>Add New Product</h2>
-		<form @submit.prevent="addProduct">
-		<div>
-			<label for="productName">Product Name:</label>
-			<input
-			id="productName"
-			v-model="productName"
-			type="text"
-			placeholder="Enter product name"
-			required
-			/>
-		</div>
-		<div>
-			<label for="pointsRequired">Points Required:</label>
-			<input
-			id="pointsRequired"
-			v-model.number="pointsRequired"
-			type="number"
-			placeholder="Enter points required"
-			min="1"
-			required
-			/>
-		</div>
-		<div>
-			<label for="stock">Stock:</label>
-			<input
-			id="stock"
-			v-model.number="stock"
-			type="number"
-			placeholder="Enter stock quantity"
-			min="0"
-			required
-			/>
-		</div>
-		<button type="submit" class="wmax">Add Product</button>
-		</form>
-	</div>
-
 	<div class="container">
-		<h2>Available Products</h2>
-		<div class="search-container">
-		<input
-			class="search-bar"
-			v-model="searchQuery"
-			placeholder="Search products by name..."
-			type="text"
-		/>
+		<div class="space-between">
+			<h2>Available Products</h2>
+			<button @click="openAddProductModal">Add New Product</button>
 		</div>
-		<table v-if="filteredProducts.length > 0">
-		<thead>
-			<tr>
-			<th>Name</th>
-			<th>Points Required</th>
-			<th>Stock</th>
-			<th>Hidden</th>
-			<th>Actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr v-for="(product, id) in filteredProducts" :key="id">
-			<td>{{ product.name }}</td>
-			<td>{{ product.pointsRequired }}</td>
-			<td>{{ product.stock }}</td>
-			<td>{{ product.hidden ? "Yes" : "No" }}</td>
-			<td>
-				<button @click="increaseStock(product.id, product.stock)" style="margin-right: 5px;">
-					Increase Stock
-				</button>
-				<button @click="openEditModal(product.id, product)">Edit</button>
-			</td>
-			</tr>
-		</tbody>
-		</table>
-		<p v-else>No products match your search.</p>
+		<!-- Search Input -->
+		<div class=" margin-t-s">
+			<input
+				class="search-bar"
+				v-model="searchQuery"
+				placeholder="Search products by name..."
+				type="text"
+			/>
+		</div>
+	</div>
+	
+	<div v-if="filteredProducts.length > 0" class="container">
+		
+		<div>
+			<div class="align-items-center bg-white container-row h50 wmax margin-t-s center-vh">
+				<div class="center-vh" style="width:16.67%">Name</div>
+				<div class="center-vh" style="width:16.67%">Points Required</div>
+				<div class="center-vh" style="width:16.67%">Stock</div>
+				<div class="center-vh" style="width:16.67%">Hidden</div>
+				<div class="center-vh" style="width:33.33%">Action</div>
+			</div>
+			<div class="align-items-center bg-white h100 wmax margin-t-s"  v-for="(product, id) in paginatedProducts" :key="id">
+				
+				<div class="center-vh" style="width:16.67%">{{ product.name }}</div>
+				<div class="center-vh" style="width:16.67%">{{ product.pointsRequired }}</div>
+				<div class="center-vh" style="width:16.67%">{{ product.stock }}</div>
+				<div class="center-vh" style="width:16.67%">{{ product.hidden ? "Yes" : "No" }}</div>
+				<div class="center-vh" style="width:33.33%">
+					<button class="btn-green" @click="increaseStock(product.id, product.stock)" style="margin-right: 5px;">
+						Increase Stock
+					</button>
+					<button class="btn-grey" @click="openEditModal(product.id, product)">Edit</button>
+				</div>
+				
+			</div>
+		</div>
+		<!-- Pagination -->
+		<div class="pagination" v-if="totalPages > 1">
+			<button 
+				v-if="currentPage > 1" 
+				@click="changePage(currentPage - 1)"
+			>
+				Previous
+			</button>
+			<span v-else style="visibility: hidden;">Previous</span>
+			<span>Page {{ currentPage }} of {{ totalPages }}</span>
+			<button 
+				v-if="currentPage < totalPages" 
+				@click="changePage(currentPage + 1)"
+			>
+				Next
+			</button>
+			<span v-else style="visibility: hidden;">Next</span>
+		</div>
+	</div>
+	<div v-else class="container">
+		<p>No products match your search.</p>
+	</div>
+	
+
+	<!-- Add Product Modal -->
+	<div v-if="showAddProductModal" class="modal-wrapper">
+		<div class="modal-backdrop" @click="closeAddProductModal"></div>
+		<div class="modal">
+			<form @submit.prevent="addProduct" class="form-page">
+				<h2>Add New Product</h2>
+				<div>
+					<label for="productName">Product Name:</label>
+					<input
+						id="productName"
+						v-model="productName"
+						type="text"
+						placeholder="Enter product name"
+						required
+					/>
+				</div>
+				<div>
+					<label for="pointsRequired">Points Required:</label>
+					<input
+						id="pointsRequired"
+						v-model.number="pointsRequired"
+						type="number"
+						placeholder="Enter points required"
+						min="1"
+						required
+					/>
+				</div>
+				<div>
+					<label for="stock">Stock:</label>
+					<input
+						id="stock"
+						v-model.number="stock"
+						type="number"
+						placeholder="Enter stock quantity"
+						min="0"
+						required
+					/>
+				</div>
+				<div class="space-between">
+					<button type="submit">Add Product</button>
+					<button type="button" class="btn-grey" @click="closeAddProductModal">Cancel</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- Edit Product Modal -->
+	<div v-if="showEditModal" class="modal-wrapper">
+		<div class="modal-backdrop" @click="closeEditModal"></div>
+		<div class="modal">
+			<form @submit.prevent="editProduct" class="form-page">
+				<h2>Edit Product</h2>
+				<div>
+					<label for="editProductName">Product Name:</label>
+					<input
+						id="editProductName"
+						v-model="editProductName"
+						type="text"
+						placeholder="Enter new product name"
+						required
+					/>
+				</div>
+				<div>
+					<label for="editPointsRequired">Points Required:</label>
+					<input
+						id="editPointsRequired"
+						v-model.number="editPointsRequired"
+						type="number"
+						placeholder="Enter new points required"
+						min="1"
+						required
+					/>
+				</div>
+				<div class="checkbox-container">
+					<label for="editHidden">Hidden:</label>
+					<input
+						id="editHidden"
+						type="checkbox"
+						v-model="editHidden"
+					/>
+					<span>{{ editHidden ? "Hidden" : "Visible" }}</span>
+				</div>
+				<div class="space-between">
+					<button type="submit">Save Changes</button>
+					<button type="button" class="btn-grey" @click="closeEditModal">Cancel</button>
+				</div>
+			</form>
+		</div>
 	</div>
 
-	<!-- Edit Modal -->
-	<div v-if="showEditModal" class="modal-wrapper">
-		<div class="modal-backdrop" @click="closeEditModal"></div> <!-- Backdrop -->
-		<div class="modal">
-		<h2>Edit Product</h2>
-		<form @submit.prevent="editProduct">
-			<div>
-			<label for="editProductName">Product Name:</label>
-			<input
-				id="editProductName"
-				v-model="editProductName"
-				type="text"
-				placeholder="Enter new product name"
-				required
-			/>
-			</div>
-			<div>
-			<label for="editPointsRequired">Points Required:</label>
-			<input
-				id="editPointsRequired"
-				v-model.number="editPointsRequired"
-				type="number"
-				placeholder="Enter new points required"
-				min="1"
-				required
-			/>
-			</div>
-			<div>
-			<label for="editHidden">Hidden:</label>
-			<input
-				id="editHidden"
-				type="checkbox"
-				v-model="editHidden"
-			/>
-			<span>{{ editHidden ? "Hidden" : "Visible" }}</span>
-			</div>
-			<button type="submit">Save Changes</button>
-			<button type="button" class="btn-grey" @click="closeEditModal">Cancel</button>
-		</form>
-		</div>
-	</div>
 </template>
-  
+
 
   
 <script>
@@ -136,33 +172,64 @@ import { getAuth } from "firebase/auth";
 export default {
   name: "AddProductPage",
   data() {
-    return {
+	return {
 		productName: "",
 		pointsRequired: null,
 		stock: null,
 		isAdmin: false,
 		products: {},
 		searchQuery: "",
-		showEditModal: false, // Controls the visibility of the edit modal
-		editProductId: null, // Stores the ID of the product being edited
-		editProductName: "", // Stores the new product name
-		editPointsRequired: null, // Stores the new points required
-		editHidden: false, // New property for hidden status
-    };
-  },
-  computed: {
-    filteredProducts() {
-      const query = this.searchQuery.toLowerCase();
-      const transformedProducts = Object.entries(this.products).map(([key, value]) => ({
-        id: key, // Include the key as `id`
-        ...value, // Spread the rest of the product's properties
-      }));
-      return transformedProducts.filter(
-        (product) => product.name && product.name.toLowerCase().includes(query)
-      );
-    },
-  },
+		showEditModal: false,
+		editProductId: null,
+		editProductName: "",
+		editPointsRequired: null,
+		editHidden: false,
+		showAddProductModal: false,
+		currentPage: 1, // Current page for pagination
+		itemsPerPage: 10, // Number of items per page
+	};
+	},
+
+	computed: {
+	filteredProducts() {
+		const query = this.searchQuery.trim().toLowerCase(); // Trim spaces and convert to lowercase
+		const transformedProducts = Object.entries(this.products).map(([key, value]) => ({
+			id: key,
+			...value,
+		}));
+		return transformedProducts.filter(
+			(product) => product.name && product.name.toLowerCase().includes(query)
+		);
+	},
+	paginatedProducts() {
+		const start = (this.currentPage - 1) * this.itemsPerPage;
+		const end = this.currentPage * this.itemsPerPage;
+		return this.filteredProducts.slice(start, end);
+	},
+	totalPages() {
+		return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+	},
+},
+
+
   methods: {
+		changePage(page) {
+			if (page > 0 && page <= this.totalPages) {
+			this.currentPage = page;
+			}
+		},
+		openAddProductModal() {
+			this.showAddProductModal = true;
+		},
+		closeAddProductModal() {
+			this.showAddProductModal = false;
+			this.resetAddProductForm();
+		},
+		resetAddProductForm() {
+			this.productName = "";
+			this.pointsRequired = null;
+			this.stock = null;
+		},
 		async addProduct() {
 			if (!this.isAdmin) {
 				alert("You do not have permission to add products.");
@@ -188,25 +255,22 @@ export default {
 				const message = await addProductToDatabase(newProduct);
 				alert(message);
 
-				// Log the product addition in the audit table
 				const auth = getAuth();
 				const currentUser = auth.currentUser;
 				if (currentUser) {
-				await logAuditEntry({
-					type: "inventory",
-					user: currentUser.uid, // Log the current user's UID
-					details: `Added a new product: ${newProduct.name} (Points: ${newProduct.pointsRequired}, Stock: ${newProduct.stock})`,
-				});
+					await logAuditEntry({
+						type: "inventory",
+						user: currentUser.uid,
+						details: `Added a new product: ${newProduct.name} (Points: ${newProduct.pointsRequired}, Stock: ${newProduct.stock})`,
+					});
 				}
 
-				this.productName = "";
-				this.pointsRequired = null;
-				this.stock = null;
+				this.closeAddProductModal();
 				this.fetchProducts(); // Refresh product list
 			} catch (error) {
 				alert(error.message);
 			}
-	},
+		},	
     async fetchProducts() {
       try {
         this.products = await fetchProducts();

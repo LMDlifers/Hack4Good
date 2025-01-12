@@ -12,52 +12,58 @@
 				<div class="center-vh w200">Total Points</div>
 			</div>
 			<div class="align-items-center bg-white h150 w1200 margin-t-s" v-for="item in cartItems" :key="item.id">
-				<div class="center-vh w100"><input type="checkbox" :value="item.id" v-model="selectedItems"/></div>
+				<div class="center-vh w100"><input type="checkbox" :value="item.id" v-model="selectedItems" /></div>
 				<div class="w500 margin-l-s">{{ item.name }}</div>
 				<div class="center-vh w200">{{ item.pointsRequired }}</div>
 				<div class="center-vh w200">
 					<button class="btn-grey btn-round" @click="decreaseQuantity(item)">-</button>
-						{{ item.quantity }}
+					{{ item.quantity }}
 					<button class="btn-grey btn-round" @click="increaseQuantity(item)">+</button>
 				</div>
 				<div class="center-vh w200">{{ item.quantity * item.pointsRequired }}</div>
 			</div>
 			<div class="checkout-container h100 w1200 bg-white margin-t-s padding-20">
+				<p>Current Points: {{ userData.voucherPoints }}</p>
 				<p>Total Points for Selected Items: {{ totalPoints }}</p>
 				<button @click="handleCheckoutClick">Checkout</button>
 			</div>
 		</div>
 		<p v-else>Your cart is empty.</p>
-		
 
 		<!-- Checkout Confirmation Modal -->
 		<div v-if="showCheckoutModal" class="modal-wrapper">
 			<div class="modal-backdrop" @click="closeCheckoutModal"></div>
-			<div class="modal">
+			<div class="modal padding-20">
 				<h2>Confirm Checkout</h2>
 				<p>Are you sure you want to proceed with the checkout for the selected items?</p>
-				<p>Total Points: {{ totalPoints }}</p>
-				<button class="whalf" @click="confirmCheckout">Confirm</button>
-				<button class="whalf btn-grey" @click="closeCheckoutModal">Cancel</button>
+				<p>Current Balance: {{ userData.voucherPoints }}</p>
+				<p>Total Points for Selected Items: {{ totalPoints }}</p>
+				<p>After Checkout Balance: {{ userData.voucherPoints - totalPoints }}</p>
+				<div class="space-between">
+					<button @click="confirmCheckout">Confirm</button>
+					<button class="btn-grey" @click="closeCheckoutModal">Cancel</button>
+				</div>
 			</div>
 		</div>
 
 		<!-- No Items Selected Modal -->
 		<div v-if="showNoItemsSelectedModal" class="modal-wrapper">
 			<div class="modal-backdrop" @click="closeNoItemsSelectedModal"></div>
-			<div class="modal">
+			<div class="modal padding-20 center-vh flex-col">
 				<p>You have not selected any items for checkout</p>
-				<button class="btn-grey wmax" @click="closeNoItemsSelectedModal">OK</button>
+				<button class="btn-grey" @click="closeNoItemsSelectedModal">OK</button>
 			</div>
 		</div>
 
 		<!-- Confirm Remove Modal -->
 		<div v-if="showRemoveModal" class="modal-wrapper">
 			<div class="modal-backdrop" @click="closeRemoveModal"></div>
-			<div class="modal">
+			<div class="modal padding-20">
 				<p>Do you want to remove {{ productToRemove?.name }} from the cart?</p>
-				<button class="whalf" @click="confirmRemoveProduct">Yes</button>
-				<button class="whalf btn-grey" @click="closeRemoveModal">No</button>
+				<div class="space-between">
+					<button @click="confirmRemoveProduct">Yes</button>
+					<button class="btn-grey" @click="closeRemoveModal">No</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -139,9 +145,9 @@ export default {
 		},
 		handleCheckoutClick() {
 			if (this.selectedItems.length === 0) {
-				this.showNoItemsSelectedModal = true; // Show the "No Items Selected" modal
+				this.showNoItemsSelectedModal = true;
 			} else {
-				this.showCheckoutModal = true; // Show the checkout confirmation modal
+				this.showCheckoutModal = true;
 			}
 		},
 		closeCheckoutModal() {

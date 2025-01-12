@@ -106,7 +106,6 @@ a:hover {
 .form-page {
     max-width: 400px;
     margin: 0 auto;
-    margin-bottom: 20px;
     padding: 20px;
     background: white;
   }
@@ -152,9 +151,8 @@ a:hover {
 
  /* Shared Styles */
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 80%;
+    margin: 0 auto;
   }
 
   .container-end {
@@ -178,7 +176,7 @@ a:hover {
   }
   
   button:hover {
-    background-color: #1e1f52;
+    background-image: linear-gradient(rgb(0 0 0/30%) 0 0);
   }
   
   input {
@@ -193,7 +191,7 @@ a:hover {
   }
   
   table {
-    width: 1200px;
+    width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
   }
@@ -241,7 +239,7 @@ a:hover {
   }
   
   .search-bar {
-    width: 1200px;
+    width: 100%;
     border-radius: 50px;
     height: 2.5rem;
     padding-left: 20px;
@@ -283,7 +281,7 @@ a:hover {
   .modal {
     position: relative;
     background-color: #fff;
-    padding: 20px;
+    padding: 10px;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     z-index: 1001;
@@ -298,6 +296,7 @@ a:hover {
   
   .modal button {
     margin-top: 10px;
+    width: 40%;
   }
 
   .modal-wrapper {
@@ -319,6 +318,14 @@ a:hover {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5); /* Dark transparent background */
+  }
+
+  .btn-green {
+    background: #226D59;
+  }
+
+  .btn-red {
+    background: #BC1041;
   }
 
   .btn-grey {
@@ -353,6 +360,10 @@ a:hover {
     padding: 20px;
   }
 
+.h50 {
+  height: 50px;
+}
+
 .h100 {
   height: 100px;
 }
@@ -367,6 +378,10 @@ a:hover {
 
 .w200 {
   width: 200px;
+}
+
+.w400 {
+  width: 400px;
 }
 
 .w500 {
@@ -385,6 +400,10 @@ a:hover {
     margin-top: 10px;
   }
 
+  .margin-b-s {
+    margin-bottom: 10px;
+  }
+
   .bg-lightgrey {
     background: rgb(245, 245, 245);
   }
@@ -399,6 +418,10 @@ a:hover {
     justify-content: center;
     align-items: center;
     gap: 10px;
+  }
+
+  .flex-col {
+    flex-direction: column;
   }
 
   .d-flex{
@@ -417,3 +440,53 @@ a:hover {
   }
 
   
+  .status {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-transform: capitalize; /* Optional */
+  }
+  
+  .status.delivered {
+    color: #ffffff;
+    background-color: #226D59 ; /* Green */
+  }
+  
+  .status.rejected {
+    color: #ffffff;
+    background-color: #BC1041; /* Red */
+  }
+  
+  .status.pending {
+    color: #ffffff;
+    background-color: #ffc107; /* Yellow */
+  }
+
+  .space-between {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .flex-start {
+    display: flex;
+    justify-content: flex-start;
+    align-self: flex-start;
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    width: fit-content; /* Adjusts the width of the header to fit its content */
+    margin-left: auto;
+    margin-right: auto; /* Aligns the header container with the table */
+    margin-bottom: 10px; /* Optional: Adds spacing between header and table */
+  }
+
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Adjust spacing between the elements */
+}
+.checkbox-container label {
+    margin-right: 8px; /* Additional spacing for the label */
+}
