@@ -2,6 +2,8 @@
 
 ## Project setup
 ```
+nvm install latest
+
 npm install
 ```
 
