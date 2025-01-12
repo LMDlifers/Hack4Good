@@ -11,7 +11,9 @@ import AddProduct from '@/components/AddProduct.vue';
 import ManageUser from '@/components/ManageUser.vue';
 import ShoppingCart from '@/components/ShoppingCart.vue';
 
+// added by Tony
 import AdminAuction from "@/components/AdminAuction.vue";
+import AuctionHome from "@/components/AuctionHomePage.vue";
 
 const routes = [
   { path: "/signup", name: "Signup", component: SignUp },
@@ -25,7 +27,9 @@ const routes = [
   { path: "/manageuser", name: "ManageUser", component: ManageUser, meta: { requiresAuth: true }},
   { path: "/shoppingcart", name: "ShoppingCart", component: ShoppingCart, meta: { requiresAuth: true }},
 
+  // added by Tony
   { path: "/adminauction", name: "AdminAuction", component: AdminAuction },
+  { path: "/auctionhome", name: "AuctionHome", component: AuctionHome },
 ];
 
 const router = createRouter({

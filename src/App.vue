@@ -12,6 +12,9 @@
 			<router-link v-if="isLoggedIn && role === 'admin'" to="/manageuser">Manage Users</router-link>
 			<router-link v-if="!isLoggedIn" to="/login">Login</router-link>
 			<router-link v-if="!isLoggedIn" to="/signup">Sign Up</router-link>
+			
+			<router-link v-if="isLoggedIn && role === 'admin'" to="/auctionhome">Auction</router-link>
+
 			<button class="logout-button" v-if="isLoggedIn" @click="logout">Log Out</button>
         </div>
       </nav>
