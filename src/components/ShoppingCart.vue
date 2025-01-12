@@ -1,13 +1,6 @@
 <template>
 	<div class="container bg-lightgrey">
 		<h2>Shopping Cart</h2>
-
-		
-
-
-
-		
-
 		<div v-if="cartItems.length > 0">
 			<div class="align-items-center bg-white container-row h100 w1200 margin-t-s center-vh">
 				<div class="center-vh w100">

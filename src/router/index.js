@@ -26,8 +26,8 @@ const routes = [
   { path: "/manageuser", name: "ManageUser", component: ManageUser, meta: { requiresAuth: true }},
   { path: "/shoppingcart", name: "ShoppingCart", component: ShoppingCart, meta: { requiresAuth: true }},
   { path: "/auditpage", name: "AuditPage", component: AuditPage, meta: { requiresAuth: true }},
-  { path: "/adminauction", name: "AdminAuction", component: AdminAuction },
-  { path: "/auctionhome", name: "AuctionHome", component: AuctionHome },
+  { path: "/adminauction", name: "AdminAuction", component: AdminAuction, meta: { requiresAuth: true }},
+  { path: "/auctionhome", name: "AuctionHome", component: AuctionHome, meta: { requiresAuth: true }},
 ];
 
 const router = createRouter({
