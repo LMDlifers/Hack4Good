@@ -1,139 +1,203 @@
 <template>
-	<div class="form-page">
-		<h2>Preorder a Product</h2>
-		<form @submit.prevent="preorderProduct">
-			<label for="productName">Select Product:</label>
-			<select id="productName" v-model="selectedProductId" required>
-				<option disabled value="">Select a product</option>
-				<option v-for="(product, id) in products" :key="id" :value="id">
-				{{ product.name }} (Available: {{ product.stock }})
-				</option>
-			</select>
-
-			<label for="quantity">Quantity:</label>
-			<input
-				id="quantity"
-				v-model.number="quantity"
-				type="number"
-				min="1"
-				placeholder="Enter quantity"
-				required
-			/>
-			<button type="submit" class="wmax">Preorder Product</button>
-		</form>
-	</div>
 	<div class="container">
-		<h2>List of Preorders</h2>
-		<!-- Display list of preorders -->
-		<table v-if="preorders.length > 0">
-		<colgroup>
-			<col style="width: 30%;" />
-			<col style="width: 30%;" />
-			<col style="width: 20%;" />
-			<col style="width: 10%;" />
-			<col style="width: 10%;" />
-		</colgroup>
-		<thead>
-			<tr>
-			<th>Preorderer</th>
-			<th>Product Name</th>
-			<th>Quantity</th>
-			<th>Status</th>
-			<th>Preorder Date</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr v-for="(preorder, index) in preorders" :key="index">
-			<td>{{ preorder.username }}</td>
-			<td>{{ preorder.productName }}</td>
-			<td>{{ preorder.quantity }}</td>
-			<td>{{ preorder.status }}</td>
-			<td>{{ new Date(preorder.timestamp).toLocaleString() }}</td>
-			</tr>
-		</tbody>
-		</table>
-		<p v-else>No preorders found.</p>
-  </div>
+		<!-- Preorder Modal -->
+		<div v-if="showPreorderModal" class="modal-wrapper">
+			<div class="modal-backdrop" @click="closePreorderModal"></div>
+			<div class="modal">
+				<form @submit.prevent="preorderProduct" class="form-page">
+					<h2>Preorder a Product</h2>
+					<div>
+						<label for="productName">Select Product:</label>
+						<select id="productName" v-model="selectedProductId" required>
+							<option disabled value="">Select a product</option>
+							<option v-for="(product, id) in products" :key="id" :value="id">
+								{{ product.name }} (Available: {{ product.stock }})
+							</option>
+						</select>
+					</div>
+					<div>
+						<label for="quantity">Quantity:</label>
+						<input
+							id="quantity"
+							v-model.number="quantity"
+							type="number"
+							min="1"
+							placeholder="Enter quantity"
+							required
+						/>
+					</div>
+					<div class="space-between">
+						<button type="submit">Preorder</button>
+						<button type="button" class="btn-grey" @click="closePreorderModal">Cancel</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<!-- Preorder Button -->
+		<div class="space-between">
+			<h2>List of Preorders</h2>
+			<button class="btn-primary" @click="openPreorderModal">Add Preorder</button>
+		</div>
+
+		<!-- Preorders Header -->
+		<div class="header margin-t-s">
+			<div style="width: 25%;">Product Name</div>
+			<div style="width: 25%;">Quantity</div>
+			<div style="width: 25%;">Status</div>
+			<div style="width: 25%;">Preorder Date</div>
+		</div>
+
+		<!-- Preorders Rows -->
+		<div
+			class="header content margin-t-s"
+			v-for="(preorder, index) in paginatedPreorders"
+			:key="index"
+		>
+			<div style="width: 25%;">{{ preorder.productName }}</div>
+			<div style="width: 25%;">{{ preorder.quantity }}</div>
+			<div style="width: 25%;">
+					<span v-if="preorder.status === 'Delivered' || preorder.status === 'Approved'" class="status delivered">
+						{{ preorder.status }}
+					</span>
+					<span v-else-if="preorder.status === 'Rejected'" class="status rejected">
+						{{ preorder.status }}
+					</span>
+					<span v-else class="status pending">
+						{{ preorder.status }}
+					</span>
+				</div>
+			<div style="width: 25%;">{{ new Date(preorder.timestamp).toLocaleString() }}</div>
+		</div>
+
+		<!-- Pagination -->
+		<div class="pagination" v-if="totalPages > 1">
+			<button 
+				v-if="currentPage > 1" 
+				@click="changePage(currentPage - 1)"
+			>
+				Previous
+			</button>
+			<span v-else style="visibility: hidden;">Previous</span>
+			<span>Page {{ currentPage }} of {{ totalPages }}</span>
+			<button 
+				v-if="currentPage < totalPages" 
+				@click="changePage(currentPage + 1)"
+			>
+				Next
+			</button>
+			<span v-else style="visibility: hidden;">Next</span>
+		</div>
+	</div>
 </template>
 
 <script>
-	import { fetchProducts, fetchUserPreorders, preorderProduct, getCurrentUser } from "@/methods";
+import { fetchProducts, fetchUserPreorders, preorderProduct, getCurrentUser } from "@/methods";
 
-	export default {
-		name: "PreorderProductPage",
-		data() {
-			return {
-				selectedProductId: "",
-				quantity: 1,
-				preorders: [],
-				products: {},
-				};
-			},
-		methods: {
-			async fetchProducts() {
-				try {
-					this.products = await fetchProducts();
-				} catch (error) {
-					alert(error.message);
-				}
-			},
-			async fetchUserPreorders() {
-				try {
-					this.preorders = await fetchUserPreorders();
-				} catch (error) {
-					alert(error.message);
-				}
-			},
-			async preorderProduct() {
-				if (!this.userKey) {
-					alert("Please log in to preorder a product.");
-					return;
-				}
-
-				if (!this.selectedProductId || this.quantity < 1) {
-					alert("Please select a valid product and quantity.");
-					return;
-				}
-
-				const selectedProduct = this.products[this.selectedProductId];
-				if (!selectedProduct) {
-					alert("Invalid product selected.");
-					return;
-				}
-
-				if (selectedProduct.stock >= this.quantity) {
-					alert("There are enough stocks available");
-					return;
-				}
-				try {
-					const message = await preorderProduct(
-						this.userKey,
-						selectedProduct,
-						this.selectedProductId,
-						this.quantity
-					);
-					alert(message);
-					this.selectedProductId = "";
-					this.quantity = 1;
-					this.fetchUserPreorders();
-				} catch (error) {
-					alert(error.message);
-				}
-			},
+export default {
+	name: "PreorderProductPage",
+	data() {
+		return {
+			selectedProductId: "",
+			quantity: 1,
+			preorders: [],
+			products: {},
+			currentPage: 1, // Current page for pagination
+			perPage: 10, // Number of items per page
+			showPreorderModal: false, // Controls visibility of the modal
+		};
+	},
+	computed: {
+		totalPages() {
+			return Math.ceil(this.preorders.length / this.perPage);
 		},
-		async mounted() {
+		paginatedPreorders() {
+			const start = (this.currentPage - 1) * this.perPage;
+			const end = this.currentPage * this.perPage;
+			return this.sortedPreorders.slice(start, end);
+		},
+		// Sort preorders by timestamp in descending order
+		sortedPreorders() {
+			return [...this.preorders].sort(
+				(a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+			);
+		},
+	},
+	methods: {
+		async fetchProducts() {
 			try {
-				const key = await getCurrentUser();
-				console.log("Current user key:", key);
-				this.userKey = key;
-
-				await this.fetchProducts();
-				await this.fetchUserPreorders();
-
-				console.log("Preorders:", this.preorders); // Debugging: Ensure preorders are fetched correctly
+				this.products = await fetchProducts();
 			} catch (error) {
-				console.error("Error during component initialization:", error);
+				alert(error.message);
 			}
+		},
+		async fetchUserPreorders() {
+			try {
+				this.preorders = await fetchUserPreorders();
+			} catch (error) {
+				alert(error.message);
+			}
+		},
+		openPreorderModal() {
+			this.showPreorderModal = true;
+		},
+		closePreorderModal() {
+			this.showPreorderModal = false;
+		},
+		async preorderProduct() {
+			if (!this.userKey) {
+				alert("Please log in to preorder a product.");
+				return;
+			}
+
+			if (!this.selectedProductId || this.quantity < 1) {
+				alert("Please select a valid product and quantity.");
+				return;
+			}
+
+			const selectedProduct = this.products[this.selectedProductId];
+			if (!selectedProduct) {
+				alert("Invalid product selected.");
+				return;
+			}
+
+			if (selectedProduct.stock >= this.quantity) {
+				alert("There are enough stocks available, please purchase it normally.");
+				return;
+			}
+
+			try {
+				const message = await preorderProduct(
+					this.userKey,
+					selectedProduct,
+					this.selectedProductId,
+					this.quantity
+				);
+				alert(message);
+				this.selectedProductId = "";
+				this.quantity = 1;
+				this.closePreorderModal();
+				this.fetchUserPreorders();
+			} catch (error) {
+				alert(error.message);
+			}
+		},
+		changePage(page) {
+			if (page > 0 && page <= this.totalPages) {
+				this.currentPage = page;
+			}
+		},
+	},
+	async mounted() {
+		try {
+			const key = await getCurrentUser();
+			this.userKey = key;
+
+			await this.fetchProducts();
+			await this.fetchUserPreorders();
+		} catch (error) {
+			console.error("Error during component initialization:", error);
 		}
-	};
+	},
+};
 </script>
