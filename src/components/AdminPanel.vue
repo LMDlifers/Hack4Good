@@ -1,8 +1,7 @@
 <template>
-	<div>
+	<div class="container">
 		<h2>Admin Panel</h2>
-		<button @click="manageUsers">Manage Users</button>
-		<button @click="approveRequests">Approve Requests</button>
+		<p>Nothing here</p>
 		<button @click="manageAuction">Manage Auction</button>
 	</div>
 </template>

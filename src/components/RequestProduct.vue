@@ -5,7 +5,7 @@
 			<button class="margin-l-s" @click="openRequestProductModal">Request New Product</button>
 		</div>
 	</div>
-	<div v-if="paginatedRequests.length > 0" class="container">
+	<div v-if="paginatedRequests.length > 0" class="container scrollable-div">
 		<div class="margin-t-s">
 			<input
 				class="search-bar"

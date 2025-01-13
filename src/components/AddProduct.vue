@@ -15,7 +15,7 @@
 		</div>
 	</div>
 	
-	<div v-if="filteredProducts.length > 0" class="container">
+	<div v-if="filteredProducts.length > 0" class="container scrollable-div">
 		
 		<div>
 			<div class="header margin-t-s">

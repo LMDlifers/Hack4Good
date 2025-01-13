@@ -1,6 +1,8 @@
 <template>
-	<div v-if="paginatedVoucherTasks.length > 0" class="container">
+     <div class="container">
 		<h2>Voucher Task Management</h2>
+	</div>
+	<div v-if="paginatedVoucherTasks.length > 0" class="container scrollable-div">
 		<div>
 			<div class="header margin-t-s">
 				<div style="width: 15%;">User</div>
@@ -11,7 +13,7 @@
 				<div style="width: 15%;">Action</div>
 			</div>
 			<div
-				class="header content"
+				class="header content" style="min-height: 75px; height: auto;"
 				v-for="(task, index) in paginatedVoucherTasks"
 				:key="index"
 			>
@@ -73,7 +75,9 @@
 			</div>
 		</div>
 	</div>
-	<p v-else>No voucher tasks found.</p>
+    <div v-else class="container">
+		<p>No voucher tasks found.</p>
+	</div>
 </template>
 
 <script>

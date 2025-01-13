@@ -17,19 +17,31 @@
 				v-for="transaction in paginatedTransactions"
 				:key="transaction.id"
 			>
-        <div style="width: 20%;">{{ transaction.type }}</div>
-				<div style="width: 20%;">{{ transaction.productName }}</div>
-				<div style="width: 20%;">{{ transaction.quantity }}</div>
-				<div style="width: 20%;">{{ transaction.totalPoints }}</div>
-				<div style="width: 20%;">{{ formatTimestamp(transaction.timestamp) }}</div>
+                <div style="width: 20%;">{{ transaction.type }}</div>
+                <div style="width: 20%;">{{ transaction.productName }}</div>
+                <div style="width: 20%;">{{ transaction.quantity }}</div>
+                <div style="width: 20%;">{{ transaction.totalPoints }}</div>
+                <div style="width: 20%;">{{ formatTimestamp(transaction.timestamp) }}</div>
 			</div>
 
 			<!-- Pagination -->
-			<div class="pagination margin-t-s">
-				<button :disabled="currentPage === 1" @click="changePage(currentPage - 1)">Previous</button>
-				<span>Page {{ currentPage }} of {{ totalPages }}</span>
-				<button :disabled="currentPage === totalPages" @click="changePage(currentPage + 1)">Next</button>
-			</div>
+            <div class="pagination" v-if="totalPages > 1">
+                <button 
+                v-if="currentPage > 1" 
+                @click="changePage(currentPage - 1)"
+                >
+                Previous
+                </button>
+                <span v-else style="visibility: hidden;">Previous</span>
+                <span>Page {{ currentPage }} of {{ totalPages }}</span>
+                <button 
+                v-if="currentPage < totalPages" 
+                @click="changePage(currentPage + 1)"
+                >
+                Next
+                </button>
+                <span v-else style="visibility: hidden;">Next</span>
+            </div>
 		</div>
 		<p v-else>No transactions available.</p>
 	</div>

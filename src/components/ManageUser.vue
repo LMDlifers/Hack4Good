@@ -1,5 +1,5 @@
 <template>
-	<div v-if="Object.keys(users).length > 0" class="container">
+	<div class="container">
 		<div class="space-between">
 			<h2>Users</h2>
 			<button class="margin-l-s" @click="openAddUserModal">Add New User</button>
@@ -12,6 +12,8 @@
 				type="text"
 			/>
 		</div>
+	</div>
+	<div v-if="filteredUsers.length > 0" class="container">
 		<div>
 			<!-- Table Header -->
 			<div class="header margin-t-s">
@@ -71,7 +73,10 @@
 			<span v-else style="visibility: hidden;">Next</span>
 		</div>
 	</div>
-	<p v-else>No users found.</p>
+	<div v-else class="container">
+		<p>No users found.</p>
+	</div>
+	
 
 
 		<!-- Add User Modal -->
