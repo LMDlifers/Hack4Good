@@ -99,7 +99,6 @@ export default {
                 const auth = getAuth();
 				const currentUser = auth.currentUser;
                 const user = await getCurrentUserData();
-                alert(user.username);
 				if (currentUser) {
 					await logAuditEntry({
 						type: "request",

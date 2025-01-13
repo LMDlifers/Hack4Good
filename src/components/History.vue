@@ -3,23 +3,25 @@
 		<h2>Transaction History</h2>
 		<div v-if="sortedTransactions.length > 0">
 			<!-- Header -->
-			<div class="align-items-center bg-white container-row h50 wmax center-vh margin-t-s">
-				<div class="center-vh" style="width: 25%;">Product Name</div>
-				<div class="center-vh" style="width: 25%;">Quantity</div>
-				<div class="center-vh" style="width: 25%;">Total Points</div>
-				<div class="center-vh" style="width: 25%;">Timestamp</div>
+			<div class="header margin-top-s">
+        <div style="width: 20%;">Type</div>
+				<div style="width: 20%;">Product Name</div>
+				<div style="width: 20%;">Quantity</div>
+				<div style="width: 20%;">Total Points</div>
+				<div style="width: 20%;">Timestamp</div>
 			</div>
 			
 			<!-- Transactions -->
 			<div 
-				class="align-items-center bg-white container-row h100 wmax center-vh margin-t-s"
+				class="header content"
 				v-for="transaction in paginatedTransactions"
 				:key="transaction.id"
 			>
-				<div class="center-vh" style="width: 25%;">{{ transaction.productName }}</div>
-				<div class="center-vh" style="width: 25%;">{{ transaction.quantity }}</div>
-				<div class="center-vh" style="width: 25%;">{{ transaction.totalPoints }}</div>
-				<div class="center-vh" style="width: 25%;">{{ formatTimestamp(transaction.timestamp) }}</div>
+        <div style="width: 20%;">{{ transaction.type }}</div>
+				<div style="width: 20%;">{{ transaction.productName }}</div>
+				<div style="width: 20%;">{{ transaction.quantity }}</div>
+				<div style="width: 20%;">{{ transaction.totalPoints }}</div>
+				<div style="width: 20%;">{{ formatTimestamp(transaction.timestamp) }}</div>
 			</div>
 
 			<!-- Pagination -->

@@ -16,6 +16,8 @@ import AuctionHome from "@/components/AuctionHomePage.vue";
 import RequestProduct from "@/components/RequestProduct.vue";
 import ViewRequest from "@/components/ViewRequest.vue";
 import ForgetPassword from "@/components/ForgetPassword.vue";
+import VoucherTask from "@/components/VoucherTask.vue";
+import VoucherTaskAdmin from "@/components/VoucherTaskAdmin.vue";
 
 const routes = [
   { path: "/signup", name: "Signup", component: SignUp },
@@ -33,6 +35,8 @@ const routes = [
   { path: "/auctionhome", name: "AuctionHome", component: AuctionHome, meta: { requiresAuth: true }},
   { path: "/requestproduct", name: "RequestProduct", component: RequestProduct, meta: { requiresAuth: true }},
   { path: "/viewrequest", name: "ViewRequest", component: ViewRequest, meta: { requiresAuth: true }},
+  { path: "/vouchertask", name: "VoucherTask", component: VoucherTask, meta: { requiresAuth: true }},
+  { path: "/vouchertaskadmin", name: "VoucherTaskAdmin", component: VoucherTaskAdmin, meta: { requiresAuth: true }},
   { path: "/forgetpassword", name: "ForgetPassword", component: ForgetPassword },
 ];
 
