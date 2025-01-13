@@ -1,5 +1,5 @@
 // methods.js
-import { getDatabase, ref, get, push, update, remove} from "firebase/database";
+import { getDatabase, ref, get, set, push, update, remove} from "firebase/database";
 import { signInWithEmailAndPassword, getAuth, signOut } from "firebase/auth";
 import { auth } from "@/firebase";
 
@@ -669,5 +669,80 @@ export async function fetchAuditLogs() {
 		});
 	} catch (error) {
 		throw new Error("Failed to fetch audit logs: " + error.message);
+	}
+}
+
+
+export async function fetchRequests() {
+    const db = getDatabase();
+    const requestsRef = ref(db, "requests");
+
+    try {
+        const snapshot = await get(requestsRef);
+        if (snapshot.exists()) {
+            const requests = Object.entries(snapshot.val()).map(([key, request]) => ({
+                id: key,
+                ...request,
+            }));
+
+            // Fetch usernames for each request
+            const usersRef = ref(db, "users");
+            const usersSnapshot = await get(usersRef);
+            const users = usersSnapshot.exists() ? usersSnapshot.val() : {};
+
+            // Map requestorId to username
+            return requests.map((request) => ({
+                ...request,
+                username: users[request.requestorId]?.username || "Unknown User",
+            }));
+        } else {
+            return []; // No requests found
+        }
+    } catch (error) {
+        console.error("Error fetching requests:", error);
+        throw new Error("There was an error fetching the requests. Please try again.");
+    }
+}
+
+export async function fetchUserRequests() {
+    const key = await getCurrentUser();
+    try {
+        // Fetch all requests
+        const allRequests = await fetchRequests();
+        // Filter requests by userId
+        const userRequests = allRequests.filter(
+            (request) => request.requestorId === key
+        );
+
+        return userRequests; // Return only requests for this user
+    } catch (error) {
+        console.error("Error fetching user requests:", error);
+        throw new Error("There was an error fetching the user's requests. Please try again.");
+    }
+}
+
+export async function submitProductRequest(request) {
+    const db = getDatabase();
+    const requestRef = ref(db, "requests/");
+    const newRequestRef = push(requestRef);
+
+    await set(newRequestRef, {
+        ...request,
+        status: "Pending",
+        timestamp: Date.now(), // Add a timestamp for the request
+    });
+
+    return "Request submitted successfully.";
+}
+
+export async function updateRequestStatus(requestId, status) {
+	const db = getDatabase();
+	const requestRef = ref(db, `requests/${requestId}/status`);
+
+	try {
+		await set(requestRef, status);
+	} catch (error) {
+		console.error("Error updating request status:", error);
+		throw new Error("There was an error updating the request status. Please try again.");
 	}
 }

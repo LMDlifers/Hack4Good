@@ -1,5 +1,5 @@
 <template>
-	<div v-if="preorders.length > 0" class="container">
+	<div v-if="paginatedPreorders.length > 0" class="container">
 		<h2>Preorder Management</h2>
 		<div>
 			<div class="header margin-t-s">
@@ -31,40 +31,54 @@
 				</div>
 				<div style="width: 16.66%;">{{ new Date(preorder.timestamp).toLocaleString() }}</div>
 				<div style="width: 16.66%;">
-					<div v-if="preorder.status === 'Pending'">
-						<button class="btn-green" @click="updateStatus(preorder, 'Approved')">Approve</button>
-						<button class="margin-l-s btn-red" @click="updateStatus(preorder, 'Rejected')">Reject</button>
+					<div v-if="preorder.status === 'Pending'" class="action-buttons">
+						<button class="btn-green" @click="openConfirmModal(preorder, 'approve')">Approve</button>
+						<button class="btn-red" @click="openConfirmModal(preorder, 'reject')">Reject</button>
 					</div>
 					<div v-else-if="preorder.status === 'Approved'">
-						<button @click="fulfillPreorder(preorder)">Fulfill</button>
+						<button @click="openConfirmModal(preorder, 'Fulfill')">Fulfill</button>
+					</div>
+					<div v-else>
+						<span>No Actions</span>
 					</div>
 				</div>
-</div>
-
+			</div>
 		</div>
-		
 
 		<!-- Pagination -->
 		<div class="pagination" v-if="totalPages > 1">
-			<button 
-				v-if="currentPage > 1" 
-				@click="changePage(currentPage - 1)"
-			>
+			<button v-if="currentPage > 1" @click="changePage(currentPage - 1)">
 				Previous
 			</button>
 			<span v-else style="visibility: hidden;">Previous</span>
 			<span>Page {{ currentPage }} of {{ totalPages }}</span>
-			<button 
-				v-if="currentPage < totalPages" 
-				@click="changePage(currentPage + 1)"
-			>
+			<button v-if="currentPage < totalPages" @click="changePage(currentPage + 1)">
 				Next
 			</button>
 			<span v-else style="visibility: hidden;">Next</span>
 		</div>
+
+		<!-- Confirmation Modal -->
+		<div v-if="showConfirmModal" class="modal-wrapper">
+			<div class="modal-backdrop" @click="closeConfirmModal"></div>
+			<div class="modal padding-20">
+				<h2>Confirm Action</h2>
+				<p>
+					Are you sure you want to
+					<strong>{{ confirmAction }}</strong> the preorder for
+					<strong>{{ selectedPreorder?.productName }}</strong> by
+					<strong>{{ selectedPreorder?.username }}</strong>?
+				</p>
+				<div class="modal-actions space-between">
+					<button class="btn-green" @click="confirmActionHandler">Confirm</button>
+					<button class="btn-grey" @click="closeConfirmModal">Cancel</button>
+				</div>
+			</div>
+		</div>
 	</div>
 	<p v-else>No preorders found.</p>
 </template>
+
 <script>
 import {
 	fetchAllPreorders,
@@ -79,6 +93,9 @@ export default {
 			preorders: [], // List of all preorders
 			currentPage: 1, // Current page for pagination
 			perPage: 10, // Number of items per page
+			showConfirmModal: false, // Controls visibility of the confirmation modal
+			confirmAction: "", // Action to confirm (Approve, Reject, Fulfill)
+			selectedPreorder: null, // Preorder being acted upon
 		};
 	},
 	computed: {
@@ -104,6 +121,33 @@ export default {
 				this.preorders = await fetchAllPreorders();
 			} catch (error) {
 				alert("Error fetching preorders: " + error.message);
+			}
+		},
+		openConfirmModal(preorder, action) {
+			this.selectedPreorder = preorder;
+			this.confirmAction = action;
+			this.showConfirmModal = true;
+		},
+		closeConfirmModal() {
+			this.selectedPreorder = null;
+			this.confirmAction = "";
+			this.showConfirmModal = false;
+		},
+		async confirmActionHandler() {
+			try {
+				if (this.confirmAction === "Fulfill") {
+					await this.fulfillPreorder(this.selectedPreorder);
+				} else {
+					if (this.confirmAction === "approve") {
+						this.confirmAction = "Approved";
+					} else {
+						this.confirmAction = "Rejected";
+					}
+					await this.updateStatus(this.selectedPreorder, this.confirmAction);
+				}
+				this.closeConfirmModal();
+			} catch (error) {
+				alert("Error performing action: " + error.message);
 			}
 		},
 		async updateStatus(preorder, status) {

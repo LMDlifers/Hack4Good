@@ -6,11 +6,13 @@
 			<div class="nav-links">
 				<router-link v-if="isLoggedIn && role === 'user'" to="/dashboard">Dashboard</router-link>
 				<router-link v-if="isLoggedIn && role === 'user'" to="/preorder">Pre-Orders</router-link>
+				<router-link v-if="isLoggedIn && role === 'user'" to="/requestproduct">Request</router-link>
 				<router-link v-if="isLoggedIn && role === 'user'" to="/shoppingcart">Cart</router-link>
 				<router-link v-if="isLoggedIn && role === 'admin'" to="/admin">Admin Panel</router-link>
 				<router-link v-if="isLoggedIn && role === 'admin'" to="/auditpage">Audit</router-link>
 				<router-link v-if="isLoggedIn && role === 'admin'" to="/addproduct">Products</router-link>
 				<router-link v-if="isLoggedIn && role === 'admin'" to="/preorderadmin">Pre-Orders</router-link>
+				<router-link v-if="isLoggedIn && role === 'admin'" to="/viewrequest">Requests</router-link>
 				<router-link v-if="isLoggedIn && role === 'admin'" to="/manageuser">Manage Users</router-link>
 				<router-link v-if="isLoggedIn && role === 'admin'" to="/auctionhome">Auction</router-link>
 				<router-link v-if="!isLoggedIn" to="/login">Login</router-link>
@@ -31,11 +33,13 @@
 				<div :class="['menu-links', { open: openMenu }]">
 					<router-link v-if="isLoggedIn && role === 'user'" to="/dashboard" @click="closeMenu">Dashboard</router-link>
 					<router-link v-if="isLoggedIn && role === 'user'" to="/preorder" @click="closeMenu">Pre-Orders</router-link>
+					<router-link v-if="isLoggedIn && role === 'user'" to="/requestproduct" @click="closeMenu">Request</router-link>
 					<router-link v-if="isLoggedIn && role === 'user'" to="/shoppingcart" @click="closeMenu">Cart</router-link>
 					<router-link v-if="isLoggedIn && role === 'admin'" to="/admin" @click="closeMenu">Admin Panel</router-link>
 					<router-link v-if="isLoggedIn && role === 'admin'" to="/auditpage" @click="closeMenu">Audit</router-link>
 					<router-link v-if="isLoggedIn && role === 'admin'" to="/addproduct" @click="closeMenu">Products</router-link>
 					<router-link v-if="isLoggedIn && role === 'admin'" to="/preorderadmin" @click="closeMenu">Pre-Orders</router-link>
+					<router-link v-if="isLoggedIn && role === 'admin'" to="/viewrequest" @click="closeMenu">Requests</router-link>
 					<router-link v-if="isLoggedIn && role === 'admin'" to="/manageuser" @click="closeMenu">Manage Users</router-link>
 					<router-link v-if="isLoggedIn && role === 'admin'" to="/auctionhome" @click="closeMenu">Auction</router-link>
 					<router-link v-if="!isLoggedIn" to="/login" @click="closeMenu">Login</router-link>
@@ -47,6 +51,10 @@
 
 		<router-view></router-view>
 	</body>
+	<footer>
+		<p>Copyright &#169; 2025 MUHAMMADIYAH WELFARE HOME. All Rights Reserved.</p>
+		
+	</footer>
 </template>
 
 <script>

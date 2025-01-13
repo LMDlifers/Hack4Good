@@ -31,7 +31,7 @@
 				<div style="width:16.67%">{{ product.pointsRequired }}</div>
 				<div style="width:16.67%">{{ product.stock }}</div>
 				<div style="width:16.67%">{{ product.hidden ? "Yes" : "No" }}</div>
-				<div style="width:33.33%; display: flex; flex-wrap: wrap; justify-content: center; gap: 5px;">
+				<div style="width:33.33%;" class="action-buttons">
 					<button class="btn-green" @click="increaseStock(product.id, product.stock)">
 						Increase Stock
 					</button>

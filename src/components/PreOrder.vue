@@ -4,8 +4,8 @@
 		<div v-if="showPreorderModal" class="modal-wrapper">
 			<div class="modal-backdrop" @click="closePreorderModal"></div>
 			<div class="modal">
-				<h2>Preorder a Product</h2>
-				<form @submit.prevent="preorderProduct">
+				<form @submit.prevent="preorderProduct" class="form-page">
+					<h2>Preorder a Product</h2>
 					<div>
 						<label for="productName">Select Product:</label>
 						<select id="productName" v-model="selectedProductId" required>
@@ -27,34 +27,47 @@
 						/>
 					</div>
 					<div class="space-between">
-						<button type="submit">Preorder Product</button>
+						<button type="submit">Preorder</button>
 						<button type="button" class="btn-grey" @click="closePreorderModal">Cancel</button>
 					</div>
 				</form>
 			</div>
 		</div>
 
-		<h2>List of Preorders</h2>
+		<!-- Preorder Button -->
+		<div class="space-between">
+			<h2>List of Preorders</h2>
+			<button class="btn-primary" @click="openPreorderModal">Add Preorder</button>
+		</div>
+
 		<!-- Preorders Header -->
-		<div class="align-items-center bg-white container-row h50 wmax margin-t-s center-vh">
-			<div class="center-vh" style="width: 20%;">Preorderer</div>
-			<div class="center-vh" style="width: 20%;">Product Name</div>
-			<div class="center-vh" style="width: 20%;">Quantity</div>
-			<div class="center-vh" style="width: 20%;">Status</div>
-			<div class="center-vh" style="width: 20%;">Preorder Date</div>
+		<div class="header margin-t-s">
+			<div style="width: 25%;">Product Name</div>
+			<div style="width: 25%;">Quantity</div>
+			<div style="width: 25%;">Status</div>
+			<div style="width: 25%;">Preorder Date</div>
 		</div>
 
 		<!-- Preorders Rows -->
 		<div
-			class="align-items-center bg-white h100 wmax margin-t-s"
+			class="header content margin-t-s"
 			v-for="(preorder, index) in paginatedPreorders"
 			:key="index"
 		>
-			<div class="center-vh" style="width: 20%;">{{ preorder.username }}</div>
-			<div class="center-vh" style="width: 20%;">{{ preorder.productName }}</div>
-			<div class="center-vh" style="width: 20%;">{{ preorder.quantity }}</div>
-			<div class="center-vh" style="width: 20%;">{{ preorder.status }}</div>
-			<div class="center-vh" style="width: 20%;">{{ new Date(preorder.timestamp).toLocaleString() }}</div>
+			<div style="width: 25%;">{{ preorder.productName }}</div>
+			<div style="width: 25%;">{{ preorder.quantity }}</div>
+			<div style="width: 25%;">
+					<span v-if="preorder.status === 'Delivered' || preorder.status === 'Approved'" class="status delivered">
+						{{ preorder.status }}
+					</span>
+					<span v-else-if="preorder.status === 'Rejected'" class="status rejected">
+						{{ preorder.status }}
+					</span>
+					<span v-else class="status pending">
+						{{ preorder.status }}
+					</span>
+				</div>
+			<div style="width: 25%;">{{ new Date(preorder.timestamp).toLocaleString() }}</div>
 		</div>
 
 		<!-- Pagination -->
@@ -75,9 +88,6 @@
 			</button>
 			<span v-else style="visibility: hidden;">Next</span>
 		</div>
-
-
-
 	</div>
 </template>
 
@@ -104,7 +114,13 @@ export default {
 		paginatedPreorders() {
 			const start = (this.currentPage - 1) * this.perPage;
 			const end = this.currentPage * this.perPage;
-			return this.preorders.slice(start, end);
+			return this.sortedPreorders.slice(start, end);
+		},
+		// Sort preorders by timestamp in descending order
+		sortedPreorders() {
+			return [...this.preorders].sort(
+				(a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+			);
 		},
 	},
 	methods: {
@@ -145,8 +161,8 @@ export default {
 				return;
 			}
 
-			if (selectedProduct.stock < this.quantity) {
-				alert("Not enough stock available.");
+			if (selectedProduct.stock >= this.quantity) {
+				alert("There are enough stocks available, please purchase it normally.");
 				return;
 			}
 

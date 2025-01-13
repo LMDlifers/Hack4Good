@@ -13,6 +13,9 @@ import ShoppingCart from '@/components/ShoppingCart.vue';
 import AuditPage from '@/components/AuditPage.vue';
 import AdminAuction from "@/components/AdminAuction.vue";
 import AuctionHome from "@/components/AuctionHomePage.vue";
+import RequestProduct from "@/components/RequestProduct.vue";
+import ViewRequest from "@/components/ViewRequest.vue";
+import ForgetPassword from "@/components/ForgetPassword.vue";
 
 const routes = [
   { path: "/signup", name: "Signup", component: SignUp },
@@ -28,6 +31,9 @@ const routes = [
   { path: "/auditpage", name: "AuditPage", component: AuditPage, meta: { requiresAuth: true }},
   { path: "/adminauction", name: "AdminAuction", component: AdminAuction, meta: { requiresAuth: true }},
   { path: "/auctionhome", name: "AuctionHome", component: AuctionHome, meta: { requiresAuth: true }},
+  { path: "/requestproduct", name: "RequestProduct", component: RequestProduct, meta: { requiresAuth: true }},
+  { path: "/viewrequest", name: "ViewRequest", component: ViewRequest, meta: { requiresAuth: true }},
+  { path: "/forgetpassword", name: "ForgetPassword", component: ForgetPassword },
 ];
 
 const router = createRouter({
