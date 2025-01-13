@@ -1,5 +1,5 @@
 // methods.js
-import { getDatabase, ref, get, set, push, update, remove} from "firebase/database";
+import { getDatabase, ref, get, set, push, update, remove, query, orderByChild, startAt, endAt} from "firebase/database";
 import { signInWithEmailAndPassword, getAuth, signOut } from "firebase/auth";
 import { auth } from "@/firebase";
 
@@ -836,4 +836,78 @@ export async function updateUserPoints(userId, points) {
 		console.error("Error updating user points:", error);
 		throw new Error("Failed to update user points.");
 	}
+}
+
+export async function generateWeeklyReport() {
+    const db = getDatabase();
+    const currentDate = new Date();
+    const oneWeekAgo = new Date(currentDate);
+    oneWeekAgo.setDate(currentDate.getDate() - 7);
+	
+    try {
+        // Fetch Weekly Requests
+        const requestsRef = ref(db, "requests");
+        const requestsQuery = query(
+            requestsRef,
+            orderByChild("timestamp"),
+            startAt(oneWeekAgo.getTime()),
+            endAt(currentDate.getTime())
+        );
+        const requestsSnapshot = await get(requestsQuery);
+
+        const weeklyRequests = [];
+        if (requestsSnapshot.exists()) {
+            requestsSnapshot.forEach((childSnapshot) => {
+                weeklyRequests.push({
+                    id: childSnapshot.key,
+                    ...childSnapshot.val(),
+                });
+            });
+        }
+
+        // Fetch Inventory
+        const inventoryRef = ref(db, "products");
+        const inventorySnapshot = await get(inventoryRef);
+
+        const inventorySummary = [];
+        if (inventorySnapshot.exists()) {
+            inventorySnapshot.forEach((childSnapshot) => {
+                const item = childSnapshot.val();
+                inventorySummary.push({
+                    id: childSnapshot.key,
+                    name: item.name,
+                    stock: item.stock,
+                });
+            });
+        }
+        // Generate Report
+        const report = {
+            date: currentDate.toISOString(),
+            weeklyRequests: {
+                total: weeklyRequests.length,
+                details: weeklyRequests,
+            },
+            inventorySummary: {
+                totalItems: inventorySummary.length,
+                details: inventorySummary,
+            },
+        };
+
+        return report;
+    } catch (error) {
+        console.error("Error generating weekly report:", error);
+        throw new Error("Failed to generate weekly report. Please try again.");
+    }
+}
+
+export function downloadReport(filename, content) {
+    const blob = new Blob([JSON.stringify(content, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${filename}.json`;
+    link.click();
+
+    URL.revokeObjectURL(url); // Clean up the URL object
 }
