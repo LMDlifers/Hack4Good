@@ -5,6 +5,10 @@
 nvm install latest
 
 npm install
+
+npm install jspdf
+
+npm install jspdf-autotable
 ```
 
 ### Compiles and hot-reloads for development
