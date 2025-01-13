@@ -14,25 +14,25 @@
 		</div>
 		<div>
 			<!-- Table Header -->
-			<div class="align-items-center bg-white container-row h50 wmax margin-t-s center-vh">
-				<div class="center-vh" style="width: 20%;">Username</div>
-				<div class="center-vh" style="width: 20%;">Email</div>
-				<div class="center-vh" style="width: 20%;">Phone Number</div>
-				<div class="center-vh" style="width: 20%;">Role</div>
-				<div class="center-vh" style="width: 20%;">Actions</div>
+			<div class="header margin-t-s">
+				<div style="width: 20%;">Username</div>
+				<div style="width: 20%;">Email</div>
+				<div style="width: 20%;">Phone Number</div>
+				<div style="width: 20%;">Role</div>
+				<div style="width: 20%;">Actions</div>
 			</div>
 
 			<!-- User Rows -->
 			<div
-				class="align-items-center bg-white h100 wmax margin-t-s"
+				class="header content"
 				v-for="(user, id) in paginatedUsers"
 				:key="id"
 			>
-				<div class="center-vh" style="width: 20%;">{{ user.username }}</div>
-				<div class="center-vh" style="width: 20%;">{{ user.email }}</div>
-				<div class="center-vh" style="width: 20%;">{{ user.phoneNumber }}</div>
-				<div class="center-vh" style="width: 20%;">{{ user.role }} </div>
-				<div class="center-vh" style="width: 20%;">
+				<div style="width: 20%;">{{ user.username }}</div>
+				<div style="width: 20%;">{{ user.email }}</div>
+				<div style="width: 20%;">{{ user.phoneNumber }}</div>
+				<div style="width: 20%;">{{ user.role }} </div>
+				<div style="width: 20%;">
 					<button
 						class="btn-red"
 						v-if="!user.suspended"

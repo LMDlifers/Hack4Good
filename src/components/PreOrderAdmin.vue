@@ -2,23 +2,23 @@
 	<div v-if="preorders.length > 0" class="container">
 		<h2>Preorder Management</h2>
 		<div>
-			<div class="align-items-center bg-white container-row h50 wmax margin-t-s center-vh">
-				<div class="center-vh" style="width: 16.66%;">User</div>
-				<div class="center-vh" style="width: 16.66%;">Product</div>
-				<div class="center-vh" style="width: 16.66%;">Quantity</div>
-				<div class="center-vh" style="width: 16.66%;">Status</div>
-				<div class="center-vh" style="width: 16.66%;">PreOrder Date</div>
-				<div class="center-vh" style="width: 16.66%;">Action</div>
+			<div class="header margin-t-s">
+				<div style="width: 16.66%;">User</div>
+				<div style="width: 16.66%;">Product</div>
+				<div style="width: 16.66%;">Quantity</div>
+				<div style="width: 16.66%;">Status</div>
+				<div style="width: 16.66%;">PreOrder Date</div>
+				<div style="width: 16.66%;">Action</div>
 			</div>
 			<div
-				class="align-items-center bg-white h100 wmax margin-t-s"
+				class="header content"
 				v-for="(preorder, index) in paginatedPreorders"
 				:key="index"
 			>
-				<div class="center-vh" style="width: 16.66%;">{{ preorder.username }}</div>
-				<div class="center-vh" style="width: 16.66%;">{{ preorder.productName }}</div>
-				<div class="center-vh" style="width: 16.66%;">{{ preorder.quantity }}</div>
-				<div class="center-vh" style="width: 16.66%;">
+				<div style="width: 16.66%;">{{ preorder.username }}</div>
+				<div style="width: 16.66%;">{{ preorder.productName }}</div>
+				<div style="width: 16.66%;">{{ preorder.quantity }}</div>
+				<div style="width: 16.66%;">
 					<span v-if="preorder.status === 'Delivered' || preorder.status === 'Approved'" class="status delivered">
 						{{ preorder.status }}
 					</span>
@@ -29,8 +29,8 @@
 						{{ preorder.status }}
 					</span>
 				</div>
-				<div class="center-vh" style="width: 16.66%;">{{ new Date(preorder.timestamp).toLocaleString() }}</div>
-				<div class="center-vh" style="width: 16.66%;">
+				<div style="width: 16.66%;">{{ new Date(preorder.timestamp).toLocaleString() }}</div>
+				<div style="width: 16.66%;">
 					<div v-if="preorder.status === 'Pending'">
 						<button class="btn-green" @click="updateStatus(preorder, 'Approved')">Approve</button>
 						<button class="margin-l-s btn-red" @click="updateStatus(preorder, 'Rejected')">Reject</button>

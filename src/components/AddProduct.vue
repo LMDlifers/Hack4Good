@@ -18,21 +18,21 @@
 	<div v-if="filteredProducts.length > 0" class="container">
 		
 		<div>
-			<div class="align-items-center bg-white container-row h50 wmax margin-t-s center-vh">
-				<div class="center-vh" style="width:16.67%">Name</div>
-				<div class="center-vh" style="width:16.67%">Points Required</div>
-				<div class="center-vh" style="width:16.67%">Stock</div>
-				<div class="center-vh" style="width:16.67%">Hidden</div>
-				<div class="center-vh" style="width:33.33%">Action</div>
+			<div class="header margin-t-s">
+				<div style="width:16.67%">Name</div>
+				<div style="width:16.67%">Points Required</div>
+				<div style="width:16.67%">Stock</div>
+				<div style="width:16.67%">Hidden</div>
+				<div style="width:33.33%">Action</div>
 			</div>
-			<div class="align-items-center bg-white h100 wmax margin-t-s"  v-for="(product, id) in paginatedProducts" :key="id">
+			<div class="header content"  v-for="(product, id) in paginatedProducts" :key="id">
 				
-				<div class="center-vh" style="width:16.67%">{{ product.name }}</div>
-				<div class="center-vh" style="width:16.67%">{{ product.pointsRequired }}</div>
-				<div class="center-vh" style="width:16.67%">{{ product.stock }}</div>
-				<div class="center-vh" style="width:16.67%">{{ product.hidden ? "Yes" : "No" }}</div>
-				<div class="center-vh" style="width:33.33%">
-					<button class="btn-green" @click="increaseStock(product.id, product.stock)" style="margin-right: 5px;">
+				<div style="width:16.67%">{{ product.name }}</div>
+				<div style="width:16.67%">{{ product.pointsRequired }}</div>
+				<div style="width:16.67%">{{ product.stock }}</div>
+				<div style="width:16.67%">{{ product.hidden ? "Yes" : "No" }}</div>
+				<div style="width:33.33%; display: flex; flex-wrap: wrap; justify-content: center; gap: 5px;">
+					<button class="btn-green" @click="increaseStock(product.id, product.stock)">
 						Increase Stock
 					</button>
 					<button class="btn-grey" @click="openEditModal(product.id, product)">Edit</button>

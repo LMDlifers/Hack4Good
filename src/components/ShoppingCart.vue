@@ -2,27 +2,27 @@
 	<div class="container bg-lightgrey">
 		<h2>Shopping Cart</h2>
 		<div v-if="cartItems.length > 0">
-			<div class="align-items-center bg-white container-row h100 w1200 margin-t-s center-vh">
-				<div class="center-vh w100">
+			<div class="header">
+				<div class="" style="width: 10%">
 					<input type="checkbox" @change="toggleSelectAll" :checked="allSelected" />
 				</div>
-				<div class="w500 margin-l-s center-v">Product</div>
-				<div class="center-vh w200">Points Required</div>
-				<div class="center-vh w200">Quantity</div>
-				<div class="center-vh w200">Total Points</div>
+				<div class="left" style="width: 40%">Product</div>
+				<div style="width: 15%">Points Required</div>
+				<div style="width: 20%">Quantity</div>
+				<div style="width: 15%">Total Points</div>
 			</div>
-			<div class="align-items-center bg-white h150 w1200 margin-t-s" v-for="item in cartItems" :key="item.id">
-				<div class="center-vh w100"><input type="checkbox" :value="item.id" v-model="selectedItems" /></div>
-				<div class="w500 margin-l-s">{{ item.name }}</div>
-				<div class="center-vh w200">{{ item.pointsRequired }}</div>
-				<div class="center-vh w200">
+			<div class="header content" v-for="item in cartItems" :key="item.id">
+				<div style="width: 10%"><input type="checkbox" :value="item.id" v-model="selectedItems" /></div>
+				<div class="left" style="width: 40%">{{ item.name }}</div>
+				<div style="width: 15%">{{ item.pointsRequired }}</div>
+				<div style="width: 20%">
 					<button class="btn-grey btn-round" @click="decreaseQuantity(item)">-</button>
 					{{ item.quantity }}
 					<button class="btn-grey btn-round" @click="increaseQuantity(item)">+</button>
 				</div>
-				<div class="center-vh w200">{{ item.quantity * item.pointsRequired }}</div>
+				<div style="width: 15%">{{ item.quantity * item.pointsRequired }}</div>
 			</div>
-			<div class="checkout-container h100 w1200 bg-white margin-t-s padding-20">
+			<div class="checkout-container h100 wmax bg-white margin-t-s padding-20">
 				<p>Current Points: {{ userData.voucherPoints }}</p>
 				<p>Total Points for Selected Items: {{ totalPoints }}</p>
 				<button @click="handleCheckoutClick">Checkout</button>
