@@ -22,5 +22,9 @@ npm run build
 npm run lint
 ```
 
+### Generate Report
+npm install jspdf
+npm install jspdf-autotable
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
