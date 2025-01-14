@@ -9,6 +9,7 @@
 				<router-link v-if="isLoggedIn && role === 'user'" to="/vouchertask">Voucher Tasks</router-link>
 				<router-link v-if="isLoggedIn && role === 'user'" to="/requestproduct">Request</router-link>
 				<router-link v-if="isLoggedIn && role === 'user'" to="/shoppingcart">Cart</router-link>
+				<router-link v-if="isLoggedIn && role === 'user'" to="/userauction">Auction</router-link>
 				<router-link v-if="isLoggedIn && role === 'admin'" to="/admin">Admin Panel</router-link>
 				<router-link v-if="isLoggedIn && role === 'admin'" to="/auditpage">Audit</router-link>
 				<router-link v-if="isLoggedIn && role === 'admin'" to="/addproduct">Products</router-link>
@@ -38,6 +39,7 @@
 					<router-link v-if="isLoggedIn && role === 'user'" to="/vouchertask" @click="closeMenu">Voucher Tasks</router-link>
 					<router-link v-if="isLoggedIn && role === 'user'" to="/requestproduct" @click="closeMenu">Request</router-link>
 					<router-link v-if="isLoggedIn && role === 'user'" to="/shoppingcart" @click="closeMenu">Cart</router-link>
+					<router-link v-if="isLoggedIn && role === 'user'" to="/userauction" @click="closeMenu">Auction</router-link>
 					<router-link v-if="isLoggedIn && role === 'admin'" to="/admin" @click="closeMenu">Admin Panel</router-link>
 					<router-link v-if="isLoggedIn && role === 'admin'" to="/auditpage" @click="closeMenu">Audit</router-link>
 					<router-link v-if="isLoggedIn && role === 'admin'" to="/addproduct" @click="closeMenu">Products</router-link>
