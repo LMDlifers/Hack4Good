@@ -80,10 +80,10 @@
 
           <div class="auction-info">
             <h3>{{ item.name || "Unknown" }}</h3>
-            <p>Created by {{ item.creator }}</p>
+            <p>Created by {{ item.creator || "Unknown" }}</p>
             <div class="auction-details">
-              <p>Reserve price: {{ item.reservePrice || "--" }}</p>
-              <p>Highest bid: {{ item.highestBid || "--" }}</p>
+              <p>Reserve price: ${{ item.reservePrice || "--" }}</p>
+              <p>Highest bid: ${{ item.highestBid || "0" }}</p>
             </div>
           </div>
         </div>
@@ -94,7 +94,6 @@
   
 <script>
 import { getDatabase, ref, onValue, push, set } from "firebase/database";
-import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 
 export default {
   name: "AuctionHomePage",
@@ -107,7 +106,7 @@ export default {
         name: "",
         time: "",
         reservePrice: "", // Add reservePrice to the auction object
-        photo: null,
+        highestBid: 0, // Default highestBid to 0
       },
     };
   },
@@ -120,18 +119,17 @@ export default {
   },
   created() {
     const db = getDatabase();
-    const productsRef = ref(db, "products");
+    const auctionsRef = ref(db, "auctions"); // New auctions table path
 
-    // Listen for changes in the "products" reference
-    onValue(productsRef, (snapshot) => {
+    onValue(auctionsRef, (snapshot) => {
       if (snapshot.exists()) {
-        const products = snapshot.val();
-        this.auctionItems = Object.keys(products).map((key) => ({
+        const auctions = snapshot.val();
+        this.auctionItems = Object.keys(auctions).map((key) => ({
           id: key,
-          ...products[key],
+          ...auctions[key],
         }));
       } else {
-        console.log("No products available.");
+        console.log("No auction items available.");
         this.auctionItems = [];
       }
     });
@@ -153,54 +151,53 @@ export default {
         name: "",
         time: "",
         reservePrice: "", // Reset reserve price
-        photo: null,
+        highestBid: 0, // Reset highest bid
       };
-    },
-
-    // Handle file input change for product photo
-    handleFileChange(event) {
-      const file = event.target.files[0];
-      if (file) {
-        this.newAuction.photo = file;
-      }
     },
 
     // Submit the new auction item to Firebase
     async submitAuction() {
-      if (this.newAuction.name && this.newAuction.time && this.newAuction.reservePrice && this.newAuction.photo) {
-        // Get a reference to Firebase Storage for photo upload
-        const storage = getStorage();
-        const fileRef = storageRef(storage, `auction_images/${this.newAuction.photo.name}`);
-        
-        try {
-          // Upload the photo to Firebase Storage
-          await uploadBytes(fileRef, this.newAuction.photo);
-          const photoURL = await fileRef.getDownloadURL();
+      if (this.isSubmitting) {
+        return; // Prevent duplicate submissions
+      }
 
-          // Save the auction data to Firebase Realtime Database
+      console.log("Submitting auction item:", this.newAuction);
+
+      if (
+        this.newAuction.name &&
+        this.newAuction.time &&
+        this.newAuction.reservePrice
+      ) {
+        this.isSubmitting = true;
+
+        try {
+          console.log("Saving auction data to Firebase...");
           const db = getDatabase();
-          const newAuctionRef = push(ref(db, "products"));
+          const newAuctionRef = push(ref(db, "auctions"));
           await set(newAuctionRef, {
             name: this.newAuction.name,
             time: this.newAuction.time,
-            reservePrice: this.newAuction.reservePrice, // Store the reserve price
-            image: photoURL, // Store the image URL in the database
+            reservePrice: this.newAuction.reservePrice,
+            highestBid: this.newAuction.highestBid, // Include highestBid
+            creator: "Admin", // You can replace this with the current logged-in user's name
           });
 
-          // Close the modal after successful submission
+          alert("Auction item added successfully!");
           this.closeModal();
         } catch (error) {
-          console.error("Error uploading photo or saving auction:", error);
+          console.error("Error during submission:", error);
+          alert("An error occurred while adding the auction. Please try again.");
+        } finally {
+          this.isSubmitting = false;
         }
       } else {
-        console.log("Please fill out all fields.");
+        console.log("Form validation failed:", this.newAuction);
+        alert("Please fill out all fields.");
       }
     },
   },
 };
 </script>
-
-
   
 <style scoped>
 /* General Styles */
