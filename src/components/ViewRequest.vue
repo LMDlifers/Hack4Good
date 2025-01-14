@@ -1,6 +1,8 @@
 <template>
-	<div v-if="paginatedRequests.length > 0" class="container">
+    <div class="container">
 		<h2>Request Management</h2>
+	</div>
+	<div v-if="paginatedRequests.length > 0" class="container scrollable-div">
 		<div>
 			<div class="header margin-t-s">
 				<div style="width: 16.66%;">Requested By</div>
@@ -55,7 +57,9 @@
 			<span v-else style="visibility: hidden;">Next</span>
 		</div>
 	</div>
-	<p v-else>No requests found.</p>
+	<div v-else class="container">
+		<p>No requests found.</p>
+	</div>
 </template>
 
 <script>
@@ -99,7 +103,6 @@ export default {
                 const auth = getAuth();
 				const currentUser = auth.currentUser;
                 const user = await getCurrentUserData();
-                alert(user.username);
 				if (currentUser) {
 					await logAuditEntry({
 						type: "request",

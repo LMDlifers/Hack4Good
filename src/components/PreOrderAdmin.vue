@@ -1,6 +1,8 @@
 <template>
-	<div v-if="paginatedPreorders.length > 0" class="container">
+	<div class="container">
 		<h2>Preorder Management</h2>
+	</div>
+	<div v-if="paginatedPreorders.length > 0" class="container scrollable-div">
 		<div>
 			<div class="header margin-t-s">
 				<div style="width: 16.66%;">User</div>
@@ -76,7 +78,9 @@
 			</div>
 		</div>
 	</div>
-	<p v-else>No preorders found.</p>
+	<div v-else class="container">
+		<p>No preorders found.</p>
+	</div>
 </template>
 
 <script>

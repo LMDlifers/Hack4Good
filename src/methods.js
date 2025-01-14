@@ -1,5 +1,5 @@
 // methods.js
-import { getDatabase, ref, get, set, push, update, remove} from "firebase/database";
+import { getDatabase, ref, get, set, push, update, remove, query, orderByChild, startAt, endAt} from "firebase/database";
 import { signInWithEmailAndPassword, getAuth, signOut } from "firebase/auth";
 import { auth } from "@/firebase";
 
@@ -352,48 +352,6 @@ export async function checkIfAdmin() {
 		throw new Error("An error occurred while verifying admin status. Please try again.");
 	}
 }
-
-  export async function redeemProduct(productKey, product, userKey, userData) {
-	const db = getDatabase();
-  
-	// Check if the user has enough points
-	if (userData.voucherPoints < product.pointsRequired) {
-		throw new Error("You do not have enough points to redeem this product.");
-	}
-  
-	// Check if the product is in stock
-	if (product.stock <= 0) {
-		throw new Error("This product is out of stock.");
-	}
-  
-	// Deduct points and reduce stock
-	userData.voucherPoints -= product.pointsRequired;
-	product.stock -= 1;
-  
-	// Prepare updates for Firebase
-	const updates = {
-		[`/users/${userKey}/voucherPoints`]: userData.voucherPoints,
-		[`/products/${productKey}/stock`]: product.stock,
-	};
-  
-	try {
-		// Update user points and product stock
-		await update(ref(db), updates);
-	
-		// Add transaction history
-		const transactionRef = ref(db, `users/${userKey}/transactions`);
-		await push(transactionRef, {
-			type: "Purchased " + product.name,
-			points: -product.pointsRequired,
-			timestamp: new Date().toISOString(),
-		});
-  
-		return `Successfully redeemed ${product.name}!`;
-	} catch (error) {
-		console.error("Error redeeming product:", error);
-		throw new Error("An error occurred while processing your request.");
-	}
-}
   
   // Add a product to the cart
 export async function addToCart(productId, product, userKey) {
@@ -517,10 +475,11 @@ export async function processCheckout(userId, cartItems, totalPoints, userPoints
   
 	const transactionPromises = cartItems.map(async (item) => {
 		await push(transactionsRef, {
+			type: "Product",
 			productId: item.id,
 			productName: item.name,
 			quantity: item.quantity,
-			totalPoints: item.quantity * item.pointsRequired,
+			totalPoints: -item.quantity * item.pointsRequired,
 			timestamp: new Date().toISOString(),
 		});
   
@@ -745,4 +704,210 @@ export async function updateRequestStatus(requestId, status) {
 		console.error("Error updating request status:", error);
 		throw new Error("There was an error updating the request status. Please try again.");
 	}
+}
+
+export async function fetchVoucherTasks() {
+    const db = getDatabase();
+    const voucherTasksRef = ref(db, "voucherTasks");
+    const usersRef = ref(db, "users");
+
+    try {
+        // Fetch all voucher tasks
+        const tasksSnapshot = await get(voucherTasksRef);
+        const usersSnapshot = await get(usersRef);
+
+        if (tasksSnapshot.exists() && usersSnapshot.exists()) {
+            const tasks = Object.entries(tasksSnapshot.val()).map(([key, task]) => ({
+                id: key,
+                ...task,
+            }));
+
+            const users = usersSnapshot.val();
+
+            // Map `requestorId` to `username` for each task
+            return tasks.map((task) => ({
+                ...task,
+                username: users[task.requestorId]?.username || "Unknown User",
+            }));
+        } else {
+            return []; // Return an empty array if no tasks or users exist
+        }
+    } catch (error) {
+        console.error("Error fetching voucher tasks:", error);
+        throw new Error("Could not fetch voucher tasks. Please try again later.");
+    }
+}
+
+export async function fetchUserVoucherTasks() {
+	const db = getDatabase();
+	const auth = getAuth();
+	const user = auth.currentUser;
+
+	if (!user) {
+		throw new Error("User is not logged in.");
+	}
+
+	const tasksRef = ref(db, "voucherTasks");
+
+	try {
+		const snapshot = await get(tasksRef);
+		if (snapshot.exists()) {
+			const tasks = Object.entries(snapshot.val()).map(([key, task]) => ({
+				id: key,
+				...task,
+				status: task.status || "Pending", // Default to Pending if missing
+			}));
+
+			// Filter tasks by the current user's ID
+			return tasks.filter((task) => task.requestorId === user.uid);
+		} else {
+			return [];
+		}
+	} catch (error) {
+		console.error("Error fetching user voucher tasks:", error);
+		throw new Error("Could not fetch your voucher tasks. Please try again later.");
+	}
+}
+
+
+export async function submitVoucherTask(task) {
+	const db = getDatabase();
+	const tasksRef = ref(db, "voucherTasks");
+
+	try {
+		await push(tasksRef, task); // Push the new task to Firebase
+		return "Task submitted successfully.";
+	} catch (error) {
+		console.error("Error submitting voucher task:", error);
+		throw new Error("Could not submit voucher task. Please try again.");
+	}
+}
+
+
+export async function updateVoucherTaskStatus(taskId, status) {
+	const db = getDatabase();
+	const taskRef = ref(db, `voucherTasks/${taskId}`);
+
+	try {
+		await update(taskRef, { status });
+		return `Task ${taskId} updated successfully.`;
+	} catch (error) {
+		console.error("Error updating task status:", error);
+		throw new Error("Could not update voucher task status.");
+	}
+}
+
+export async function recordTransaction(userId, task) {
+    const db = getDatabase();
+    const transactionsRef = ref(db, `users/${userId}/transactions`);
+
+    try {
+        // Add a new transaction entry under the user's transactions
+        await push(transactionsRef, {
+			type: "Voucher Transaction",
+			productId: task.id,
+			productName: task.title,
+			quantity: 0,
+			totalPoints: task.points,
+			timestamp: Date.now(),
+        });
+        console.log(`Transaction recorded for user ${userId}: ${task.description}`);
+    } catch (error) {
+        console.error("Error recording transaction:", error);
+        throw new Error("Failed to record transaction.");
+    }
+}
+
+export async function updateUserPoints(userId, points) {
+	const db = getDatabase();
+	const userRef = ref(db, `users/${userId}`);
+	
+	try {
+		// Fetch the current points and update them
+		const snapshot = await get(userRef);
+		if (snapshot.exists()) {
+			const currentPoints = snapshot.val().voucherPoints || 0;
+			await update(userRef, { voucherPoints: currentPoints + points });
+			console.log(`Updated points for user ${userId}: ${currentPoints + points}`);
+		} else {
+			console.error(`User ${userId} not found.`);
+		}
+	} catch (error) {
+		console.error("Error updating user points:", error);
+		throw new Error("Failed to update user points.");
+	}
+}
+
+export async function generateWeeklyReport() {
+    const db = getDatabase();
+    const currentDate = new Date();
+    const oneWeekAgo = new Date(currentDate);
+    oneWeekAgo.setDate(currentDate.getDate() - 7);
+	
+    try {
+        // Fetch Weekly Requests
+        const requestsRef = ref(db, "requests");
+        const requestsQuery = query(
+            requestsRef,
+            orderByChild("timestamp"),
+            startAt(oneWeekAgo.getTime()),
+            endAt(currentDate.getTime())
+        );
+        const requestsSnapshot = await get(requestsQuery);
+
+        const weeklyRequests = [];
+        if (requestsSnapshot.exists()) {
+            requestsSnapshot.forEach((childSnapshot) => {
+                weeklyRequests.push({
+                    id: childSnapshot.key,
+                    ...childSnapshot.val(),
+                });
+            });
+        }
+
+        // Fetch Inventory
+        const inventoryRef = ref(db, "products");
+        const inventorySnapshot = await get(inventoryRef);
+
+        const inventorySummary = [];
+        if (inventorySnapshot.exists()) {
+            inventorySnapshot.forEach((childSnapshot) => {
+                const item = childSnapshot.val();
+                inventorySummary.push({
+                    id: childSnapshot.key,
+                    name: item.name,
+                    stock: item.stock,
+                });
+            });
+        }
+        // Generate Report
+        const report = {
+            date: currentDate.toISOString(),
+            weeklyRequests: {
+                total: weeklyRequests.length,
+                details: weeklyRequests,
+            },
+            inventorySummary: {
+                totalItems: inventorySummary.length,
+                details: inventorySummary,
+            },
+        };
+
+        return report;
+    } catch (error) {
+        console.error("Error generating weekly report:", error);
+        throw new Error("Failed to generate weekly report. Please try again.");
+    }
+}
+
+export function downloadReport(filename, content) {
+    const blob = new Blob([JSON.stringify(content, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${filename}.json`;
+    link.click();
+
+    URL.revokeObjectURL(url); // Clean up the URL object
 }

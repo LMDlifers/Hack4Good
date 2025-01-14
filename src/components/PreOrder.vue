@@ -1,45 +1,12 @@
 <template>
 	<div class="container">
-		<!-- Preorder Modal -->
-		<div v-if="showPreorderModal" class="modal-wrapper">
-			<div class="modal-backdrop" @click="closePreorderModal"></div>
-			<div class="modal">
-				<form @submit.prevent="preorderProduct" class="form-page">
-					<h2>Preorder a Product</h2>
-					<div>
-						<label for="productName">Select Product:</label>
-						<select id="productName" v-model="selectedProductId" required>
-							<option disabled value="">Select a product</option>
-							<option v-for="(product, id) in products" :key="id" :value="id">
-								{{ product.name }} (Available: {{ product.stock }})
-							</option>
-						</select>
-					</div>
-					<div>
-						<label for="quantity">Quantity:</label>
-						<input
-							id="quantity"
-							v-model.number="quantity"
-							type="number"
-							min="1"
-							placeholder="Enter quantity"
-							required
-						/>
-					</div>
-					<div class="space-between">
-						<button type="submit">Preorder</button>
-						<button type="button" class="btn-grey" @click="closePreorderModal">Cancel</button>
-					</div>
-				</form>
-			</div>
-		</div>
-
 		<!-- Preorder Button -->
 		<div class="space-between">
 			<h2>List of Preorders</h2>
 			<button class="btn-primary" @click="openPreorderModal">Add Preorder</button>
 		</div>
-
+	</div>
+	<div v-if="paginatedPreorders.length > 0" class="container scrollable-div">
 		<!-- Preorders Header -->
 		<div class="header margin-t-s">
 			<div style="width: 25%;">Product Name</div>
@@ -87,6 +54,42 @@
 				Next
 			</button>
 			<span v-else style="visibility: hidden;">Next</span>
+		</div>
+	</div>
+	<div class="container" v-else>
+		<p>No pre-orders found.</p>
+	</div>
+	<!-- Preorder Modal -->
+	<div v-if="showPreorderModal" class="modal-wrapper">
+		<div class="modal-backdrop" @click="closePreorderModal"></div>
+		<div class="modal">
+			<form @submit.prevent="preorderProduct" class="form-page">
+				<h2>Preorder a Product</h2>
+				<div>
+					<label for="productName">Select Product:</label>
+					<select id="productName" v-model="selectedProductId" required>
+						<option disabled value="">Select a product</option>
+						<option v-for="(product, id) in products" :key="id" :value="id">
+							{{ product.name }} (Available: {{ product.stock }})
+						</option>
+					</select>
+				</div>
+				<div>
+					<label for="quantity">Quantity:</label>
+					<input
+						id="quantity"
+						v-model.number="quantity"
+						type="number"
+						min="1"
+						placeholder="Enter quantity"
+						required
+					/>
+				</div>
+				<div class="space-between">
+					<button type="submit">Preorder</button>
+					<button type="button" class="btn-grey" @click="closePreorderModal">Cancel</button>
+				</div>
+			</form>
 		</div>
 	</div>
 </template>

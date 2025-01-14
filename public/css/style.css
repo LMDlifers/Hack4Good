@@ -147,6 +147,10 @@ a:hover {
 }
 /* */
 
+.scrollable-div {
+  overflow-x: auto;
+}
+
 .tabs {
     display: flex;
     justify-content: space-between;
@@ -197,6 +201,14 @@ a:hover {
     margin-bottom: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
+  }
+
+  .form-page textarea {
+    width: 100%;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
   }
 
   .form-page select {
@@ -513,7 +525,10 @@ a:hover {
   .checkout-container {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+    padding: 20px;
     gap: 1rem;
+    background: white;
   }
 
   
@@ -557,10 +572,12 @@ a:hover {
     margin-left: auto;
     margin-right: auto; /* Aligns the header container with the table */
     margin-bottom: 10px; /* Optional: Adds spacing between header and table */
+    margin-top: 10px;
     text-align: center;
     background: white;
     height: 50px;
     padding: 10px;
+    min-width: 800px;
   }
 
   .header .left {

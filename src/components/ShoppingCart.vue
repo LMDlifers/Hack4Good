@@ -1,5 +1,5 @@
 <template>
-	<div class="container bg-lightgrey">
+	<div class="container scrollable-div">
 		<h2>Shopping Cart</h2>
 		<div v-if="cartItems.length > 0">
 			<div class="header">
@@ -22,11 +22,11 @@
 				</div>
 				<div style="width: 15%">{{ item.quantity * item.pointsRequired }}</div>
 			</div>
-			<div class="checkout-container h100 wmax bg-white margin-t-s padding-20">
-				<p>Current Points: {{ userData.voucherPoints }}</p>
+			<div class="checkout-container">
 				<p>Total Points for Selected Items: {{ totalPoints }}</p>
 				<button @click="handleCheckoutClick">Checkout</button>
 			</div>
+			
 		</div>
 		<p v-else>Your cart is empty.</p>
 
