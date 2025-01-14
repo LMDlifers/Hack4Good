@@ -18,7 +18,16 @@
 				:key="index"
 			>
 				<div style="width: 16.66%;">{{ preorder.username }}</div>
-				<div style="width: 16.66%;">{{ preorder.productName }}</div>
+				<div style="width: 16.66%;">
+					<p>{{ preorder.productName }}</p>
+					<img
+					v-if="preorder.imageUrl"
+					:src="preorder.imageUrl"
+					alt="Product Image"
+					class="product-image-s"
+					/>
+					<p v-else>No Image</p>
+				</div>
 				<div style="width: 16.66%;">{{ preorder.quantity }}</div>
 				<div style="width: 16.66%;">
 					<span v-if="preorder.status === 'Delivered' || preorder.status === 'Approved'" class="status delivered">
@@ -85,7 +94,7 @@
 
 <script>
 import {
-	fetchAllPreorders,
+	fetchPreorders,
 	updatePreorderStatus,
 	deductProductStock,
 } from "@/methods";
@@ -122,7 +131,7 @@ export default {
 		async fetchPreorders() {
 			try {
 				// Fetch all preorders
-				this.preorders = await fetchAllPreorders();
+				this.preorders = await fetchPreorders();
 			} catch (error) {
 				alert("Error fetching preorders: " + error.message);
 			}

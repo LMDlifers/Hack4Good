@@ -12,28 +12,28 @@
 		</div>
 		<input class="search-bar" v-model="searchQuery" placeholder="Search for products..." />
 		<div class="products-container">
-		<div class="product bg-white" v-for="product in filteredProducts" :key="product.id">
-			<div class="space-between">
-				<div>
-					<h3>{{ product.name }}</h3>
-					<img
-					v-if="product.imageUrl"
-					:src="product.imageUrl"
-					alt="Product Image"
-					class="product-image"
-					/>
-					<p v-else>No Image</p>
-					
+			<div class="product bg-white" v-for="product in filteredProducts" :key="product.id">
+				<div class="space-between">
+					<div>
+						<h3>{{ product.name }}</h3>
+						<img
+						v-if="product.imageUrl"
+						:src="product.imageUrl"
+						alt="Product Image"
+						class="product-image"
+						/>
+						<p v-else>No Image</p>
+						
+					</div>
+				</div>
+
+				<div class="margin-t-s">
+					<p>Points Required: {{ product.pointsRequired }}</p>
+					<p>Stock: {{ product.stock }}</p>
+					<button class="wmax" v-if="product.stock !== 0" @click="handleAddToCart(product)">Add to Cart</button>
+					<button class="wmax" v-else @click="preorderProduct(product)">Pre-order</button>
 				</div>
 			</div>
-
-			<div class="margin-t-s">
-				<p>Points Required: {{ product.pointsRequired }}</p>
-				<p>Stock: {{ product.stock }}</p>
-				<button class="wmax" v-if="product.stock !== 0" @click="handleAddToCart(product)">Add to Cart</button>
-				<button class="wmax" v-else @click="preorderProduct(product)">Pre-order</button>
-			</div>
-		</div>
 		</div>
 
 	</div>

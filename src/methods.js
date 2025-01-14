@@ -200,32 +200,36 @@ export async function fetchProducts() {
 		const snapshot = await get(productsRef);
 
 		if (snapshot.exists()) {
-		const products = snapshot.val();
-		const productsWithImages = await Promise.all(
-			Object.entries(products).map(async ([id, product]) => {
-			try {
-				// Attempt to fetch the image URL from Firebase Storage
-				const imageRef = storageRef(storage, `products/${id}`);
-				const imageUrl = await getDownloadURL(imageRef);
-				return { id, ...product, imageUrl }; // Attach the image URL to the product
-			} catch (error) {
-				console.warn(`No image found for product ${id}:`, error);
-				return { id, ...product, imageUrl: null }; // Add null for missing images
-			}
-			})
-		);
+			const products = snapshot.val();
+			const productsWithImages = await Promise.all(
+				Object.entries(products).map(async ([id, product]) => {
+					try {
+						// Attempt to fetch the image URL from Firebase Storage
+						const imageRef = storageRef(storage, `products/${id}`);
+						const imageUrl = await getDownloadURL(imageRef);
+						return { id, ...product, imageUrl }; // Attach the image URL to the product
+					} catch (error) {
+						console.warn(`No image found for product ${id}, using default image:`, error);
+						// Use default image URL
+						const defaultImageRef = storageRef(storage, `no-image.jpg`);
+						const defaultImageUrl = await getDownloadURL(defaultImageRef);
+						return { id, ...product, imageUrl: defaultImageUrl }; // Attach default image URL
+					}
+				})
+			);
 
-		console.log("Products with images fetched successfully:", productsWithImages);
-		return productsWithImages; // Return an array of products with their details and images
+			console.log("Products with images fetched successfully:", productsWithImages);
+			return productsWithImages; // Return an array of products with their details and images
 		} else {
-		console.log("No products found in the database.");
-		return [];
+			console.log("No products found in the database.");
+			return [];
 		}
 	} catch (error) {
 		console.error("Error fetching products:", error);
 		throw error;
 	}
 }
+
 export async function fetchProduct(productId) {
 	const db = getDatabase(); // Initialize Realtime Database
 	const productRef = ref(db, `products/${productId}`); // Path to the specific product in the database
@@ -235,14 +239,21 @@ export async function fetchProduct(productId) {
 		const snapshot = await get(productRef);
 		if (!snapshot.exists()) {
 			console.warn(`No product found with ID: ${productId}`);
-			return { productName: "Unknown Product", pointsRequired: 0, stock: 0, imageUrl: null };
+			return { productName: "Unknown Product", pointsRequired: 0, stock: 0, imageUrl: await getDefaultImageUrl() };
 		}
 
 		const productDetails = snapshot.val(); // Get product details
 
 		// Fetch product image URL from Firebase Storage
 		const imageRef = storageRef(storage, `products/${productId}`);
-		const imageUrl = await getDownloadURL(imageRef);
+		let imageUrl;
+		try {
+			imageUrl = await getDownloadURL(imageRef);
+		} catch (error) {
+			console.warn(`No image found for product ${productId}, using default image.`);
+			imageUrl = await getDefaultImageUrl(); // Use default image URL
+		}
+
 		return { ...productDetails, imageUrl }; // Combine product details and image URL
 	} catch (error) {
 		alert(error.message);
@@ -251,36 +262,71 @@ export async function fetchProduct(productId) {
 	}
 }
 
+// Function to fetch the default image URL
+async function getDefaultImageUrl() {
+	try {
+		const defaultImageRef = storageRef(storage, `no-image.jpg`);
+		return await getDownloadURL(defaultImageRef);
+	} catch (error) {
+		console.error("Error fetching default image:", error);
+		return null; // Return null if default image cannot be fetched
+	}
+}
+
+
 
 export async function fetchPreorders() {
-	const db = getDatabase();
-	const preordersRef = ref(db, "preorders");
+    const db = getDatabase();
+    const preordersRef = ref(db, "preorders");
 
-	try {
-		const snapshot = await get(preordersRef);
-		if (snapshot.exists()) {
-			const preorders = Object.entries(snapshot.val()).map(([key, preorder]) => ({
-				id: key,
-				...preorder,
-			}));
+    try {
+        const snapshot = await get(preordersRef);
+        if (snapshot.exists()) {
+            const preorders = Object.entries(snapshot.val()).map(([key, preorder]) => ({
+                id: key,
+                ...preorder,
+            }));
 
-			// Fetch usernames for each preorder
-			const usersRef = ref(db, "users");
-			const usersSnapshot = await get(usersRef);
-			const users = usersSnapshot.exists() ? usersSnapshot.val() : {};
+            // Fetch usernames for each preorder
+            const usersRef = ref(db, "users");
+            const usersSnapshot = await get(usersRef);
+            const users = usersSnapshot.exists() ? usersSnapshot.val() : {};
 
-			// Map preordererId to username
-			return preorders.map((preorder) => ({
-				...preorder,
-				username: users[preorder.preordererId]?.username || "Unknown User",
-			}));
-		} else {
-			return []; // No preorders found
-		}
-	} catch (error) {
-		console.error("Error fetching preorders:", error);
-		throw new Error("There was an error fetching the preorders. Please try again.");
-	}
+            // Fetch product details and images for each preorder
+            const preordersWithDetails = await Promise.all(
+                preorders.map(async (preorder) => {
+                    try {
+                        // Fetch product details including the image
+                        const productDetails = await fetchProduct(preorder.productId);
+                        // Combine preorder with product details and username
+                        return {
+                            ...preorder,
+                            ...productDetails,
+                            username: users[preorder.preordererId]?.username || "Unknown User",
+                        };
+                    } catch (error) {
+                        console.warn(
+                            `Error fetching product details for preorder ${preorder.productId}:`,
+                            error
+                        );
+                        return {
+                            ...preorder,
+                            username: users[preorder.preordererId]?.username || "Unknown User",
+                            productName: "Unknown Product",
+                            imageUrl: null,
+                        };
+                    }
+                })
+            );
+
+            return preordersWithDetails;
+        } else {
+            return []; // No preorders found
+        }
+    } catch (error) {
+        console.error("Error fetching preorders:", error);
+        throw new Error("There was an error fetching the preorders. Please try again.");
+    }
 }
 
 export async function fetchUserPreorders() {
