@@ -8,19 +8,17 @@
     <!-- Main Content -->
     <main>
       <div class="main-header">
-        <h1 class="title">
-          Auction House (Admin)
-          <button @click="manageAuction">Add Auction Item</button>
-        </h1>
-        <div class="search-wrapper">
-          <input
-            type="text"
-            class="search-bar-main"
-            placeholder="Search auctions..."
-            v-model="searchQuery"
-            @input="onSearch"
-          />
-        </div>
+        <h1 class="title">Auction House (Admin)</h1>
+        <button class="btn-add-auction" @click="manageAuction">Add Auction Item</button>
+      </div>
+      <div class="search-wrapper">
+        <input
+          type="text"
+          class="search-bar-main"
+          placeholder="Search auctions..."
+          v-model="searchQuery"
+          @input="onSearch"
+        />
       </div>
 
       <!-- Modal Form -->
@@ -84,16 +82,25 @@
             <div class="auction-details">
               <p>Reserve price: ${{ item.reservePrice || "--" }}</p>
               <p>Highest bid: ${{ item.highestBid || "0" }}</p>
+              <p>Date/Time: {{ item.time || "Not Set" }}</p>
+              <p :class="getStatusClass(item.time)">
+                Status: {{ getStatusText(item.time) }}
+              </p>
             </div>
+          </div>
+
+          <div class="auction-actions">
+            <button @click="editAuction(item)">Edit</button>
+            <button class="btn-red" @click="deleteAuction(item.id)">Delete</button>
           </div>
         </div>
       </section>
     </main>
   </div>
 </template>
-  
+
 <script>
-import { getDatabase, ref, onValue, push, set } from "firebase/database";
+import { getDatabase, ref, onValue, push, set, remove } from "firebase/database";
 
 export default {
   name: "AuctionHomePage",
@@ -102,6 +109,9 @@ export default {
       searchQuery: "",
       auctionItems: [], // Initialize as an empty array
       isModalVisible: false, // Controls modal visibility
+      isSubmitting: false, // Prevent duplicate submissions
+      editing: false, // Track if we are editing an auction
+      editingId: null, // Store the ID of the auction being edited
       newAuction: {
         name: "",
         time: "",
@@ -147,15 +157,17 @@ export default {
     // Close the modal
     closeModal() {
       this.isModalVisible = false;
+      this.editing = false; // Reset editing mode
+      this.editingId = null; // Clear the editing ID
       this.newAuction = {
         name: "",
         time: "",
-        reservePrice: "", // Reset reserve price
-        highestBid: 0, // Reset highest bid
+        reservePrice: "",
+        highestBid: 0,
       };
     },
 
-    // Submit the new auction item to Firebase
+    // Submit the new or updated auction item to Firebase
     async submitAuction() {
       if (this.isSubmitting) {
         return; // Prevent duplicate submissions
@@ -171,22 +183,38 @@ export default {
         this.isSubmitting = true;
 
         try {
-          console.log("Saving auction data to Firebase...");
           const db = getDatabase();
-          const newAuctionRef = push(ref(db, "auctions"));
-          await set(newAuctionRef, {
-            name: this.newAuction.name,
-            time: this.newAuction.time,
-            reservePrice: this.newAuction.reservePrice,
-            highestBid: this.newAuction.highestBid, // Include highestBid
-            creator: "Admin", // You can replace this with the current logged-in user's name
-          });
 
-          alert("Auction item added successfully!");
+          if (this.editing) {
+            // Update existing auction
+            console.log("Updating auction:", this.editingId);
+            const auctionRef = ref(db, `auctions/${this.editingId}`);
+            await set(auctionRef, {
+              name: this.newAuction.name,
+              time: this.newAuction.time,
+              reservePrice: this.newAuction.reservePrice,
+              highestBid: this.newAuction.highestBid, // Include highestBid
+              creator: "Admin", // Replace with current user if applicable
+            });
+            alert("Auction updated successfully!");
+          } else {
+            // Add new auction
+            console.log("Adding new auction...");
+            const newAuctionRef = push(ref(db, "auctions"));
+            await set(newAuctionRef, {
+              name: this.newAuction.name,
+              time: this.newAuction.time,
+              reservePrice: this.newAuction.reservePrice,
+              highestBid: this.newAuction.highestBid, // Include highestBid
+              creator: "Admin", // Replace with current user if applicable
+            });
+            alert("Auction item added successfully!");
+          }
+
           this.closeModal();
         } catch (error) {
           console.error("Error during submission:", error);
-          alert("An error occurred while adding the auction. Please try again.");
+          alert("An error occurred while submitting the auction. Please try again.");
         } finally {
           this.isSubmitting = false;
         }
@@ -195,10 +223,49 @@ export default {
         alert("Please fill out all fields.");
       }
     },
+
+    // Edit an auction
+    editAuction(item) {
+      console.log("Editing auction:", item);
+      this.newAuction = { ...item }; // Populate the form with auction details
+      this.editing = true;
+      this.editingId = item.id; // Store the ID of the auction being edited
+      this.isModalVisible = true; // Open the modal
+    },
+
+    // Delete an auction
+    async deleteAuction(auctionId) {
+      const db = getDatabase();
+      try {
+        console.log("Deleting auction with ID:", auctionId);
+        await remove(ref(db, `auctions/${auctionId}`));
+        alert("Auction item deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting auction:", error);
+        alert("An error occurred while deleting the auction. Please try again.");
+      }
+    },
+
+    // Determine auction status based on time
+    getStatusText(auctionTime) {
+      if (!auctionTime) return "Not Set";
+
+      const now = new Date();
+      const auctionDate = new Date(auctionTime);
+      return auctionDate > now ? "Open" : "Closed";
+    },
+
+    getStatusClass(auctionTime) {
+      if (!auctionTime) return "status-unknown";
+
+      const now = new Date();
+      const auctionDate = new Date(auctionTime);
+      return auctionDate > now ? "status-open" : "status-closed";
+    },
   },
 };
 </script>
-  
+
 <style scoped>
 /* General Styles */
 .auction-house {
@@ -213,7 +280,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .title {
@@ -222,8 +289,22 @@ export default {
   margin: 0;
 }
 
+.btn-add-auction {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-add-auction:hover {
+  background-color: #0056b3;
+}
+
 .search-wrapper {
-  width: 40%;
+  margin-top: 10px;
+  width: 100%;
 }
 
 .search-bar-main {
@@ -300,6 +381,49 @@ export default {
   color: #555;
 }
 
+/* Status Styling */
+.status-open {
+  color: green;
+  font-weight: bold;
+}
+
+.status-closed {
+  color: red;
+  font-weight: bold;
+}
+
+.status-unknown {
+  color: gray;
+  font-style: italic;
+}
+
+.auction-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.auction-actions button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.auction-actions button:hover {
+  background-color: #0056b3;
+}
+
+.auction-actions button:last-child {
+  background-color: #f44336;
+}
+
+.auction-actions button:last-child:hover {
+  background-color: #d32f2f;
+}
+
 /* Modal Styling */
 .modal-overlay {
   position: fixed;
@@ -350,7 +474,7 @@ button {
   cursor: pointer;
   font-size: 16px;
   border-radius: 5px;
-}
+} 
 
 button:hover {
   background-color: #0056b3;
