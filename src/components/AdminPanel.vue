@@ -1,7 +1,12 @@
 <template>
 	<div class="container">
-		<h2>Weekly Report</h2>
-
+		<div class="space-between">
+			<h2>Weekly Report</h2>
+			<button class="btn-download" @click="downloadPDF">
+				Download Report as PDF
+			</button>
+		</div>
+		
 		<!-- Loading Indicator -->
 		<div v-if="loading" class="loading">Loading...</div>
 
@@ -10,8 +15,9 @@
 
 		<!-- Report Content -->
 		<div v-if="report && !loading && !error">
+			
 			<!-- Weekly Requests Section -->
-			<div class="report-section">
+			<div class="report-section margin-t-s">
 				<h3>Weekly Requests</h3>
 				<p>Total Requests: {{ report.weeklyRequests.total }}</p>
 				<table class="table">
@@ -59,9 +65,7 @@
 					No inventory items available.
 				</p>
 			</div>
-			<button class="btn-download" @click="downloadPDF">
-				Download Report as PDF
-			</button>
+			
 		</div>
 	</div>
 </template>
@@ -98,75 +102,75 @@ export default {
 			return new Date(timestamp).toLocaleString();
 		},
 		async downloadPDF() {
-        const doc = new jsPDF();
+			const doc = new jsPDF();
 
-        // Add the logo
-        const logoUrl = require('@/assets/logo.png'); // Adjust the path as necessary
-        const img = new Image();
-        img.src = logoUrl;
-        
-        img.onload = () => {
-            // Draw the logo at the top
-            doc.addImage(img, 'PNG', 10, 10, 40, 10); // (image, format, x, y, width, height)
+			// Add the logo
+			const logoUrl = require('@/assets/logo.png'); // Adjust the path as necessary
+			const img = new Image();
+			img.src = logoUrl;
+			
+			img.onload = () => {
+				// Draw the logo at the top
+				doc.addImage(img, 'PNG', 10, 10, 40, 10); // (image, format, x, y, width, height)
 
-            // Add the report title
-            doc.setFontSize(18);
-            doc.text("Weekly Report", 60, 20);
+				// Add the report title
+				doc.setFontSize(18);
+				doc.text("Weekly Report", 60, 20);
 
-            // Add the report generation date
-            const reportDate = `Generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`;
-            doc.setFontSize(10);
-            doc.text(reportDate, 60, 30);
+				// Add the report generation date
+				const reportDate = `Generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`;
+				doc.setFontSize(10);
+				doc.text(reportDate, 60, 30);
 
-            // Weekly Requests Section
-            const weeklyRequests = this.report.weeklyRequests.details;
-            doc.setFontSize(14);
-            doc.text(`Weekly Requests (Total: ${this.report.weeklyRequests.total})`, 10, 50);
+				// Weekly Requests Section
+				const weeklyRequests = this.report.weeklyRequests.details;
+				doc.setFontSize(14);
+				doc.text(`Weekly Requests (Total: ${this.report.weeklyRequests.total})`, 10, 50);
 
-            if (weeklyRequests.length > 0) {
-                doc.autoTable({
-                    startY: 60,
-                    head: [["Product Name", "Quantity", "Status", "Request Date"]],
-                    body: weeklyRequests.map((request) => [
-                        request.productName,
-                        request.quantity,
-                        request.status,
-                        this.formatDate(request.timestamp),
-                    ]),
-                });
-            } else {
-                doc.text("No requests made this week.", 10, 60);
-            }
+				if (weeklyRequests.length > 0) {
+					doc.autoTable({
+						startY: 60,
+						head: [["Product Name", "Quantity", "Status", "Request Date"]],
+						body: weeklyRequests.map((request) => [
+							request.productName,
+							request.quantity,
+							request.status,
+							this.formatDate(request.timestamp),
+						]),
+					});
+				} else {
+					doc.text("No requests made this week.", 10, 60);
+				}
 
-            // Inventory Summary Section
-            const inventorySummary = this.report.inventorySummary.details;
-            const inventoryStartY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 10 : 70;
-            doc.setFontSize(14);
-            doc.text(
-                `Inventory Summary (Total Items: ${this.report.inventorySummary.totalItems})`,
-                10,
-                inventoryStartY
-            );
+				// Inventory Summary Section
+				const inventorySummary = this.report.inventorySummary.details;
+				const inventoryStartY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 10 : 70;
+				doc.setFontSize(14);
+				doc.text(
+					`Inventory Summary (Total Items: ${this.report.inventorySummary.totalItems})`,
+					10,
+					inventoryStartY
+				);
 
-            if (inventorySummary.length > 0) {
-                doc.autoTable({
-                    startY: inventoryStartY + 10,
-                    head: [["Item Name", "Stock"]],
-                    body: inventorySummary.map((item) => [item.name, item.stock]),
-                });
-            } else {
-                doc.text("No inventory items available.", 10, inventoryStartY + 10);
-            }
+				if (inventorySummary.length > 0) {
+					doc.autoTable({
+						startY: inventoryStartY + 10,
+						head: [["Item Name", "Stock"]],
+						body: inventorySummary.map((item) => [item.name, item.stock]),
+					});
+				} else {
+					doc.text("No inventory items available.", 10, inventoryStartY + 10);
+				}
 
-            // Save the PDF
-            doc.save("Weekly_Report.pdf");
-        };
+				// Save the PDF
+				doc.save("Weekly_Report.pdf");
+			};
 
-        img.onerror = () => {
-            console.error("Failed to load logo image.");
-            alert("Error: Unable to load the logo.");
-        };
-    },
+			img.onerror = () => {
+				console.error("Failed to load logo image.");
+				alert("Error: Unable to load the logo.");
+			};
+		},
 	
 	},
 	mounted() {
@@ -187,19 +191,5 @@ export default {
 	text-align: center;
 	color: #666;
 	margin-top: 10px;
-}
-
-.btn-download {
-	background-color: #4caf50;
-	color: white;
-	border: none;
-	padding: 10px 20px;
-	cursor: pointer;
-	border-radius: 5px;
-	margin-top: 15px;
-}
-
-.btn-download:hover {
-	background-color: #45a049;
 }
 </style>

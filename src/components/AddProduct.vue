@@ -27,7 +27,12 @@
 			</div>
 			<div class="header content"  v-for="(product, id) in paginatedProducts" :key="id">
 				
-				<div style="width:16.67%">{{ product.name }}</div>
+				<div style="width:16.67%; display: flex; flex-direction: column; align-items: center;">
+					{{ product.name }}
+					<img v-if="product.imageUrl" :src="product.imageUrl" alt="Product Image" class="product-image" />
+					<p v-else>No Image</p>
+				</div>
+
 				<div style="width:16.67%">{{ product.pointsRequired }}</div>
 				<div style="width:16.67%">{{ product.stock }}</div>
 				<div style="width:16.67%">{{ product.hidden ? "Yes" : "No" }}</div>
@@ -102,6 +107,16 @@
 						required
 					/>
 				</div>
+				<div>
+					<label for="productImage">Product Image:</label>
+					<input
+						id="productImage"
+						type="file"
+						@change="handleImageUpload"
+						accept="image/*"
+						required
+					/>
+				</div>
 				<div class="space-between">
 					<button type="submit">Add Product</button>
 					<button type="button" class="btn-grey" @click="closeAddProductModal">Cancel</button>
@@ -158,16 +173,11 @@
 
   
 <script>
-import {
-  addProductToDatabase,
-  fetchProducts,
-  toggleProductVisibility,
-  updateProductStock,
-  checkIfAdmin,
-  logAuditEntry, // Import the audit logging method
-  updateProductDetails
-} from "@/methods";
+import { addProductToDatabase, fetchProducts, toggleProductVisibility, updateProductStock, 
+	checkIfAdmin, logAuditEntry, updateProductDetails } from "@/methods";
 import { getAuth } from "firebase/auth";
+import { ref, uploadBytes } from "firebase/storage";
+import { storage } from "@/firebase";
 
 export default {
   name: "AddProductPage",
@@ -176,6 +186,7 @@ export default {
 		productName: "",
 		pointsRequired: null,
 		stock: null,
+		productImageFile: null,
 		isAdmin: false,
 		products: {},
 		searchQuery: "",
@@ -191,28 +202,31 @@ export default {
 	},
 
 	computed: {
-	filteredProducts() {
-		const query = this.searchQuery.trim().toLowerCase(); // Trim spaces and convert to lowercase
-		const transformedProducts = Object.entries(this.products).map(([key, value]) => ({
-			id: key,
-			...value,
-		}));
-		return transformedProducts.filter(
-			(product) => product.name && product.name.toLowerCase().includes(query)
-		);
+		filteredProducts() {
+			const query = this.searchQuery.trim().toLowerCase(); // Trim spaces and convert to lowercase
+			const transformedProducts = Object.entries(this.products).map(([key, value]) => ({
+				id: key,
+				...value,
+			}));
+			return transformedProducts.filter(
+				(product) => product.name && product.name.toLowerCase().includes(query)
+			);
+		},
+		paginatedProducts() {
+			const start = (this.currentPage - 1) * this.itemsPerPage;
+			const end = this.currentPage * this.itemsPerPage;
+			return this.filteredProducts.slice(start, end);
+		},
+		totalPages() {
+			return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+		},
 	},
-	paginatedProducts() {
-		const start = (this.currentPage - 1) * this.itemsPerPage;
-		const end = this.currentPage * this.itemsPerPage;
-		return this.filteredProducts.slice(start, end);
-	},
-	totalPages() {
-		return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
-	},
-},
 
 
   methods: {
+	handleImageUpload(event) {
+      this.productImageFile = event.target.files[0]; // Save the selected file
+    },
 		changePage(page) {
 			if (page > 0 && page <= this.totalPages) {
 			this.currentPage = page;
@@ -244,6 +258,11 @@ export default {
 				return;
 			}
 
+			if (!this.productImageFile) {
+				alert("Please upload a product image.");
+				return;
+			}
+
 			const newProduct = {
 				name: this.productName,
 				pointsRequired: this.pointsRequired,
@@ -252,8 +271,10 @@ export default {
 			};
 
 			try {
-				const message = await addProductToDatabase(newProduct);
-				alert(message);
+				const productId = await addProductToDatabase(newProduct);
+
+				const imageRef = ref(storage, `products/${productId}`);
+				await uploadBytes(imageRef, this.productImageFile);
 
 				const auth = getAuth();
 				const currentUser = auth.currentUser;
@@ -264,7 +285,7 @@ export default {
 						details: `Added a new product: ${newProduct.name} (Points: ${newProduct.pointsRequired}, Stock: ${newProduct.stock})`,
 					});
 				}
-
+				alert("Product added successfully");
 				this.closeAddProductModal();
 				this.fetchProducts(); // Refresh product list
 			} catch (error) {

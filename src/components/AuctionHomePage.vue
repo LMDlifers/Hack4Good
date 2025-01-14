@@ -1,80 +1,86 @@
 <template>
-  <div class="auction-house">
-    <!-- Navigation Bar -->
-    <header class="header">
-      <nav class="top-nav"></nav>
-    </header>
-
+  <div class="container">
     <!-- Main Content -->
     <main>
       <div class="main-header">
-        <h1 class="title">Auction House (Admin)</h1>
-        <button class="btn-add-auction" @click="manageAuction">Add Auction Item</button>
-      </div>
-      <div class="search-wrapper">
-        <input
-          type="text"
-          class="search-bar-main"
-          placeholder="Search auctions..."
-          v-model="searchQuery"
-          @input="onSearch"
-        />
-      </div>
-
-      <!-- Modal Form -->
-      <div v-if="isModalVisible" class="modal-overlay">
-        <div class="modal">
-          <h2>Add Auction Item</h2>
-          <form @submit.prevent="submitAuction">
-            <label for="name">Product Name:</label>
-            <input
-              type="text"
-              id="name"
-              v-model="newAuction.name"
-              required
-            />
-
-            <label for="time">Auction Time/Date:</label>
-            <input
-              type="datetime-local"
-              id="time"
-              v-model="newAuction.time"
-              required
-            />
-
-            <label for="reservePrice">Reserve Price:</label>
-            <input
-              type="number"
-              id="reservePrice"
-              v-model="newAuction.reservePrice"
-              required
-              min="0"
-            />
-
-            <label for="photo">Product Photo:</label>
-            <input
-              type="file"
-              id="photo"
-              @change="handleFileChange"
-            />
-
-            <button type="submit">Submit</button>
-            <button type="button" @click="closeModal">Cancel</button>
-          </form>
+        <h1 class="title">
+          Auction House (Admin)
+          <button @click="manageAuction">Add Auction Item</button>
+        </h1>
+        <div class="search-wrapper">
+          <input
+            type="text"
+            class="search-bar-main"
+            placeholder="Search auctions..."
+            v-model="searchQuery"
+            @input="onSearch"
+          />
         </div>
       </div>
 
-      <!-- Auction List Section -->
-      <section class="auction-list">
-        <div
-          v-for="item in filteredItems"
-          :key="item.id"
-          class="auction-card"
-        >
-          <div class="auction-image">
-            <p v-if="!item.image">No Image Available</p>
-            <img v-else :src="item.image" alt="Auction Item" />
-          </div>
+    <!-- Modal Form -->
+<div v-if="isModalVisible" class="modal-wrapper">
+  <div class="modal-backdrop" @click="closeModal"></div>
+  <div class="modal padding-20">
+    <h2>Add Auction Item</h2>
+    <form @submit.prevent="submitAuction">
+      <!-- Product Name -->
+      <label for="name">Product Name:</label>
+      <input
+        type="text"
+        id="name"
+        v-model="newAuction.name"
+        required
+      />
+
+      <!-- Auction Time/Date -->
+      <label for="time">Auction Time/Date:</label>
+      <input
+        type="datetime-local"
+        id="time"
+        v-model="newAuction.time"
+        required
+      />
+
+      <!-- Reserve Price -->
+      <label for="reservePrice">Reserve Price:</label>
+      <input
+        type="number"
+        id="reservePrice"
+        v-model="newAuction.reservePrice"
+        required
+        min="0"
+      />
+
+      <!-- Product Photo -->
+      <label for="photo">Product Photo:</label>
+      <input
+        type="file"
+        id="photo"
+        @change="handleFileChange"
+      />
+
+      <!-- Actions -->
+      <div class="modal-actions space-between">
+        <button class="btn-green" type="submit">Submit</button>
+        <button class="btn-grey" type="button" @click="closeModal">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+    <!-- Auction List Section -->
+    <section class="auction-list">
+      <div
+        v-for="item in filteredItems"
+        :key="item.id"
+        class="auction-card"
+      >
+        <div class="auction-image">
+          <p v-if="!item.image">No Image Available</p>
+          <img v-else :src="item.image" alt="Auction Item" />
+        </div>
 
           <div class="auction-info">
             <h3>{{ item.name || "Unknown" }}</h3>
@@ -88,7 +94,6 @@
               </p>
             </div>
           </div>
-
           <div class="auction-actions">
             <button @click="editAuction(item)">Edit</button>
             <button class="btn-red" @click="deleteAuction(item.id)">Delete</button>
@@ -267,20 +272,12 @@ export default {
 </script>
 
 <style scoped>
-/* General Styles */
-.auction-house {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
 /* Main Header Styling */
 .main-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .title {
@@ -303,8 +300,7 @@ export default {
 }
 
 .search-wrapper {
-  margin-top: 10px;
-  width: 100%;
+  width: 40%;
 }
 
 .search-bar-main {
@@ -474,7 +470,7 @@ button {
   cursor: pointer;
   font-size: 16px;
   border-radius: 5px;
-} 
+}
 
 button:hover {
   background-color: #0056b3;

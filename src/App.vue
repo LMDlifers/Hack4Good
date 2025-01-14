@@ -2,24 +2,58 @@
 	<body id="app" class="main bg-lightgrey">
 		<!-- Desktop Navigation -->
 		<nav id="desktop-nav">
-			<img src="@/assets/logo.png" class="logo">
-			<div class="nav-links">
-				<router-link v-if="isLoggedIn && role === 'user'" to="/dashboard">Dashboard</router-link>
-				<router-link v-if="isLoggedIn && role === 'user'" to="/preorder">Pre-Orders</router-link>
-				<router-link v-if="isLoggedIn && role === 'user'" to="/vouchertask">Voucher Tasks</router-link>
-				<router-link v-if="isLoggedIn && role === 'user'" to="/requestproduct">Request</router-link>
-				<router-link v-if="isLoggedIn && role === 'user'" to="/shoppingcart">Cart</router-link>
-				<router-link v-if="isLoggedIn && role === 'admin'" to="/admin">Admin Panel</router-link>
-				<router-link v-if="isLoggedIn && role === 'admin'" to="/auditpage">Audit</router-link>
-				<router-link v-if="isLoggedIn && role === 'admin'" to="/addproduct">Products</router-link>
-				<router-link v-if="isLoggedIn && role === 'admin'" to="/preorderadmin">Pre-Orders</router-link>
-				<router-link v-if="isLoggedIn && role === 'admin'" to="/viewrequest">Requests</router-link>
-				<router-link v-if="isLoggedIn && role === 'admin'" to="/vouchertaskadmin">Voucher Tasks</router-link>
-				<router-link v-if="isLoggedIn && role === 'admin'" to="/manageuser">Manage Users</router-link>
-				<router-link v-if="isLoggedIn && role === 'admin'" to="/auctionhome">Auction</router-link>
-				<router-link v-if="!isLoggedIn" to="/login">Login</router-link>
-				<router-link v-if="!isLoggedIn" to="/signup">Sign Up</router-link>
-				<button class="logout-button" v-if="isLoggedIn" @click="logout">Log Out</button>
+			<router-link v-if="isLoggedIn && role === 'user'" to="/dashboard">
+				<img src="@/assets/logo.png" class="logo">
+			</router-link>
+			<router-link v-else-if="isLoggedIn && role === 'admin'" to="/admin">
+				<img src="@/assets/logo.png" class="logo">
+			</router-link>
+			<div v-else>
+				<img src="@/assets/logo.png" class="logo">
+			</div>
+			<div class="nav-links" v-if="isLoggedIn && role === 'user'">
+				<router-link to="/dashboard">Dashboard</router-link>
+				<router-link to="/preorder">Pre-Orders</router-link>
+				<router-link to="/vouchertask">Voucher Tasks</router-link>
+				<router-link to="/requestproduct">Request</router-link>
+				<router-link to="/auction">Auction</router-link>
+				<router-link to="/shoppingcart">Cart</router-link>
+				<button class="logout-button" @click="logout">Log Out</button>
+			</div>
+			<div class="nav-links" v-else-if="isLoggedIn && role === 'admin'">
+				<div class="dropdown">
+					<span class="dropdown-header">Administration</span>
+					<div class="dropdown-content">
+						<router-link to="/admin">Admin Panel</router-link>
+						<router-link to="/manageuser">Manage Users</router-link>
+					</div>
+				</div>
+				<div class="dropdown">
+					<span class="dropdown-header">Operations</span>
+					<div class="dropdown-content">
+						<router-link to="/addproduct">Products</router-link>
+						<router-link to="/preorderadmin">Pre-Orders</router-link>
+						<router-link to="/viewrequest">Requests</router-link>
+						<router-link to="/vouchertaskadmin">Voucher Tasks</router-link>
+					</div>
+				</div>
+				<div class="dropdown">
+					<span class="dropdown-header">Audit</span>
+					<div class="dropdown-content">
+						<router-link to="/auditpage">Audit Logs</router-link>
+					</div>
+				</div>
+				<div class="dropdown">
+					<span class="dropdown-header">Special Features</span>
+					<div class="dropdown-content">
+						<router-link to="/auctionhome">Auction</router-link>
+					</div>
+				</div>
+				<button class="logout-button" @click="logout">Log Out</button>
+			</div>
+			<div v-else class="nav-links">
+				<router-link to="/login">Login</router-link>
+				<router-link to="/signup">Sign Up</router-link>
 			</div>
 		</nav>
 
@@ -32,23 +66,29 @@
 					<span></span>
 					<span></span>
 				</div>
-				<div :class="['menu-links', { open: openMenu }]">
-					<router-link v-if="isLoggedIn && role === 'user'" to="/dashboard" @click="closeMenu">Dashboard</router-link>
-					<router-link v-if="isLoggedIn && role === 'user'" to="/preorder" @click="closeMenu">Pre-Orders</router-link>
-					<router-link v-if="isLoggedIn && role === 'user'" to="/vouchertask" @click="closeMenu">Voucher Tasks</router-link>
-					<router-link v-if="isLoggedIn && role === 'user'" to="/requestproduct" @click="closeMenu">Request</router-link>
-					<router-link v-if="isLoggedIn && role === 'user'" to="/shoppingcart" @click="closeMenu">Cart</router-link>
-					<router-link v-if="isLoggedIn && role === 'admin'" to="/admin" @click="closeMenu">Admin Panel</router-link>
-					<router-link v-if="isLoggedIn && role === 'admin'" to="/auditpage" @click="closeMenu">Audit</router-link>
-					<router-link v-if="isLoggedIn && role === 'admin'" to="/addproduct" @click="closeMenu">Products</router-link>
-					<router-link v-if="isLoggedIn && role === 'admin'" to="/preorderadmin" @click="closeMenu">Pre-Orders</router-link>
-					<router-link v-if="isLoggedIn && role === 'admin'" to="/viewrequest" @click="closeMenu">Requests</router-link>
-					<router-link v-if="isLoggedIn && role === 'admin'" to="/vouchertaskadmin" @click="closeMenu">Voucher Tasks</router-link>
-					<router-link v-if="isLoggedIn && role === 'admin'" to="/manageuser" @click="closeMenu">Manage Users</router-link>
-					<router-link v-if="isLoggedIn && role === 'admin'" to="/auctionhome" @click="closeMenu">Auction</router-link>
+				<div v-if="isLoggedIn && role === 'user'" :class="['menu-links', { open: openMenu }]">
+					<router-link to="/dashboard" @click="closeMenu">Dashboard</router-link>
+                    <router-link to="/preorder" @click="closeMenu">Pre-Orders</router-link>
+                    <router-link to="/vouchertask" @click="closeMenu">Voucher Tasks</router-link>
+                    <router-link to="/requestproduct" @click="closeMenu">Request</router-link>
+					<router-link to="/auction" @click="closeMenu">Auction</router-link>
+                    <router-link to="/shoppingcart" @click="closeMenu">Cart</router-link>
+					<button class="logout-button" @click="logout">Log Out</button>
+				</div>
+				<div v-else-if="isLoggedIn && role === 'admin'" :class="['menu-links', { open: openMenu }]">
+					<router-link to="/admin" @click="closeMenu">Admin Panel</router-link>
+					<router-link to="/auditpage" @click="closeMenu">Audit</router-link>
+					<router-link to="/addproduct" @click="closeMenu">Products</router-link>
+					<router-link to="/preorderadmin" @click="closeMenu">Pre-Orders</router-link>
+					<router-link to="/viewrequest" @click="closeMenu">Requests</router-link>
+					<router-link to="/vouchertaskadmin" @click="closeMenu">Voucher Tasks</router-link>
+					<router-link to="/manageuser" @click="closeMenu">Manage Users</router-link>
+					<router-link to="/auctionhome" @click="closeMenu">Auction</router-link>
+					<button class="logout-button" @click="logout">Log Out</button>
+				</div> 
+				<div v-else :class="['menu-links', { open: openMenu }]">
 					<router-link v-if="!isLoggedIn" to="/login" @click="closeMenu">Login</router-link>
 					<router-link v-if="!isLoggedIn" to="/signup" @click="closeMenu">Sign Up</router-link>
-					<button class="logout-button" v-if="isLoggedIn" @click="logout">Log Out</button>
 				</div>
 			</div>
 		</nav>
@@ -162,3 +202,45 @@ export default {
 	},
 };
 </script>
+<style scoped>
+.dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.dropdown-header {
+	cursor: pointer;
+	padding: 5px 10px;
+}
+
+.dropdown-header:hover {
+	color: #bf4a2a;
+    text-decoration: underline;
+    text-underline-offset: 1rem;
+    text-decoration-color: #bf4a2a;
+}
+
+.dropdown-content {
+	display: none;
+	position: absolute;
+	background-color: white;
+	min-width: 150px;
+	box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+	display: block;
+}
+
+.dropdown-content a {
+	color: black;
+	text-decoration: none;
+	display: block;
+	padding: 10px;
+}
+
+.dropdown-content a:hover {
+	color: #bf4a2a;
+}
+</style>
