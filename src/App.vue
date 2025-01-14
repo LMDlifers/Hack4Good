@@ -69,11 +69,11 @@
           </div>
           <div v-if="isLoggedIn && role === 'user'" :class="['menu-links', { open: openMenu }]">
             <router-link to="/dashboard" @click="closeMenu">Dashboard</router-link>
-                      <router-link to="/preorder" @click="closeMenu">Pre-Orders</router-link>
-                      <router-link to="/vouchertask" @click="closeMenu">Voucher Tasks</router-link>
-                      <router-link to="/requestproduct" @click="closeMenu">Request</router-link>
+			<router-link to="/preorder" @click="closeMenu">Pre-Orders</router-link>
+			<router-link to="/vouchertask" @click="closeMenu">Voucher Tasks</router-link>
+			<router-link to="/requestproduct" @click="closeMenu">Request</router-link>
             <router-link to="/auction" @click="closeMenu">Auction</router-link>
-                      <router-link to="/shoppingcart" @click="closeMenu">Cart</router-link>
+			<router-link to="/shoppingcart" @click="closeMenu">Cart</router-link>
             <button class="logout-button" @click="logout">Log Out</button>
           </div>
           <div v-else-if="isLoggedIn && role === 'admin'" :class="['menu-links', { open: openMenu }]">

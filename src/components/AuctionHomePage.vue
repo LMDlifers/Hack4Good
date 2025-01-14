@@ -15,53 +15,54 @@
 		<!-- Modal Form -->
 		<div v-if="isModalVisible" class="modal-wrapper">
 			<div class="modal-backdrop" @click="closeModal"></div>
-			<div class="modal padding-20">
-				<h2>Add Auction Item</h2>
+			<div class="modal">
+				
 				<form @submit.prevent="submitAuction" class="form-page">
-				<!-- Product Name -->
-				<label for="name">Product Name:</label>
-				<input
-					type="text"
-					id="name"
-					v-model="newAuction.name"
-					required
-				/>
+					<h2>Add Auction Item</h2>
+					<!-- Product Name -->
+					<label for="name">Product Name:</label>
+					<input
+						type="text"
+						id="name"
+						v-model="newAuction.name"
+						required
+					/>
 
-				<!-- Auction Time/Date -->
-				<label for="time">Auction Time/Date:</label>
-				<input
-					type="datetime-local"
-					id="time"
-					v-model="newAuction.time"
-					required
-				/>
+					<!-- Auction Time/Date -->
+					<label for="time">Auction Time/Date:</label>
+					<input
+						type="datetime-local"
+						id="time"
+						v-model="newAuction.time"
+						required
+					/>
 
-			<!-- Reserve Price -->
-			<label for="reservePrice">Reserve Price:</label>
-			<input
-				type="number"
-				id="reservePrice"
-				v-model="newAuction.reservePrice"
-				required
-				min="0"
-			/>
+					<!-- Reserve Price -->
+					<label for="reservePrice">Reserve Price:</label>
+					<input
+						type="number"
+						id="reservePrice"
+						v-model="newAuction.reservePrice"
+						required
+						min="0"
+					/>
 
-			<!-- Product Photo -->
-			<label for="photo">Product Photo:</label>
-			<input
-				type="file"
-				id="photo"
-				@change="handleFileChange"
-			/>
+					<!-- Product Photo -->
+					<label for="photo">Product Photo:</label>
+					<input
+						type="file"
+						id="photo"
+						@change="handleFileChange"
+					/>
 
-			<!-- Actions -->
-			<div class="modal-actions space-between">
-				<button class="btn-green" type="submit">Submit</button>
-				<button class="btn-grey" type="button" @click="closeModal">Cancel</button>
+					<!-- Actions -->
+					<div class="modal-actions space-between">
+						<button class="btn-green" type="submit">Submit</button>
+						<button class="btn-grey" type="button" @click="closeModal">Cancel</button>
+					</div>
+				</form>
 			</div>
-			</form>
 		</div>
-	</div>
 
 
 		<!-- Auction List Section -->
@@ -88,9 +89,9 @@
 				</p>
 				</div>
 			</div>
-			<div class="flex-end">
-				<button class="btn-grey" @click="editAuction(item)">Edit</button>
-				<button class="btn-red" @click="deleteAuction(item.id)">Delete</button>
+			<div class="space-between">
+				<button class="btn-grey" style="width: 40%" @click="editAuction(item)">Edit</button>
+				<button class="btn-red" style="width: 40%" @click="deleteAuction(item.id)">Delete</button>
 			</div>
 			</div>
 		</section>
@@ -300,112 +301,9 @@ methods: {
 };
 </script>
 
-<style scoped>
+<style>
 
-/* Auction List Section */
-.auction-list {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-gap: 20px;
-margin-top: 20px;
-}
 
-.auction-card {
-border: 1px solid #ccc;
-border-radius: 8px;
-padding: 15px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-background-color: white;
-display: flex;
-flex-direction: column;
-justify-content: space-between;
-height: auto;
-}
-
-.auction-image {
-	height: 100%;
-	width: 100%;
-	object-fit: contain;
-	background-color: #f4f4f4;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin-bottom: 15px;
-	overflow: hidden;
-	border-radius: 8px;
-}
-
-.auction-image img {
-width: 100%;
-height: 100%;
-object-fit: cover;
-}
-
-.auction-info {
-text-align: left;
-flex: 1;
-}
-
-.auction-info h3 {
-margin: 0;
-font-size: 18px;
-font-weight: bold;
-}
-
-.auction-details {
-margin-top: 10px;
-font-size: 14px;
-color: #555;
-}
-
-/* Status Styling */
-.status-open {
-color: green;
-font-weight: bold;
-}
-
-.status-closed {
-color: red;
-font-weight: bold;
-}
-
-.status-unknown {
-color: gray;
-font-style: italic;
-}
-
-/* Modal Styling */
-.modal-overlay {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-color: rgba(0, 0, 0, 0.5);
-display: flex;
-justify-content: center;
-align-items: center;
-z-index: 1000;
-}
-
-.modal {
-background-color: white;
-padding: 20px;
-border-radius: 8px;
-width: 400px;
-text-align: center;
-}
-
-.modal h2 {
-font-size: 1.5rem;
-margin-bottom: 20px;
-}
-
-label {
-display: block;
-margin: 10px 0 5px;
-text-align: left;
-}
 
 
 </style>
