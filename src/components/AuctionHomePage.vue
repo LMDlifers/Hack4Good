@@ -1,101 +1,100 @@
 <template>
-<div class="container">
-	<div class="space-between">
-		<h2>Auction House (Admin)</h2>
-		<button @click="manageAuction">Add Auction Item</button>
-
-	</div>
-	<div class="margin-t-s">
-	<input
-		class="search-bar"
-		v-model="searchQuery"
-		placeholder="Search auctions..."
-		type="text"
-	/>
-	</div>
-	<!-- Modal Form -->
-	<div v-if="isModalVisible" class="modal-wrapper">
-		<div class="modal-backdrop" @click="closeModal"></div>
-		<div class="modal padding-20">
-			<h2>Add Auction Item</h2>
-			<form @submit.prevent="submitAuction" class="form-page">
-			<!-- Product Name -->
-			<label for="name">Product Name:</label>
+	<div class="container">
+		<div class="space-between">
+			<h2>Auction House (Admin)</h2>
+			<button @click="manageAuction">Add Auction Item</button>
+		</div>
+		<div class="margin-t-s">
 			<input
+				class="search-bar"
+				v-model="searchQuery"
+				placeholder="Search auctions..."
 				type="text"
-				id="name"
-				v-model="newAuction.name"
-				required
 			/>
+		</div>
+		<!-- Modal Form -->
+		<div v-if="isModalVisible" class="modal-wrapper">
+			<div class="modal-backdrop" @click="closeModal"></div>
+			<div class="modal padding-20">
+				<h2>Add Auction Item</h2>
+				<form @submit.prevent="submitAuction" class="form-page">
+				<!-- Product Name -->
+				<label for="name">Product Name:</label>
+				<input
+					type="text"
+					id="name"
+					v-model="newAuction.name"
+					required
+				/>
 
-			<!-- Auction Time/Date -->
-			<label for="time">Auction Time/Date:</label>
+				<!-- Auction Time/Date -->
+				<label for="time">Auction Time/Date:</label>
+				<input
+					type="datetime-local"
+					id="time"
+					v-model="newAuction.time"
+					required
+				/>
+
+			<!-- Reserve Price -->
+			<label for="reservePrice">Reserve Price:</label>
 			<input
-				type="datetime-local"
-				id="time"
-				v-model="newAuction.time"
+				type="number"
+				id="reservePrice"
+				v-model="newAuction.reservePrice"
 				required
+				min="0"
 			/>
 
-		<!-- Reserve Price -->
-		<label for="reservePrice">Reserve Price:</label>
-		<input
-			type="number"
-			id="reservePrice"
-			v-model="newAuction.reservePrice"
-			required
-			min="0"
-		/>
+			<!-- Product Photo -->
+			<label for="photo">Product Photo:</label>
+			<input
+				type="file"
+				id="photo"
+				@change="handleFileChange"
+			/>
 
-		<!-- Product Photo -->
-		<label for="photo">Product Photo:</label>
-		<input
-			type="file"
-			id="photo"
-			@change="handleFileChange"
-		/>
-
-		<!-- Actions -->
-		<div class="modal-actions space-between">
-			<button class="btn-green" type="submit">Submit</button>
-			<button class="btn-grey" type="button" @click="closeModal">Cancel</button>
-		</div>
-		</form>
-	</div>
-</div>
-
-
-	<!-- Auction List Section -->
-	<section class="auction-list">
-	<div
-		v-for="item in filteredItems"
-		:key="item.id"
-		class="auction-card"
-	>
-		<div class="auction-image">
-		<p v-if="!item.image">No Image Available</p>
-		<img v-else :src="item.image" alt="Auction Item" />
-		</div>
-
-		<div class="auction-info">
-			<h3>{{ item.name || "Unknown" }}</h3>
-			<p>Created by {{ item.creator || "Unknown" }}</p>
-			<div class="auction-details">
-			<p>Reserve price: ${{ item.reservePrice || "--" }}</p>
-			<p>Highest bid: ${{ item.highestBid || "0" }}</p>
-			<p>Date/Time: {{ item.time || "Not Set" }}</p>
-			<p :class="getStatusClass(item.time)">
-				Status: {{ getStatusText(item.time) }}
-			</p>
+			<!-- Actions -->
+			<div class="modal-actions space-between">
+				<button class="btn-green" type="submit">Submit</button>
+				<button class="btn-grey" type="button" @click="closeModal">Cancel</button>
 			</div>
+			</form>
 		</div>
-		<div class="flex-end">
-			<button class="btn-grey" @click="editAuction(item)">Edit</button>
-			<button class="btn-red" @click="deleteAuction(item.id)">Delete</button>
-		</div>
-		</div>
-	</section>
-</div>
+	</div>
+
+
+		<!-- Auction List Section -->
+		<section class="auction-list">
+		<div
+			v-for="item in filteredItems"
+			:key="item.id"
+			class="auction-card"
+		>
+			<div class="auction-image">
+			<p v-if="!item.image">No Image Available</p>
+			<img v-else :src="item.image" alt="Auction Item" />
+			</div>
+
+			<div class="auction-info">
+				<h3>{{ item.name || "Unknown" }}</h3>
+				<p>Created by {{ item.creator || "Unknown" }}</p>
+				<div class="auction-details">
+				<p>Reserve price: ${{ item.reservePrice || "--" }}</p>
+				<p>Highest bid: ${{ item.highestBid || "0" }}</p>
+				<p>Date/Time: {{ item.time || "Not Set" }}</p>
+				<p :class="getStatusClass(item.time)">
+					Status: {{ getStatusText(item.time) }}
+				</p>
+				</div>
+			</div>
+			<div class="flex-end">
+				<button class="btn-grey" @click="editAuction(item)">Edit</button>
+				<button class="btn-red" @click="deleteAuction(item.id)">Delete</button>
+			</div>
+			</div>
+		</section>
+	</div>
 </template>
 
 <script>

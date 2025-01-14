@@ -37,7 +37,7 @@
 			</div>
 			
 		</div>
-		<p v-else>Your cart is empty.</p>
+		<p v-else class="margin-t-s">Your cart is empty.</p>
 
 		<!-- Checkout Confirmation Modal -->
 		<div v-if="showCheckoutModal" class="modal-wrapper">

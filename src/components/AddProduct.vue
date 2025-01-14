@@ -16,7 +16,6 @@
 	</div>
 	
 	<div v-if="filteredProducts.length > 0" class="container scrollable-div">
-		
 		<div>
 			<div class="header margin-t-s">
 				<div style="width:16.67%">Name</div>
@@ -64,7 +63,7 @@
 			<span v-else style="visibility: hidden;">Next</span>
 		</div>
 	</div>
-	<div v-else class="container">
+	<div v-else class="container margin-t-s">
 		<p>No products match your search.</p>
 	</div>
 	

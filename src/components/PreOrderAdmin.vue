@@ -87,7 +87,7 @@
 			</div>
 		</div>
 	</div>
-	<div v-else class="container">
+	<div v-else class="container margin-t-s">
 		<p>No preorders found.</p>
 	</div>
 </template>

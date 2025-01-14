@@ -57,7 +57,7 @@
 			<span v-else style="visibility: hidden;">Next</span>
 		</div>
 	</div>
-	<div v-else class="container">
+	<div v-else class="container margin-top-s">
 		<p>No requests found.</p>
 	</div>
 </template>
