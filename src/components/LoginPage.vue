@@ -13,9 +13,9 @@
 		<button type="submit" class="wmax">Login</button>
 		<p v-if="errorMessage" class="error">{{ errorMessage }}</p>
 		</form>
-		<p>
-		<router-link to="/forgetpassword">Forgot your password?</router-link>
-		</p>
+		<div class="margin-t-s">
+			<router-link to="/forgetpassword">Forgot your password?</router-link>
+		</div>
 	</div>
 </template>
 

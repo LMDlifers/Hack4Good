@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="space-between">
 			<h2>Available Products</h2>
-			<button @click="openAddProductModal">Add New Product</button>
+			<button @click="openAddProductModal" >Add New Product</button>
 		</div>
 		<!-- Search Input -->
 		<div class=" margin-t-s">
@@ -16,7 +16,6 @@
 	</div>
 	
 	<div v-if="filteredProducts.length > 0" class="container scrollable-div">
-		
 		<div>
 			<div class="header margin-t-s">
 				<div style="width:16.67%">Name</div>
@@ -27,7 +26,12 @@
 			</div>
 			<div class="header content"  v-for="(product, id) in paginatedProducts" :key="id">
 				
-				<div style="width:16.67%">{{ product.name }}</div>
+				<div style="width:16.67%; display: flex; flex-direction: column; align-items: center;">
+					{{ product.name }}
+					<img v-if="product.imageUrl" :src="product.imageUrl" alt="Product Image" class="product-image-s" />
+					<p v-else>No Image</p>
+				</div>
+
 				<div style="width:16.67%">{{ product.pointsRequired }}</div>
 				<div style="width:16.67%">{{ product.stock }}</div>
 				<div style="width:16.67%">{{ product.hidden ? "Yes" : "No" }}</div>
@@ -59,7 +63,7 @@
 			<span v-else style="visibility: hidden;">Next</span>
 		</div>
 	</div>
-	<div v-else class="container">
+	<div v-else class="container margin-t-s">
 		<p>No products match your search.</p>
 	</div>
 	
@@ -102,8 +106,17 @@
 						required
 					/>
 				</div>
+				<div>
+					<label for="productImage">Product Image:</label>
+					<input
+						id="productImage"
+						type="file"
+						@change="handleImageUpload"
+						accept="image/*"
+					/>
+				</div>
 				<div class="space-between">
-					<button type="submit">Add Product</button>
+					<button type="submit" class="btn-green">Add Product</button>
 					<button type="button" class="btn-grey" @click="closeAddProductModal">Cancel</button>
 				</div>
 			</form>
@@ -145,29 +158,35 @@
 					/>
 					<span>{{ editHidden ? "Hidden" : "Visible" }}</span>
 				</div>
+				<div>
+					<label for="editProductImage">New Product Image:</label>
+					<input
+						id="editProductImage"
+						type="file"
+						@change="handleEditImageUpload"
+						accept="image/*"
+					/>
+				</div>
+				<div>
+					<button type="button" class="btn-red" style="width: 100%" @click="removeImage">Remove Current Image</button>
+				</div>
 				<div class="space-between">
-					<button type="submit">Save Changes</button>
+					<button type="submit" class="btn-green">Save Changes</button>
 					<button type="button" class="btn-grey" @click="closeEditModal">Cancel</button>
 				</div>
 			</form>
 		</div>
 	</div>
-
 </template>
 
 
   
 <script>
-import {
-  addProductToDatabase,
-  fetchProducts,
-  toggleProductVisibility,
-  updateProductStock,
-  checkIfAdmin,
-  logAuditEntry, // Import the audit logging method
-  updateProductDetails
-} from "@/methods";
+import { addProductToDatabase, fetchProducts, toggleProductVisibility, updateProductStock, 
+	checkIfAdmin, logAuditEntry, updateProductDetails } from "@/methods";
 import { getAuth } from "firebase/auth";
+import { ref, uploadBytes, deleteObject } from "firebase/storage";
+import { storage } from "@/firebase";
 
 export default {
   name: "AddProductPage",
@@ -176,6 +195,7 @@ export default {
 		productName: "",
 		pointsRequired: null,
 		stock: null,
+		productImageFile: null,
 		isAdmin: false,
 		products: {},
 		searchQuery: "",
@@ -187,90 +207,112 @@ export default {
 		showAddProductModal: false,
 		currentPage: 1, // Current page for pagination
 		itemsPerPage: 10, // Number of items per page
+		markImageForDeletion: false,
 	};
 	},
 
 	computed: {
-	filteredProducts() {
-		const query = this.searchQuery.trim().toLowerCase(); // Trim spaces and convert to lowercase
-		const transformedProducts = Object.entries(this.products).map(([key, value]) => ({
-			id: key,
-			...value,
-		}));
-		return transformedProducts.filter(
-			(product) => product.name && product.name.toLowerCase().includes(query)
-		);
+		filteredProducts() {
+			const query = this.searchQuery.trim().toLowerCase(); // Trim spaces and convert to lowercase
+			const transformedProducts = Object.entries(this.products).map(([key, value]) => ({
+				id: key,
+				...value,
+			}));
+			return transformedProducts.filter(
+				(product) => product.name && product.name.toLowerCase().includes(query)
+			);
+		},
+		paginatedProducts() {
+			const start = (this.currentPage - 1) * this.itemsPerPage;
+			const end = this.currentPage * this.itemsPerPage;
+			return this.filteredProducts.slice(start, end);
+		},
+		totalPages() {
+			return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+		},
 	},
-	paginatedProducts() {
-		const start = (this.currentPage - 1) * this.itemsPerPage;
-		const end = this.currentPage * this.itemsPerPage;
-		return this.filteredProducts.slice(start, end);
-	},
-	totalPages() {
-		return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
-	},
-},
 
 
   methods: {
-		changePage(page) {
-			if (page > 0 && page <= this.totalPages) {
-			this.currentPage = page;
+	handleImageUpload(event) {
+      this.productImageFile = event.target.files[0]; // Save the selected file
+    },
+	handleEditImageUpload(event) {
+		const file = event.target.files[0];
+		if (file) {
+			this.editProductImageFile = file; // Set the selected file
+			console.log("Selected file:", file); // Debug log to verify the file
+		} else {
+			console.log("No file selected");
+		}
+	},
+	removeImage() {
+		this.markImageForDeletion = true; // Mark the image for deletion
+		alert("Image marked for deletion. It will be removed when you save changes.");
+	},
+	changePage(page) {
+		if (page > 0 && page <= this.totalPages) {
+		this.currentPage = page;
+		}
+	},
+	openAddProductModal() {
+		this.showAddProductModal = true;
+	},
+	closeAddProductModal() {
+		this.showAddProductModal = false;
+		this.resetAddProductForm();
+	},
+	resetAddProductForm() {
+		this.productName = "";
+		this.pointsRequired = null;
+		this.stock = null;
+		this.productImageFile = null;
+	},
+	async addProduct() {
+		if (!this.isAdmin) {
+			alert("You do not have permission to add products.");
+			return;
+		}
+
+		const existingProduct = Object.values(this.products).find(
+			(product) => product.name.toLowerCase() === this.productName.toLowerCase()
+		);
+		if (existingProduct) {
+			alert("A product with this name already exists.");
+			return;
+		}
+
+		const newProduct = {
+			name: this.productName,
+			pointsRequired: this.pointsRequired,
+			stock: this.stock,
+			hidden: false,
+		};
+
+		try {
+			const productId = await addProductToDatabase(newProduct);
+
+			if (this.productImageFile) {
+				const imageRef = ref(storage, `products/${productId}`);
+				await uploadBytes(imageRef, this.productImageFile);
 			}
-		},
-		openAddProductModal() {
-			this.showAddProductModal = true;
-		},
-		closeAddProductModal() {
-			this.showAddProductModal = false;
-			this.resetAddProductForm();
-		},
-		resetAddProductForm() {
-			this.productName = "";
-			this.pointsRequired = null;
-			this.stock = null;
-		},
-		async addProduct() {
-			if (!this.isAdmin) {
-				alert("You do not have permission to add products.");
-				return;
+
+			const auth = getAuth();
+			const currentUser = auth.currentUser;
+			if (currentUser) {
+				await logAuditEntry({
+					type: "inventory",
+					user: currentUser.uid,
+					details: `Added a new product: ${newProduct.name} (Points: ${newProduct.pointsRequired}, Stock: ${newProduct.stock})`,
+				});
 			}
-
-			const existingProduct = Object.values(this.products).find(
-				(product) => product.name.toLowerCase() === this.productName.toLowerCase()
-			);
-			if (existingProduct) {
-				alert("A product with this name already exists.");
-				return;
-			}
-
-			const newProduct = {
-				name: this.productName,
-				pointsRequired: this.pointsRequired,
-				stock: this.stock,
-				hidden: false,
-			};
-
-			try {
-				const message = await addProductToDatabase(newProduct);
-				alert(message);
-
-				const auth = getAuth();
-				const currentUser = auth.currentUser;
-				if (currentUser) {
-					await logAuditEntry({
-						type: "inventory",
-						user: currentUser.uid,
-						details: `Added a new product: ${newProduct.name} (Points: ${newProduct.pointsRequired}, Stock: ${newProduct.stock})`,
-					});
-				}
-
-				this.closeAddProductModal();
-				this.fetchProducts(); // Refresh product list
-			} catch (error) {
-				alert(error.message);
-			}
-		},	
+			alert("Product added successfully");
+			this.closeAddProductModal();
+			this.fetchProducts(); // Refresh product list
+		} catch (error) {
+			alert(error.message);
+		}
+	},	
     async fetchProducts() {
       try {
         this.products = await fetchProducts();
@@ -286,39 +328,57 @@ export default {
       this.showEditModal = true;
     },
     closeEditModal() {
-      this.showEditModal = false;
-      this.editProductId = null;
-      this.editProductName = "";
-      this.editPointsRequired = null;
-      this.editHidden = false;
-    },
-    async editProduct() {
-      try {
-        const updatedProduct = {
-          name: this.editProductName,
-          pointsRequired: this.editPointsRequired,
-          hidden: this.editHidden, // Include updated hidden status
-        };
+		this.showEditModal = false;
+		this.editProductId = null;
+		this.editProductName = "";
+		this.editPointsRequired = null;
+		this.editHidden = false;
+		this.editProductImageFile = null;
+		this.markImageForDeletion = false; // Reset the flag
+	},
+	async editProduct() {
+		try {
+			const updatedProduct = {
+				name: this.editProductName,
+				pointsRequired: this.editPointsRequired,
+				hidden: this.editHidden, // Include updated hidden status
+			};
 
-        await updateProductDetails(this.editProductId, updatedProduct);
+			// Update product details
+			await updateProductDetails(this.editProductId, updatedProduct);
 
-        const auth = getAuth();
-        const currentUser = auth.currentUser;
-        if (currentUser) {
-          await logAuditEntry({
-            type: "inventory",
-            user: currentUser.uid,
-            details: `Edited product: ${this.editProductName} (Points: ${this.editPointsRequired}, Hidden: ${this.editHidden ? "Yes" : "No"})`,
-          });
-        }
+			// Handle image removal if marked
+			if (this.markImageForDeletion) {
+				const imageRef = ref(storage, `products/${this.editProductId}`);
+				await deleteObject(imageRef);
+			}
 
-        alert("Product updated successfully!");
-        this.closeEditModal();
-        this.fetchProducts();
-      } catch (error) {
-        alert(error.message);
-      }
-    },
+			// Handle new image upload if provided
+			if (this.editProductImageFile) {
+				const imageRef = ref(storage, `products/${this.editProductId}`);
+				await uploadBytes(imageRef, this.editProductImageFile);
+			}
+
+			// Log the edit
+			const auth = getAuth();
+			const currentUser = auth.currentUser;
+			if (currentUser) {
+				await logAuditEntry({
+					type: "inventory",
+					user: currentUser.uid,
+					details: `Edited product: ${this.editProductName} (Points: ${this.editPointsRequired}, Hidden: ${this.editHidden ? "Yes" : "No"})`,
+				});
+			}
+
+			alert("Product updated successfully!");
+			this.closeEditModal();
+			this.fetchProducts();
+		} catch (error) {
+			alert(error.message);
+		}
+	},
+
+
 	async toggleVisibility(productId, product) {
       try {
         const message = await toggleProductVisibility(productId, product.hidden);

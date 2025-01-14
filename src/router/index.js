@@ -19,6 +19,7 @@ import ForgetPassword from "@/components/ForgetPassword.vue";
 import UserAuction from "@/components/UserAuction.vue";
 import VoucherTask from "@/components/VoucherTask.vue";
 import VoucherTaskAdmin from "@/components/VoucherTaskAdmin.vue";
+import UserAuction from "@/components/UserAuction.vue";
 
 const routes = [
   { path: "/signup", name: "Signup", component: SignUp },
@@ -39,6 +40,7 @@ const routes = [
   { path: "/viewrequest", name: "ViewRequest", component: ViewRequest, meta: { requiresAuth: true }},
   { path: "/vouchertask", name: "VoucherTask", component: VoucherTask, meta: { requiresAuth: true }},
   { path: "/vouchertaskadmin", name: "VoucherTaskAdmin", component: VoucherTaskAdmin, meta: { requiresAuth: true }},
+  { path: "/auction", name: "UserAuction", component: UserAuction, meta: { requiresAuth: true }},
   { path: "/forgetpassword", name: "ForgetPassword", component: ForgetPassword },
 ];
 

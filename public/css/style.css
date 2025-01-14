@@ -299,10 +299,10 @@ a:hover {
     font-weight: bold;
   }
   
-  p {
+  /* p {
     margin-top: 20px;
     color: black;
-  }
+  } */
   
   /* Home Container */
   .home-container {
@@ -328,7 +328,6 @@ a:hover {
   }
   
   .search-bar {
-    margin-top: 10px;
     width: 100%;
     border-radius: 50px;
     height: 2.5rem;
@@ -347,6 +346,9 @@ a:hover {
   
   .product {
     padding: 20px;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between;
   }
   
   .product:hover {
@@ -357,6 +359,18 @@ a:hover {
     display: flex;
     justify-content: space-between;
     font-size: 12px;
+  }
+
+  .product-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Maintains the aspect ratio of the image */
+  }
+
+  .product-image-s {
+    max-width: 80px;
+    max-height: 80px;
+    object-fit: contain;
   }
 
   .pagination {
@@ -558,11 +572,17 @@ a:hover {
     display: flex;
     justify-content: space-between;
   }
-
+  
   .flex-start {
     display: flex;
     justify-content: flex-start;
     align-self: flex-start;
+  }
+
+  .flex-end {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
   }
   
   .header {

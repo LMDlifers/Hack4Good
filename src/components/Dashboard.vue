@@ -1,7 +1,10 @@
 <template>
 	<div class="container">
 		<div class="home-container">
-			<h3>Welcome, {{ userData.username }}! You have {{ userData.voucherPoints }} points</h3>
+			<div style="display: flex; text-align: center; gap: 5px;">
+				<h3>Welcome, {{ userData.username }}! You have </h3>
+				<h3 style="color: #bf4a2a;"> {{ userData.voucherPoints }} points</h3>
+			</div>
 			<div class="tabs">
 				<router-link to="/preorder">View Pre Orders</router-link>
 				<router-link to="/history">View Transaction History</router-link>
@@ -10,22 +13,35 @@
 		<input class="search-bar" v-model="searchQuery" placeholder="Search for products..." />
 		<div class="products-container">
 			<div class="product bg-white" v-for="product in filteredProducts" :key="product.id">
-				<h3>{{ product.name }}</h3>
-				<div class="product-details">
+				<div class="space-between">
 					<div>
-						<p>Points Required: {{ product.pointsRequired }}</p>
-						<p>Stock: {{ product.stock }}</p>
+						<h3>{{ product.name }}</h3>
+						<img
+						v-if="product.imageUrl"
+						:src="product.imageUrl"
+						alt="Product Image"
+						class="product-image"
+						/>
+						<p v-else>No Image</p>
+						
 					</div>
-					<button v-if="product.stock !== 0" @click="handleAddToCart(product)">Add to Cart</button>
-					<button v-else @click="preorderProduct(product)">Pre-order</button>
+				</div>
+
+				<div class="margin-t-s">
+					<p>Points Required: {{ product.pointsRequired }}</p>
+					<p>Stock: {{ product.stock }}</p>
+					<button class="wmax" v-if="product.stock !== 0" @click="handleAddToCart(product)">Add to Cart</button>
+					<button class="wmax" v-else @click="preorderProduct(product)">Pre-order</button>
 				</div>
 			</div>
 		</div>
+
 	</div>
 </template>
 
 <script>
 import { fetchProducts, addToCart, getCurrentUser, getCurrentUserData } from "@/methods";
+
 
 export default {
 	name: "UserDashboard",
@@ -35,6 +51,7 @@ export default {
 			userKey: null,
 			products: {},
 			searchQuery: "",
+			imageUrls: [],
 		};
 	},
 	computed: {
@@ -54,15 +71,13 @@ export default {
 		},
 	},
 	methods: {
-		// async handleRedeemProduct(product) {
-		// 	try {
-		// 		const message = await redeemProduct(product.id, product, this.userKey, this.userData);
-		// 		alert(message);
-		// 		this.loadProducts();
-		// 	} catch (error) {
-		// 		alert(error.message);
-		// 	}
-		// },
+		async fetchProducts() {
+			try {
+				this.products = await fetchProducts();
+			} catch (error) {
+				alert(error.message);
+			}
+		},
 		async preorderProduct(product) {
 			try {
 				// Redirect to the Pre-order page with the selected product details
@@ -110,6 +125,28 @@ export default {
 	async mounted() {
 		await this.loadUserData();
 		await this.loadProducts();
+		await this.fetchProducts();
 	},
 };
+
+
 </script>
+
+<style>
+.storage-images-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.image-wrapper img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.upload-container {
+  margin: 20px 0;
+}
+</style>

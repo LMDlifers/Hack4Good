@@ -13,9 +13,18 @@
 			</div>
 			<div class="header content" v-for="item in cartItems" :key="item.id">
 				<div style="width: 10%"><input type="checkbox" :value="item.id" v-model="selectedItems" /></div>
-				<div class="left" style="width: 40%">{{ item.name }}</div>
-				<div style="width: 15%">{{ item.pointsRequired }}</div>
-				<div style="width: 20%">
+				<div class="left" style="width: 40%;">
+					<div>{{ item.name }}</div>
+					<img
+						v-if="item.imageUrl"
+						:src="item.imageUrl"
+						alt="Product Image"
+						class="product-image-s"
+						/>
+					<p v-else>No Image</p>
+				</div>
+				<div style="width: 15%;">{{ item.pointsRequired }}</div>
+				<div style="width: 20%;">
 					<button class="btn-grey btn-round" @click="decreaseQuantity(item)">-</button>
 					{{ item.quantity }}
 					<button class="btn-grey btn-round" @click="increaseQuantity(item)">+</button>
@@ -23,12 +32,12 @@
 				<div style="width: 15%">{{ item.quantity * item.pointsRequired }}</div>
 			</div>
 			<div class="checkout-container">
-				<p>Total Points for Selected Items: {{ totalPoints }}</p>
+				<div>Total Points for Selected Items: {{ totalPoints }}</div>
 				<button @click="handleCheckoutClick">Checkout</button>
 			</div>
 			
 		</div>
-		<p v-else>Your cart is empty.</p>
+		<p v-else class="margin-t-s">Your cart is empty.</p>
 
 		<!-- Checkout Confirmation Modal -->
 		<div v-if="showCheckoutModal" class="modal-wrapper">

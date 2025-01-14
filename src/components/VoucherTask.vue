@@ -62,7 +62,7 @@
 			<span v-else style="visibility: hidden;">Next</span>
 		</div>
 	</div>
-	<div class="container" v-else>
+	<div class="container margin-t-s" v-else>
 		<p>No voucher tasks found.</p>
 	</div>
 
