@@ -38,29 +38,36 @@ The platform leverages **Vue.js** for its frontend, **Firebase** for its backend
 ## 2. Installation Guide
 
 ### Project Setup
-```bash
+
+## Node.js manager
+```
 nvm install latest
 npm install
+```
+
+## Report / Analytics generation
+```
 npm install jspdf
 npm install jspdf-autotable
-Compiles and Hot-Reloads for Development
-bash
-Copy code
+```
+
+## Compiles and Hot-Reloads for Development
+```
 npm run serve
-Compiles and Minifies for Production
-bash
-Copy code
+```
+
+## Compiles and Minifies for Production
+
+```
 npm run build
-Lints and Fixes Files
-bash
-Copy code
+```
+
+## Lints and fixes files
+```
 npm run lint
-Generate Reports
-bash
-Copy code
-npm install jspdf
-npm install jspdf-autotable
-Customize Configuration
+```
+
+## Customize Configuration
 For more details, visit the Configuration Reference.
 
 3. How to Use
