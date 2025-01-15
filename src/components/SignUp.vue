@@ -25,7 +25,7 @@
 </template>
 <script>
 import { auth } from "@/firebase";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { getDatabase, ref, set, push } from "firebase/database"; 
 
 export default {
@@ -47,9 +47,6 @@ export default {
 				const user = userCredential.user;
 
 				console.log("Signup successful!", user);
-
-				// Step 2: Update the user's display name
-				await updateProfile(user, { displayName: this.name });
 
 				// Step 3: Save user data to Firebase Realtime Database
 				const db = getDatabase();
@@ -81,7 +78,6 @@ export default {
 					timestamp: new Date().toISOString()
 				});
 				console.log("Welcome bonus transaction added!");
-
 				// Step 5: Redirect to the user dashboard
 				this.$router.push({ name: "Dashboard" });
 			} catch (error) {
