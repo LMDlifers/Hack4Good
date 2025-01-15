@@ -65,10 +65,10 @@
 			<strong>Remaining Points after Pre-order:</strong> {{ userData.voucherPoints - totalPoints }}
 			</p>
 			<div class="modal-actions space-between">
-			<button class="btn-green" :disabled="userData.voucherPoints < totalPoints" @click="confirmPreorder">
-				Confirm
-			</button>
-			<button class="btn-grey" @click="closeModal">Cancel</button>
+				<button class="btn-grey" @click="closeModal">Cancel</button>
+				<button class="btn-green" :disabled="userData.voucherPoints < totalPoints" @click="confirmPreorder">
+					Confirm
+				</button>
 			</div>
 		</div>
 	</div>
@@ -161,7 +161,7 @@ export default {
 
 				const transaction = {
 					productId: this.selectedProduct.id,
-					productName: this.selectedProduct.name,
+					details: "Preordered " + this.selectedProduct.name,
 					quantity: this.quantity,
 					totalPoints: -totalPointsRequired, 
 					type: "Preorder",

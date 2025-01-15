@@ -56,8 +56,8 @@
 
 					<!-- Actions -->
 					<div class="modal-actions space-between">
-						<button class="btn-green" type="submit">Submit</button>
 						<button class="btn-grey" type="button" @click="closeModal">Cancel</button>
+						<button class="btn-green" type="submit">Submit</button>
 					</div>
 				</form>
 			</div>
@@ -90,8 +90,8 @@
 				<h2>Confirm Deletion</h2>
 				<p>Are you sure you want to delete the auction item <strong>{{ itemToDelete?.name }}</strong>?</p>
 				<div class="space-between">
-					<button class="btn-red" @click="confirmDelete">Delete</button>
 					<button class="btn-grey" @click="closeConfirmDeleteModal">Cancel</button>
+					<button class="btn-red" @click="confirmDelete">Delete</button>
 				</div>
 			</div>
 		</div>

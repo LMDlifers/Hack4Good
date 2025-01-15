@@ -65,12 +65,12 @@
 				<p>
 					Are you sure you want to
 					<strong>{{ confirmAction }}</strong> the voucher task
-					<strong>{{ selectedTask?.description }}</strong> by
+					<strong>{{ selectedTask?.title }}</strong> by
 					<strong>{{ selectedTask?.username }}</strong>?
 				</p>
 				<div class="modal-actions space-between">
-					<button class="btn-green" @click="confirmActionHandler">Confirm</button>
 					<button class="btn-grey" @click="closeConfirmModal">Cancel</button>
+					<button class="btn-green" @click="confirmActionHandler">Confirm</button>
 				</div>
 			</div>
 		</div>
@@ -166,7 +166,7 @@ export default {
 			try {
 				task.status = status;
 				await updateVoucherTaskStatus(task.id, status);
-				alert(`Voucher task for "${task.description}" has been ${status.toLowerCase()}.`);
+				alert(`Voucher task for "${task.title}" has been ${status.toLowerCase()}.`);
 				this.fetchVoucherTasks(); // Refresh the list of tasks
 			} catch (error) {
 				alert("Error updating task status: " + error.message);

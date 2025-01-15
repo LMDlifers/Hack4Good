@@ -81,8 +81,8 @@
 					<strong>{{ selectedPreorder?.username }}</strong>?
 				</p>
 				<div class="modal-actions space-between">
-					<button class="btn-green" @click="confirmActionHandler">Confirm</button>
 					<button class="btn-grey" @click="closeConfirmModal">Cancel</button>
+					<button class="btn-green" @click="confirmActionHandler">Confirm</button>
 				</div>
 			</div>
 		</div>
@@ -93,11 +93,8 @@
 </template>
 
 <script>
-import {
-	fetchPreorders,
-	updatePreorderStatus,
-	deductProductStock,
-} from "@/methods";
+import { fetchPreorders, updatePreorderStatus, deductProductStock } from "@/methods";
+import { getDatabase, ref, get, set, push } from "firebase/database";
 
 export default {
 	name: "AdminPreorderPage",
@@ -165,10 +162,45 @@ export default {
 		},
 		async updateStatus(preorder, status) {
 			try {
-				alert(preorder);
 				preorder.status = status;
+
+				// Update preorder status in the database
 				await updatePreorderStatus(preorder, preorder.status);
-				alert(`Status updated to "${status}" for ${preorder.productName}`);
+
+				// If the status is "Rejected", refund the points
+				if (status === "Rejected") {
+					const userId = preorder.preordererId;
+					const pointsToRefund = preorder.pointsRequired * preorder.quantity;
+
+					// Fetch user data
+					const userRef = ref(getDatabase(), `users/${userId}`);
+					const userSnapshot = await get(userRef);
+
+					if (userSnapshot.exists()) {
+						const userData = userSnapshot.val();
+						const updatedPoints = (userData.voucherPoints || 0) + pointsToRefund;
+
+						// Update user points
+						await set(userRef, {
+							...userData,
+							voucherPoints: updatedPoints,
+						});
+
+						// Add a transaction record
+						const transactionsRef = ref(getDatabase(), `users/${userId}/transactions`);
+						const newTransactionRef = push(transactionsRef);
+
+						await set(newTransactionRef, {
+							productId: preorder.productId,
+							details: "Preorder for '" + preorder.productName + "' has been rejected",
+							quantity: preorder.quantity,
+							totalPoints: pointsToRefund, // Positive value for a refund
+							type: "Preorder Refund",
+							timestamp: new Date().toISOString(),
+						});
+						alert(`Points refunded: ${pointsToRefund} to user ${preorder.username}`);
+					}
+				}
 				this.fetchPreorders(); // Refresh the list of preorders
 			} catch (error) {
 				alert("Error updating status: " + error.message);

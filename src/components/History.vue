@@ -5,7 +5,7 @@
 			<!-- Header -->
 			<div class="header margin-top-s">
         <div style="width: 20%;">Type</div>
-				<div style="width: 20%;">Product Name</div>
+				<div style="width: 20%;">Details</div>
 				<div style="width: 20%;">Quantity</div>
 				<div style="width: 20%;">Total Points</div>
 				<div style="width: 20%;">Timestamp</div>
@@ -13,12 +13,12 @@
 			
 			<!-- Transactions -->
 			<div 
-				class="header content"
+				class="header content" style="min-height: 75px; height: auto;"
 				v-for="transaction in paginatedTransactions"
 				:key="transaction.id"
 			>
                 <div style="width: 20%;">{{ transaction.type }}</div>
-                <div style="width: 20%;">{{ transaction.productName }}</div>
+                <div style="width: 20%;">{{ transaction.details }}</div>
                 <div style="width: 20%;">{{ transaction.quantity }}</div>
                 <div style="width: 20%;">{{ transaction.totalPoints }}</div>
                 <div style="width: 20%;">{{ formatTimestamp(transaction.timestamp) }}</div>

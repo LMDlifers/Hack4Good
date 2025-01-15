@@ -106,8 +106,8 @@
 				</div>
 
 				<div class="modal-actions space-between">
-					<button type="submit">Create User</button>
 					<button type="button" class="btn-grey" @click="closeAddUserModal">Cancel</button>
+					<button type="submit">Create User</button>
 				</div>
 			</form>
 		</div>
@@ -123,13 +123,13 @@
 				{{ suspendUser.suspended ? "unsuspend" : "suspend" }} {{ suspendUser.username }}?
 			</p>
 			<div class="modal-actions space-between">
+				<button class="btn-grey" @click="closeSuspendModal">Cancel</button>
 				<button
 					:class="suspendUser.suspended ? 'btn-green' : 'btn-red'"
 					@click="confirmSuspendUser"
 				>
 					{{ suspendUser.suspended ? "Unsuspend" : "Suspend" }}
 				</button>
-				<button class="btn-grey" @click="closeSuspendModal">Cancel</button>
 			</div>
 		</div>
 	</div>
@@ -142,8 +142,8 @@
 				Are you sure you want to reset the password for <strong>{{ resetUserEmail }}</strong>?
 			</p>
 			<div class="modal-actions space-between">
-			<button class="btn-green" @click="confirmResetPassword">Confirm</button>
 			<button class="btn-grey" @click="closeResetPasswordModal">Cancel</button>
+			<button class="btn-green" @click="confirmResetPassword">Confirm</button>
 		</div>
 	</div>
 </div>

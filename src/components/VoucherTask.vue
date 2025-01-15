@@ -19,8 +19,8 @@
 			<!-- Table Header -->
 			<div class="header margin-t-s">
 				<div style="width: 20%;">Task Title</div>
-				<div style="width: 20%;">Points</div>
-				<div style="width: 20%;">Description</div>
+				<div style="width: 10%;">Points</div>
+				<div style="width: 30%;">Description</div>
 				<div style="width: 20%;">Status</div>
 				<div style="width: 20%;">Timestamp</div>
 			</div>
@@ -33,8 +33,8 @@
 				:key="id"
 			>
 				<div style="width: 20%;">{{ task.title }}</div>
-				<div style="width: 20%;">{{ task.points }}</div>
-				<div style="width: 20%;">{{ task.description }}</div>
+				<div style="width: 10%;">{{ task.points }}</div>
+				<div style="width: 30%;">{{ task.description }}</div>
 				<div style="width: 20%;">
 					<span class="status" :class="getStatusClass(task.status)">
 						{{ task.status }}
@@ -92,8 +92,8 @@
 				</div>
 
 				<div class="modal-actions space-between">
-					<button type="submit">Submit Task</button>
 					<button type="button" class="btn-grey" @click="closeVoucherTaskModal">Cancel</button>
+					<button type="submit">Submit Task</button>
 				</div>
 			</form>
 		</div>

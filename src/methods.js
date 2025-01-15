@@ -568,7 +568,7 @@ export async function processCheckout(userId, cartItems, totalPoints, userPoints
 		await push(transactionsRef, {
 			type: "Product",
 			productId: item.id,
-			productName: item.name,
+			details: "Purchased product '" + item.name + "'",
 			quantity: item.quantity,
 			totalPoints: -item.quantity * item.pointsRequired,
 			timestamp: new Date().toISOString(),
@@ -897,8 +897,8 @@ export async function recordTransaction(userId, task) {
         await push(transactionsRef, {
 			type: "Voucher Transaction",
 			productId: task.id,
-			productName: task.title,
-			quantity: 0,
+			details: "Task '" + task.title + "' has been approved",
+			quantity: "-",
 			totalPoints: task.points,
 			timestamp: Date.now(),
         });

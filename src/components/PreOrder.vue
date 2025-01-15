@@ -95,8 +95,8 @@
 						/>
 					</div>
 					<div class="space-between">
-						<button type="submit">Preorder</button>
 						<button type="button" class="btn-grey" @click="closePreorderModal">Cancel</button>
+						<button type="submit">Preorder</button>
 					</div>
 				</form>
 			</div>

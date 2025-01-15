@@ -90,8 +90,8 @@
 				</div>
 
 				<div class="modal-actions space-between">
-					<button type="submit">Submit Request</button>
 					<button type="button" class="btn-grey" @click="closeRequestModal">Cancel</button>
+					<button type="submit">Submit Request</button>
 				</div>
 			</form>
 		</div>

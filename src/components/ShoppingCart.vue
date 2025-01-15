@@ -48,8 +48,8 @@
 				<p>Total Points for Selected Items: {{ totalPoints }}</p>
 				<p>After Checkout Balance: {{ userData.voucherPoints - totalPoints }}</p>
 				<div class="space-between">
-					<button @click="confirmCheckout">Confirm</button>
 					<button class="btn-grey" @click="closeCheckoutModal">Cancel</button>
+					<button @click="confirmCheckout">Confirm</button>
 				</div>
 			</div>
 		</div>

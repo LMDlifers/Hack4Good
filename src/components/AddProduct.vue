@@ -116,8 +116,8 @@
 					/>
 				</div>
 				<div class="space-between">
-					<button type="submit" class="btn-green">Add Product</button>
 					<button type="button" class="btn-grey" @click="closeAddProductModal">Cancel</button>
+					<button type="submit" class="btn-green">Add Product</button>
 				</div>
 			</form>
 		</div>
@@ -136,8 +136,8 @@
 			required
 			/>
 			<div class="space-between">
-			<button class="btn-green" @click="confirmIncreaseStock">Confirm</button>
-			<button class="btn-grey" @click="closeIncreaseStockModal">Cancel</button>
+				<button class="btn-grey" @click="closeIncreaseStockModal">Cancel</button>
+				<button class="btn-green" @click="confirmIncreaseStock">Confirm</button>
 			</div>
 		</div>
 	</div>
@@ -193,8 +193,8 @@
 					<button type="button" class="btn-red" style="width: 100%" @click="removeImage">Remove Current Image</button>
 				</div>
 				<div class="space-between">
-					<button type="submit" class="btn-green">Save Changes</button>
 					<button type="button" class="btn-grey" @click="closeEditModal">Cancel</button>
+					<button type="submit" class="btn-green">Save Changes</button>
 				</div>
 			</form>
 		</div>
