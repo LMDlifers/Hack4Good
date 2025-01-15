@@ -76,10 +76,14 @@ export async function getCurrentUserData() {
 	const userKey = await getCurrentUser();
 	const db = getDatabase();
 	const userRef = ref(db, `users/${userKey}`);
-  
+	alert(userKey);
 	try {
+		alert("1");
 		const snapshot = await get(userRef);
+		console.log(snapshot);
+		console.log(snapshot.exists());
 		if (snapshot.exists()) {
+			alert("3");
 			return snapshot.val();
 		} else {
 			throw new Error("No data available for the user.");
@@ -392,7 +396,21 @@ export async function fetchUserPreorders() {
     }
 }
 
+export async function suspendUser(userId, suspended) {
+	const db = getDatabase();
+	const productRef = ref(db, `users/${userId}`);
   
+	try {
+		await update(productRef, { suspended: !suspended });
+		if (suspended) {
+			return `User has been unsuspended.`;
+		}
+		return `User has been suspended.`;
+	} catch (error) {
+		console.error("Error suspending user", error);
+		throw new Error("An error occurred while suspending user. Please try again.");
+	}
+}
 
   
 // Check if the current user is an admin
