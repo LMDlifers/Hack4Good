@@ -69,6 +69,7 @@ npm run lint
 
 ## Customize Configuration
 For more details, visit the Configuration Reference.
+---
 
 3. How to Use
 As a Resident:
@@ -79,13 +80,15 @@ Navigate additional features (e.g., Voucher Tasks) via the menu.
 Auction House: Bid on exclusive items to enhance platform engagement and foster community.
 
 As an Admin:
-Admin Login Credentials: User: admin@gmail.com / Password: 123123
+Admin Login Credentials: 
+User: admin@gmail.com
+Password: 123123
 
 Admin Features:
 Configure user permissions, product pricing, and auction items.
 Manage platform data with streamlined tools.
 4. Credits
-Tan Kee Xiang (Project Head): GitHub
-Lee Wei Kiat (DevOps Engineer): GitHub
-Marcus Liang (Frontend Engineer): GitHub
-Tony Koo (QA / Operations): GitHub
+Tan Kee Xiang (Project Head): [GitHub](https://github.com/kee-x)
+Lee Wei Kiat (DevOps Engineer): [GitHub](https://github.com/weikiatt)
+Marcus Liang (Frontend Engineer): [GitHub](https://github.com/LiangMarcus)
+Tony Koo (QA / Operations): [GitHub](https://github.com/LMDlifers)
