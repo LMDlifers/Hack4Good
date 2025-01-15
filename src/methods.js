@@ -1002,3 +1002,11 @@ export function downloadReport(filename, content) {
 
     URL.revokeObjectURL(url); // Clean up the URL object
 }
+
+export async function addProductToDatabase(product) {
+	const db = getDatabase();
+	const productRef = ref(db, "products");
+	const newProductRef = push(productRef); // Create a new product with a unique ID
+	await set(newProductRef, product); // Save the product details
+	return newProductRef.key; // Return the unique ID (productId)
+  }

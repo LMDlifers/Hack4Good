@@ -178,7 +178,7 @@ export default {
 				alert("There are enough stocks available, please purchase it normally.");
 				return;
 			}
-
+			alert('t');
 			try {
 				const message = await preorderProduct(
 					this.userKey,

@@ -327,7 +327,7 @@ export default {
 				const currentUser = auth.currentUser;
 				if (currentUser) {
 					await logAuditEntry({
-						type: "inventory",
+						type: "Inventory",
 						user: currentUser.uid,
 						details: `Added a new product: ${newProduct.name} (Points: ${newProduct.pointsRequired}, Stock: ${newProduct.stock})`,
 					});
@@ -390,7 +390,7 @@ export default {
 				const currentUser = auth.currentUser;
 				if (currentUser) {
 					await logAuditEntry({
-						type: "inventory",
+						type: "Inventory",
 						user: currentUser.uid,
 						details: `Edited product: ${this.editProductName} (Points: ${this.editPointsRequired}, Hidden: ${this.editHidden ? "Yes" : "No"})`,
 					});
@@ -417,7 +417,7 @@ export default {
 
 				if (currentUser) {
 					await logAuditEntry({
-						type: "inventory",
+						type: "Inventory",
 						user: currentUser.uid, // Log the current user's UID
 						details: `${product.hidden ? "Unhid" : "Hid"} this product: ${this.products[productId].name}`,
 					});
@@ -457,7 +457,7 @@ export default {
 			const currentUser = auth.currentUser;
 			if (currentUser) {
 				await logAuditEntry({
-				type: "inventory",
+				type: "Inventory",
 				user: currentUser.uid,
 				details: `Increased stock for product ${this.selectedProduct.name} by ${this.increaseAmount}`,
 				});

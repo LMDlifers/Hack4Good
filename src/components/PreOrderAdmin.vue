@@ -198,7 +198,7 @@ export default {
 							type: "Preorder Refund",
 							timestamp: new Date().toISOString(),
 						});
-						alert(`Points refunded: ${pointsToRefund} to user ${preorder.username}`);
+						// alert(`Points refunded: ${pointsToRefund} to user ${preorder.username}`);
 					}
 				}
 				this.fetchPreorders(); // Refresh the list of preorders

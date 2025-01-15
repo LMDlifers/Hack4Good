@@ -34,8 +34,8 @@
 				</div>
 				<div style="width: 16.66%;">
 					<div v-if="request.status === 'Pending'" class="action-buttons">
-						<button class="btn-green" @click="updateStatus(request, 'Approved')">Approve</button>
 						<button class="btn-red" @click="updateStatus(request, 'Rejected')">Reject</button>
+						<button class="btn-green" @click="updateStatus(request, 'Approved')">Approve</button>
 					</div>
 					<div v-else>
 						<span>No Actions</span>
@@ -105,7 +105,7 @@ export default {
                 const user = await getCurrentUserData();
 				if (currentUser) {
 					await logAuditEntry({
-						type: "request",
+						type: "Request",
 						user: currentUser.uid,
                         details: `${user.username} has ${status.toLowerCase()} request for ${request.productName}`
 					});

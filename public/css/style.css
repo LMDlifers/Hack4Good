@@ -298,6 +298,10 @@ a:hover {
   th {
     font-weight: bold;
   }
+
+  td {
+    background-color: white;
+  }
   
   /* p {
     margin-top: 20px;
@@ -436,12 +440,9 @@ a:hover {
   }
 
   .btn-grey {
-    background: lightgrey;
+    background: #C0C0C0;
   }
 
-  .btn-grey:hover {
-    background: grey;
-  }
 
   .btn-round {
     border-radius: 50%;

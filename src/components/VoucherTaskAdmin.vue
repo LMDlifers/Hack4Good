@@ -34,8 +34,8 @@
 				<div style="width: 15%;">{{ new Date(task.timestamp).toLocaleString() }}</div>
 				<div style="width: 15%;">
 					<div v-if="task.status === 'Pending'" class="action-buttons">
-						<button class="btn-green" @click="openConfirmModal(task, 'approve')">Approve</button>
 						<button class="btn-red" @click="openConfirmModal(task, 'reject')">Reject</button>
+						<button class="btn-green" @click="openConfirmModal(task, 'approve')">Approve</button>
 					</div>
 					<div v-else>
 						<span>No Actions</span>

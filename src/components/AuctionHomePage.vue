@@ -113,15 +113,14 @@
 				<h3>{{ item.name || "Unknown" }}</h3>
 				<p>Created by {{ item.creator || "Unknown" }}</p>
 				<div class="auction-details">
-				<p>Reserve price: ${{ item.reservePrice || "--" }}</p>
-				<p>Highest bid: ${{ item.highestBid || "0" }}</p>
-				<p>Closing Time: {{ item.time || "Not Set" }}</p>
-				<p :class="getStatusClass(item.time)">
-					Status: {{ getStatusText(item.time) }}
-				</p>
+					<p>Starting points: <strong>{{ item.reservePrice || "--" }} points</strong></p>
+					<p>Highest bid: <strong>{{ item.currentBid || item.reservePrice }} points</strong></p>
+					<p>Highest bidder: <strong>{{ item.highestBidderName || "None" }}</strong> </p>
+					<p>Closing Time: <strong>{{ new Date(item.time).toLocaleString() || "Not Set" }}</strong> </p>
+					<p>Status: <strong :class="getStatusClass(item.time)"> {{ getStatusText(item.time) }} </strong></p>
 				</div>
 			</div>
-			<div class="space-between">
+			<div class="space-between margin-t-s">
 				<button class="btn-grey" style="width: 40%" @click="editAuction(item)">Edit</button>
 				<button class="btn-red" style="width: 40%" @click="promptDeleteAuction(item.id)">Delete</button>
 			</div>

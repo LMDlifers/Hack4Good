@@ -17,10 +17,10 @@
 		<div v-if="report && !loading && !error">
 			
 			<!-- Weekly Requests Section -->
-			<div class="report-section margin-t-s">
+			<div class="margin-t-s">
 				<h3>Weekly Requests</h3>
 				<p>Total Requests: {{ report.weeklyRequests.total }}</p>
-				<table class="table">
+				<table>
 					<thead>
 						<tr>
 							<th>Product Name</th>
@@ -44,10 +44,10 @@
 			</div>
 
 			<!-- Inventory Summary Section -->
-			<div class="report-section">
+			<div class="margin-t-s">
 				<h3>Inventory Summary</h3>
 				<p>Total Items: {{ report.inventorySummary.totalItems }}</p>
-				<table class="table">
+				<table>
 					<thead>
 						<tr>
 							<th>Item Name</th>

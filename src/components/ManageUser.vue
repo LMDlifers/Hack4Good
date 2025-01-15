@@ -8,7 +8,7 @@
 			<input
 				class="search-bar"
 				v-model="searchQuery"
-				placeholder="Search products by name..."
+				placeholder="Search for users..."
 				type="text"
 			/>
 		</div>

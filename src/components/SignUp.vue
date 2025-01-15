@@ -74,8 +74,11 @@ export default {
 				const transactionsRef = ref(db, `users/${user.uid}/transactions`);
 				await push(transactionsRef, {
 					type: "Welcome Bonus",
-					points: 100,
-					timestamp: new Date().toISOString(),
+					productId: "-",
+					details: `Welcome Bonus`,
+					quantity: "-",
+					totalPoints: 100,
+					timestamp: new Date().toISOString()
 				});
 				console.log("Welcome bonus transaction added!");
 

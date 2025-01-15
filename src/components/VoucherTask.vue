@@ -14,7 +14,6 @@
 		</div>
 	</div>
 	<div v-if="paginatedTasks.length > 0" class="container scrollable-div">
-		
 		<div>
 			<!-- Table Header -->
 			<div class="header margin-t-s">

@@ -157,7 +157,7 @@ export default {
 
 				const transaction = {
 					productId: this.selectedProduct.id,
-					details: "Preordered " + this.selectedProduct.name,
+					details: "Preordered '" + this.selectedProduct.name + "'",
 					quantity: this.quantity,
 					totalPoints: -totalPointsRequired, 
 					type: "Preorder",
