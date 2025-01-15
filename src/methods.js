@@ -76,14 +76,11 @@ export async function getCurrentUserData() {
 	const userKey = await getCurrentUser();
 	const db = getDatabase();
 	const userRef = ref(db, `users/${userKey}`);
-	alert(userKey);
 	try {
-		alert("1");
 		const snapshot = await get(userRef);
 		console.log(snapshot);
 		console.log(snapshot.exists());
 		if (snapshot.exists()) {
-			alert("3");
 			return snapshot.val();
 		} else {
 			throw new Error("No data available for the user.");
