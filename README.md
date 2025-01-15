@@ -71,24 +71,35 @@ npm run lint
 For more details, visit the Configuration Reference.
 ---
 
-3. How to Use
-As a Resident:
-Sign-Up: Register using your credentials to access the dashboard.
+### 3. How to Use
 
-Dashboard features: Account balance, transaction history, pre-orders, and shopping cart management.
-Navigate additional features (e.g., Voucher Tasks) via the menu.
-Auction House: Bid on exclusive items to enhance platform engagement and foster community.
+#### As a Resident:
+1. **Sign-Up**: Register using your credentials to access the dashboard.  
+2. **Dashboard Features**:  
+   - View account balance, transaction history, and pre-orders.  
+   - Add items to your shopping cart.  
+   - Access additional features (e.g., Voucher Tasks) via the top-right menu.  
+3. **Auction House**:  
+   - Place bids on exclusive or special items.  
+   - Enhance engagement and foster community participation.
 
-As an Admin:
-Admin Login Credentials: 
-User: admin@gmail.com
-Password: 123123
+---
 
-Admin Features:
-Configure user permissions, product pricing, and auction items.
-Manage platform data with streamlined tools.
-4. Credits
-Tan Kee Xiang (Project Head): [GitHub](https://github.com/kee-x)
-Lee Wei Kiat (DevOps Engineer): [GitHub](https://github.com/weikiatt)
-Marcus Liang (Frontend Engineer): [GitHub](https://github.com/LiangMarcus)
-Tony Koo (QA / Operations): [GitHub](https://github.com/LMDlifers)
+#### As an Admin:
+- **Login Credentials**:  
+  - **User**: `admin@gmail.com`  
+  - **Password**: `123123`
+
+- **Admin Features**:  
+  - Configure user permissions and product pricing.  
+  - Upload and manage auction items.  
+  - Maintain platform data using streamlined tools.
+
+---
+
+### 4. Credits
+
+- **Tan Kee Xiang (Project Head)**: [GitHub](https://github.com/kee-x)  
+- **Lee Wei Kiat (DevOps Engineer)**: [GitHub](https://github.com/weikiatt)  
+- **Marcus Liang (Frontend Engineer)**: [GitHub](https://github.com/LiangMarcus)  
+- **Tony Koo (QA / Operations)**: [GitHub](https://github.com/LMDlifers)
