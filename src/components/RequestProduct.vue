@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { fetchRequests, submitProductRequest } from "@/methods";
+import { fetchUserRequests, submitProductRequest } from "@/methods";
 import { getAuth } from "firebase/auth";
 
 export default {
@@ -136,9 +136,9 @@ export default {
 		},
 	},
 	methods: {
-		async fetchRequests() {
+		async fetchUserRequests() {
 			try {
-				const requests = await fetchRequests();
+				const requests = await fetchUserRequests();
 				// Sort by timestamp, latest first
 				this.requests = requests.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 			} catch (error) {
@@ -176,7 +176,7 @@ export default {
 				await submitProductRequest(this.newRequest);
 				alert("Request submitted successfully.");
 				this.closeRequestModal();
-				this.fetchRequests(); // Refresh requests list
+				this.fetchUserRequests(); // Refresh requests list
 			} catch (error) {
 				alert("Error submitting request: " + error.message);
 			}
@@ -192,7 +192,7 @@ export default {
 		},
 	},
 	async mounted() {
-		await this.fetchRequests();
+		await this.fetchUserRequests();
 	},
 };
 </script>

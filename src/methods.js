@@ -1010,3 +1010,6 @@ export async function addProductToDatabase(product) {
 	await set(newProductRef, product); // Save the product details
 	return newProductRef.key; // Return the unique ID (productId)
   }
+
+
+  
