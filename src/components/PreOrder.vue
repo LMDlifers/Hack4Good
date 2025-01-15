@@ -3,7 +3,7 @@
 		<!-- Preorder Button -->
 		<div class="space-between">
 			<h2>List of Preorders</h2>
-			<button class="btn-primary" @click="openPreorderModal">Add Preorder</button>
+			<!-- <button class="btn-primary" @click="openPreorderModal">Add Preorder</button> -->
 		</div>
 	</div>
 	<div v-if="paginatedPreorders.length > 0" class="container scrollable-div">
@@ -65,7 +65,7 @@
 			<span v-else style="visibility: hidden;">Next</span>
 		</div>
 	</div>
-	<div class="container" v-else>
+	<div v-else class="container margin-t-s">
 		<p>No pre-orders found.</p>
 	</div>
 	<!-- Preorder Modal -->
