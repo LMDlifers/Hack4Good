@@ -97,30 +97,30 @@ For more details, visit the [Configuration Reference](https://cli.vuejs.org/conf
   - **Password**: `123123`
 
 1. **Administration**:
-   ## Admin Panel
+   ##### Admin Panel
       - Generate and download reports, including weekly requests and inventory summaries.
-   ## Manage users
+   ##### Manage users
       - Register new users with ease.
       - Suspend users when necessary.
       - Reset user passwords via email for account recovery.
 2. **Operations**
-   ## Products
+   ##### Products
       - Add new products to the inventory.
       - Update product details as needed.
       - Adjust stock levels to ensure availability.
       - Quickly search for specific products.
-   ## Pre Orders
+   ##### Pre Orders
       - Review and approve or reject preorder requests from residents.
-   ## Requests
+   ##### Requests
       - Evaluate and approve or reject product requests submitted by residents.
-   ## Voucher Tasks
+   ##### Voucher Tasks
       - Manage voucher task claims by approving or rejecting submissions.
 3. **Audit**
-   ## Audit Log
+   ##### Audit Log
       - Monitor all administrative activities for transparency.
       - Generate detailed audit reports.
 4. **Special Features**
-   ## Auction
+   ##### Auction
       - Create new auctions for exclusive items.
       - Search and manage existing auctions effortlessly.
       - Edit auction details to reflect updates.
