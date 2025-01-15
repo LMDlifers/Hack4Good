@@ -20,7 +20,7 @@
 						:src="item.imageUrl"
 						alt="Product Image"
 						class="product-image-s"
-						/>
+					/>
 					<p v-else>No Image</p>
 				</div>
 				<div style="width: 15%;">{{ item.pointsRequired }}</div>
@@ -35,7 +35,6 @@
 				<div>Total Points for Selected Items: {{ totalPoints }}</div>
 				<button @click="handleCheckoutClick">Checkout</button>
 			</div>
-			
 		</div>
 		<p v-else class="margin-t-s">Your cart is empty.</p>
 
@@ -55,11 +54,26 @@
 			</div>
 		</div>
 
+		<!-- Insufficient Stock Modal -->
+		<div v-if="showInsufficientStockModal" class="modal-wrapper">
+			<div class="modal-backdrop" @click="closeInsufficientStockModal"></div>
+			<div class="modal padding-20 center-vh flex-col">
+				<h2>Insufficient Stock</h2>
+				<p>The following items have insufficient stock:</p>
+				<ul>
+					<li v-for="item in insufficientStockItems" :key="item.id">
+						{{ item.name }} (Available: {{ item.stock }}, Required: {{ item.quantity }})
+					</li>
+				</ul>
+				<button class="btn-grey" @click="closeInsufficientStockModal">OK</button>
+			</div>
+		</div>
+
 		<!-- No Items Selected Modal -->
 		<div v-if="showNoItemsSelectedModal" class="modal-wrapper">
 			<div class="modal-backdrop" @click="closeNoItemsSelectedModal"></div>
 			<div class="modal padding-20 center-vh flex-col">
-				<p>You have not selected any items for checkout</p>
+				<p>You have not selected any items for checkout.</p>
 				<button class="btn-grey" @click="closeNoItemsSelectedModal">OK</button>
 			</div>
 		</div>
@@ -75,11 +89,26 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- Checkout Successful Modal -->
+		<div v-if="showCheckoutSuccessModal" class="modal-wrapper">
+			<div class="modal-backdrop" @click="closeCheckoutSuccessModal"></div>
+			<div class="modal padding-20 center-vh flex-col">
+				<h2>Checkout Successful</h2>
+				<p>Your selected items have been successfully checked out.</p>
+				<button class="btn-grey" @click="closeCheckoutSuccessModal">OK</button>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script>
-import { fetchCartData, updateCartItemQuantity, removeCartItem, processCheckout } from "@/methods";
+import {
+	fetchCartData,
+	updateCartItemQuantity,
+	removeCartItem,
+	processCheckout,
+} from "@/methods";
 import { auth } from "@/firebase";
 
 export default {
@@ -89,10 +118,13 @@ export default {
 			cartItems: [],
 			userData: {},
 			showCheckoutModal: false, // Controls checkout confirmation modal visibility
+			showInsufficientStockModal: false, // Controls insufficient stock modal visibility
 			showNoItemsSelectedModal: false, // Controls "No Items Selected" modal visibility
 			showRemoveModal: false, // Controls "Remove Product" modal visibility
+			showCheckoutSuccessModal: false, // Controls "Checkout Successful" modal visibility
 			productToRemove: null, // Stores the product to remove
 			selectedItems: [], // Holds the IDs of selected items
+			insufficientStockItems: [], // Holds the items with insufficient stock
 		};
 	},
 	computed: {
@@ -135,8 +167,12 @@ export default {
 			const userId = auth.currentUser.uid;
 			if (this.productToRemove) {
 				await removeCartItem(userId, this.productToRemove.id);
-				this.cartItems = this.cartItems.filter((cartItem) => cartItem.id !== this.productToRemove.id);
-				this.selectedItems = this.selectedItems.filter((id) => id !== this.productToRemove.id);
+				this.cartItems = this.cartItems.filter(
+					(cartItem) => cartItem.id !== this.productToRemove.id
+				);
+				this.selectedItems = this.selectedItems.filter(
+					(id) => id !== this.productToRemove.id
+				);
 				this.productToRemove = null;
 			}
 			this.closeRemoveModal();
@@ -165,15 +201,45 @@ export default {
 		closeNoItemsSelectedModal() {
 			this.showNoItemsSelectedModal = false;
 		},
+		closeInsufficientStockModal() {
+			this.showInsufficientStockModal = false;
+			this.closeCheckoutModal(); // Close confirm checkout modal if open
+		},
+		closeCheckoutSuccessModal() {
+			this.showCheckoutSuccessModal = false;
+		},
 		async confirmCheckout() {
 			try {
+				// Filter items selected for checkout
 				const itemsToCheckout = this.cartItems.filter((item) =>
 					this.selectedItems.includes(item.id)
 				);
-				await processCheckout(auth.currentUser.uid, itemsToCheckout, this.totalPoints, this.userData.voucherPoints);
-				this.cartItems = this.cartItems.filter((item) => !this.selectedItems.includes(item.id));
+
+				// Collect items with insufficient stock
+				this.insufficientStockItems = itemsToCheckout.filter(
+					(item) => item.quantity > item.stock
+				);
+
+				// If there are any items with insufficient stock, show the modal
+				if (this.insufficientStockItems.length > 0) {
+					this.showInsufficientStockModal = true;
+					return; // Prevent checkout
+				}
+
+				// Proceed with checkout if all items have enough stock
+				await processCheckout(
+					auth.currentUser.uid,
+					itemsToCheckout,
+					this.totalPoints,
+					this.userData.voucherPoints
+				);
+
+				// Remove checked-out items from the cart
+				this.cartItems = this.cartItems.filter(
+					(item) => !this.selectedItems.includes(item.id)
+				);
 				this.selectedItems = [];
-				alert("Checkout successful!");
+				this.showCheckoutSuccessModal = true; // Show checkout success modal
 				this.closeCheckoutModal();
 			} catch (error) {
 				alert(error.message);

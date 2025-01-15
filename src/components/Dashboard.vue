@@ -31,10 +31,11 @@
 					<p>Points Required: {{ product.pointsRequired }}</p>
 					<p>Stock: {{ product.stock }}</p>
 					<button class="wmax" v-if="product.stock !== 0" @click="handleAddToCart(product)">Add to Cart</button>
-					<button class="wmax" v-else @click="preorderProduct(product)">Pre-order</button>
+					<button class="wmax" v-else @click="openPreorderModal(product)">Pre-order</button>
 				</div>
 			</div>
 		</div>
+		
 
 	</div>
 </template>
@@ -51,14 +52,14 @@ export default {
 			userKey: null,
 			products: {},
 			searchQuery: "",
-			imageUrls: [],
+			showModal: false,
+			selectedProduct: null,
+			quantity: 1,
 		};
 	},
 	computed: {
 		filteredProducts() {
 			const query = this.searchQuery.toLowerCase();
-
-			// Transform `this.products` to include keys as part of each product object
 			const transformedProducts = Object.entries(this.products).map(([key, value]) => ({
 				id: key, // Include the key as `id`
 				...value, // Spread the rest of the product's properties
@@ -77,6 +78,31 @@ export default {
 			} catch (error) {
 				alert(error.message);
 			}
+		},
+		openPreorderModal(product) {
+			this.selectedProduct = product;
+			this.showModal = true;
+		},
+		closeModal() {
+			this.showModal = false;
+			this.selectedProduct = null;
+			this.quantity = 1;
+		},
+		onfirmPreorder() {
+			if (this.quantity < 1) {
+				alert("Please select a valid quantity.");
+				return;
+			}
+			this.$router.push({
+				name: "PreOrder",
+				query: {
+					id: this.selectedProduct.id,
+					name: this.selectedProduct.name,
+					pointsRequired: this.selectedProduct.pointsRequired,
+					quantity: this.quantity,
+				},
+			});
+			this.closeModal();
 		},
 		async preorderProduct(product) {
 			try {
@@ -133,20 +159,4 @@ export default {
 </script>
 
 <style>
-.storage-images-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.image-wrapper img {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.upload-container {
-  margin: 20px 0;
-}
 </style>

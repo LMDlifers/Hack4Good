@@ -478,7 +478,7 @@ export async function checkIfAdmin() {
 export async function addToCart(productId, product, userKey) {
 	const db = getDatabase();
 	const cartRef = ref(db, `users/${userKey}/cart/${productId}`);
-  
+
 	try {
 		// Fetch existing cart item
 		const snapshot = await get(cartRef);
@@ -490,8 +490,9 @@ export async function addToCart(productId, product, userKey) {
 				const updatedQuantity = currentCartItem.quantity + 1;
 				await update(cartRef, { quantity: updatedQuantity });
 				return `Added another ${product.name} to your cart.`;
-			} else {
-				throw new Error(`No more stock available for ${product.name}.`);
+			} else if (currentCartItem.quantity >= product.stock) {
+				return `There amount you are trying to add to your cart exceeds the stock we currently have`;
+				// throw new Error(`No more stock available for ${product.name}.`);
 			}
 		} else {
 			// Add new item to the cart
@@ -499,6 +500,7 @@ export async function addToCart(productId, product, userKey) {
 			return `${product.name} has been added to your cart.`;
 		}
 	} catch (error) {
+		alert(error.message);
 		console.error("Error adding product to cart:", error);
 		throw new Error("An error occurred while adding the product to your cart.");
 	}
