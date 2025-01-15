@@ -13,16 +13,12 @@
 Our web-based minimart provides a straightforward and user-friendly platform for residents to purchase products using their vouchers while maintaining a minimalist yet functional design. The project features two core interfaces: one for residents and another for administrators.
 
 ### Key Features:
-- **Voucher Sharing**: Enable collaborative sharing of vouchers among residents.  
-- **Priority Requests**: Allow residents to prioritize product requests.  
-- **Wishlist**: Save preferred items for future purchases.  
-- **Product Ratings**: Share feedback to improve the shopping experience.  
-
-### Auction Module:
-- Hidden bids for fair competition.  
-- A dictionary-based fund storage system.  
-- Option for users to contribute items from their inventory for auction.  
-- Encourages platform engagement while fostering community spirit.  
+- **Purchase Products**: Conveniently browse and purchase available products.
+- **Preorder Products**: Place preorders for out-of-stock items to secure them in advance.
+- **Claim Points**: Complete voucher tasks to earn points, subject to admin approval.
+- **Request Products**: Submit requests for products not currently listed in the system.
+- **Chatbot**: Get instant answers to your questions through an AI-powered chatbot.
+- **Auction**: Engage in competitive bidding to win exclusive items or deals.
 
 ### Challenges Overcome:
 1. **Seamless Integration**: Ensuring the platform aligns with MWH’s existing website design to avoid user confusion.  
@@ -74,15 +70,25 @@ For more details, visit the [Configuration Reference](https://cli.vuejs.org/conf
 ### 3. How to Use
 
 #### As a Resident:
-1. **Sign-Up**: Register using your credentials to access the dashboard.  
-2. **Dashboard Features**:  
-   - View account balance, transaction history, and pre-orders.  
-   - Add items to your shopping cart.  
-   - Access additional features (e.g., Voucher Tasks) via the top-right menu.  
-3. **Auction House**:  
-   - Place bids on exclusive or special items.  
-   - Enhance engagement and foster community participation.
-
+1. **Sign-Up**:
+   - Create an account with your credentials to access all features on the dashboard.
+3. **Dashboard Features**:  
+   - Check your account balance and review transaction history.
+   - Add items to your shopping cart seamlessly.
+   - Preorder items that are currently out of stock.
+4. **Pre-Orders Tab**:
+   - Keep track of all your preordered items in one place.
+5. **Voucher Tasks Tab**:
+   - Submit tasks to earn reward points, pending admin approval.
+   - Review details of submitted tasks, including descriptions and their current status.
+6. **Request Product Tab**:
+   - Suggest new products that are not yet available in the system.
+   - View the status and details of all your submitted product requests.
+7. **Shopping Cart**:
+   - Effortlessly proceed to checkout with your selected items.
+8. **Auction House**:  
+   - Participate in bidding for exclusive or limited-edition items.
+   - Promote engagement and strengthen the sense of community involvement.
 ---
 
 #### As an Admin:
@@ -90,10 +96,36 @@ For more details, visit the [Configuration Reference](https://cli.vuejs.org/conf
   - **User**: `admin@gmail.com`  
   - **Password**: `123123`
 
-- **Admin Features**:  
-  - Configure user permissions and product pricing.  
-  - Upload and manage auction items.  
-  - Maintain platform data using streamlined tools.
+1. **Administration**:
+   ## Admin Panel
+      - Generate and download reports, including weekly requests and inventory summaries.
+   ## Manage users
+      - Register new users with ease.
+      - Suspend users when necessary.
+      - Reset user passwords via email for account recovery.
+2. **Operations**
+   ## Products
+      - Add new products to the inventory.
+      - Update product details as needed.
+      - Adjust stock levels to ensure availability.
+      - Quickly search for specific products.
+   ## Pre Orders
+      - Review and approve or reject preorder requests from residents.
+   ## Requests
+      - Evaluate and approve or reject product requests submitted by residents.
+   ## Voucher Tasks
+      - Manage voucher task claims by approving or rejecting submissions.
+3. **Audit**
+   ## Audit Log
+      - Monitor all administrative activities for transparency.
+      - Generate detailed audit reports.
+4. **Special Features**
+   ## Auction
+      - Create new auctions for exclusive items.
+      - Search and manage existing auctions effortlessly.
+      - Edit auction details to reflect updates.
+      - Remove outdated or completed auctions.
+   
 
 ---
 
