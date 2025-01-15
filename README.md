@@ -1,4 +1,4 @@
-# Project Title: Muhammadiyah Welfare Home’s Web-based Minimart
+# Muhammadiyah Welfare Home’s Web-based Minimart
 
 ## Table of Contents
 1. [Project Description](#1-project-description)  
@@ -68,7 +68,7 @@ npm run lint
 ```
 
 ## Customize Configuration
-For more details, visit the Configuration Reference.
+For more details, visit the [Configuration Reference](https://cli.vuejs.org/config/).
 ---
 
 ### 3. How to Use
