@@ -1,5 +1,5 @@
   import { createRouter, createWebHistory } from "vue-router";
-  import { getAuth } from "firebase/auth";
+  import { getAuth, onAuthStateChanged } from "firebase/auth";
   import Dashboard from "@/components/Dashboard.vue";
   import Login from "@/components/LoginPage.vue";
   import SignUp from "@/components/SignUp.vue";
@@ -47,16 +47,23 @@
     routes,
   });
 
+  const auth = getAuth();
   // Navigation guard to check authentication
   router.beforeEach((to, from, next) => {
-    const auth = getAuth();
     const user = auth.currentUser;
-
-    if (to.matched.some(record => record.meta.requiresAuth) && !user) {
-      next({ name: "Login" }); // Redirect to login if not authenticated
+  
+    if (to.matched.some((record) => record.meta.requiresAuth) && !user) {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          next();
+        } else {
+          next({ name: "Login" });
+        }
+      });
     } else {
       next(); // Allow navigation
     }
   });
+  
 
   export default router;
