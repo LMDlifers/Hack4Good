@@ -57,7 +57,6 @@
 			</div>
 			<p><strong>Total Points Required:</strong> {{ totalPoints }}</p>
 			<p><strong>Current Points:</strong> {{ userData.voucherPoints }}</p>
-			<p><strong>Points Left After Preorder:</strong> {{ pointsLeft }}</p>
 			<p v-if="userData.voucherPoints - totalPoints < 0" style="color: red;">
 				Insufficient points! You need more points to preorder.
 			</p>
@@ -109,9 +108,6 @@ export default {
 		totalPoints() {
 			return this.quantity * (this.selectedProduct?.pointsRequired || 0);
 		},
-		pointsLeft() {
-			return this.userData.voucherPoints - this.totalPoints;
-		}
 	},
 	methods: {
 		async fetchProducts() {
