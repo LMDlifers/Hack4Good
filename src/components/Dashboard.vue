@@ -147,24 +147,25 @@ export default {
 
 				// Check if the user has enough points
 				if (this.userData.voucherPoints < totalPointsRequired) {
-				alert("You do not have enough points to preorder this item.");
-				return;
+					alert("You do not have enough points to preorder this item.");
+					return;
 				}
 
 				const preorderItem = {
-				productId: this.selectedProduct.id,
-				productName: this.selectedProduct.name,
-				quantity: this.quantity,
-				timestamp: new Date().toISOString(),
+					productId: this.selectedProduct.id,
+					productName: this.selectedProduct.name,
+					quantity: this.quantity,
+					timestamp: new Date().toISOString(),
+					status: "Pending",
 				};
 
 				const transaction = {
-				productId: this.selectedProduct.id,
-				productName: this.selectedProduct.name,
-				quantity: this.quantity,
-				totalPoints: totalPointsRequired, // Ensure this is positive
-				type: "Preorder",
-				timestamp: new Date().toISOString(),
+					productId: this.selectedProduct.id,
+					productName: this.selectedProduct.name,
+					quantity: this.quantity,
+					totalPoints: -totalPointsRequired, 
+					type: "Preorder",
+					timestamp: new Date().toISOString(),
 				};
 
 				const auth = getAuth();

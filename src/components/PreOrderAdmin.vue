@@ -165,8 +165,9 @@ export default {
 		},
 		async updateStatus(preorder, status) {
 			try {
+				alert(preorder);
 				preorder.status = status;
-				await updatePreorderStatus(preorder.id, preorder.status);
+				await updatePreorderStatus(preorder, preorder.status);
 				alert(`Status updated to "${status}" for ${preorder.productName}`);
 				this.fetchPreorders(); // Refresh the list of preorders
 			} catch (error) {
@@ -185,7 +186,7 @@ export default {
 
 				// Update status to "Delivered"
 				preorder.status = "Delivered";
-				await updatePreorderStatus(preorder.id, preorder.status);
+				await updatePreorderStatus(preorder, preorder.status);
 
 				alert(
 					`Preorder for ${preorder.productName} has been fulfilled and marked as Delivered.`

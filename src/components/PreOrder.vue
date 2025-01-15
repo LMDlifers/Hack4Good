@@ -22,7 +22,7 @@
 			:key="index"
 		>	
 			<div style="width: 25%;">
-				<p>{{ preorder.name }}</p>
+				<p>{{ preorder.productName }}</p>
 				<img
 				v-if="preorder.imageUrl"
 				:src="preorder.imageUrl"
@@ -203,14 +203,16 @@ export default {
 	},
 	async mounted() {
 		try {
-			const key = await getCurrentUser();
-			this.userKey = key;
+			const userKey = await getCurrentUser();
+			this.userKey = userKey;
 
 			await this.fetchProducts();
 			await this.fetchUserPreorders();
 		} catch (error) {
 			console.error("Error during component initialization:", error);
+			alert("Failed to initialize the component.");
 		}
-	},
+	}
+
 };
 </script>

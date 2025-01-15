@@ -274,18 +274,26 @@ async function getDefaultImageUrl() {
 }
 
 
-
 export async function fetchPreorders() {
     const db = getDatabase();
     const preordersRef = ref(db, "preorders");
 
     try {
         const snapshot = await get(preordersRef);
+
         if (snapshot.exists()) {
-            const preorders = Object.entries(snapshot.val()).map(([key, preorder]) => ({
-                id: key,
-                ...preorder,
-            }));
+            const allPreorders = [];
+
+            // Loop through users' preorders
+            Object.entries(snapshot.val()).forEach(([userId, userPreorders]) => {
+                Object.entries(userPreorders).forEach(([preorderId, preorder]) => {
+                    allPreorders.push({
+                        preorderId,
+                        preordererId: userId,
+                        ...preorder,
+                    });
+                });
+            });
 
             // Fetch usernames for each preorder
             const usersRef = ref(db, "users");
@@ -294,10 +302,11 @@ export async function fetchPreorders() {
 
             // Fetch product details and images for each preorder
             const preordersWithDetails = await Promise.all(
-                preorders.map(async (preorder) => {
+                allPreorders.map(async (preorder) => {
                     try {
                         // Fetch product details including the image
                         const productDetails = await fetchProduct(preorder.productId);
+
                         // Combine preorder with product details and username
                         return {
                             ...preorder,
@@ -330,122 +339,59 @@ export async function fetchPreorders() {
 }
 
 export async function fetchUserPreorders() {
-	const key = await getCurrentUser(); // Get the current user's key
-	try {
-		// Fetch all preorders
-		const allPreorders = await fetchPreorders();
+    try {
+        // Get the current user's key (ID)
+        const key = await getCurrentUser();
+        if (!key) throw new Error("User not logged in.");
 
-		// Filter preorders for the current user
-		const userPreorders = allPreorders.filter(
-		(preorder) => preorder.preordererId === key
-		);
+        const db = getDatabase();
+        const userPreordersRef = ref(db, `preorders/${key}`);
 
-		// Fetch product details and images for each preorder
-		const preordersWithDetails = await Promise.all(
-			userPreorders.map(async (preorder) => {
-				try {
-					// Fetch product details including the image
-					const productDetails = await fetchProduct(preorder.productId);
-					// Combine preorder with product details
-					return { ...preorder, ...productDetails };
-				} catch (error) {
-					console.warn(
-						`Error fetching product details for preorder ${preorder.productId}:`,
-						error
-					);
-					return { ...preorder, productName: "Unknown Product", imageUrl: null };
-				}
-			})
-		);
-		return preordersWithDetails;
-	} catch (error) {
-		console.error("Error fetching user preorders:", error);
-		throw new Error("Failed to fetch preorders. Please try again later.");
-	}
-}
-	
-export async function fetchProductDetails(productId) {
-	const db = getDatabase();
-	const productRef = ref(db, `products/${productId}`); // Path to the product in the database
+        const snapshot = await get(userPreordersRef);
 
-	try {
-		const snapshot = await get(productRef);
+        if (!snapshot.exists()) {
+            return []; // No preorders for the user
+        }
 
-		if (snapshot.exists()) {
-		const productDetails = snapshot.val();
-		console.log(`Product details for ${productId}:`, productDetails);
-		return productDetails; // Return the product details as an object
-		} else {
-		console.warn(`No product found with ID: ${productId}`);
-		return null; // Return null if the product doesn't exist
-		}
-	} catch (error) {
-		console.error(`Error fetching product details for ${productId}:`, error);
-		throw new Error(`Unable to fetch product details. Please try again.`);
-	}
-}
-export async function preorderProduct(userKey, selectedProduct, selectedProductId, quantity) {
-	const db = getDatabase();
-	const preordersRef = ref(db, "preorders");
+        const userPreorders = Object.entries(snapshot.val()).map(([preorderId, preorder]) => ({
+            preorderId,
+            ...preorder,
+        }));
 
-	if (!userKey) {
-		throw new Error("No user is logged in.");
-	}
-	alert(selectedProductId);
-	const preorder = {
-		preordererId: userKey,
-		productName: selectedProduct.name,
-		productId: selectedProductId,
-		quantity: quantity,
-		status: "Pending",
-		timestamp: new Date().toISOString(),
-	};
-	try {
-		await push(preordersRef, preorder);
-		return `Preorder for "${selectedProduct.name}" has been submitted.`;
-	} catch (error) {
-		console.error("Error submitting preorder:", error);
-		throw new Error("There was an error submitting your preorder. Please try again.");
-	}
+        // Fetch product details for each preorder
+        const preordersWithDetails = await Promise.all(
+            userPreorders.map(async (preorder) => {
+                try {
+                    const productDetails = await fetchProduct(preorder.productId);
+
+                    return {
+                        ...preorder,
+                        productName: productDetails?.name || "Unknown Product",
+                        imageUrl: productDetails?.imageUrl || null,
+                        pointsRequired: productDetails?.pointsRequired || 0,
+                    };
+                } catch (error) {
+                    console.warn(
+                        `Error fetching product details for preorder ID: ${preorder.productId}`,
+                        error
+                    );
+                    return {
+                        ...preorder,
+                        productName: "Unknown Product",
+                        imageUrl: null,
+                        pointsRequired: 0,
+                    };
+                }
+            })
+        );
+
+        return preordersWithDetails;
+    } catch (error) {
+        console.error("Error fetching user preorders:", error);
+        throw new Error("Failed to fetch preorders. Please try again later.");
+    }
 }
 
-export async function addProductToDatabase(product) {
-	const db = getDatabase();
-	const productRef = ref(db, "products");
-	const newProductRef = push(productRef); // Create a new product with a unique ID
-	await set(newProductRef, product); // Save the product details
-	return newProductRef.key; // Return the unique ID (productId)
-  }
-  
-  // Toggle product visibility
-export async function toggleProductVisibility(productId, hidden) {
-	const db = getDatabase();
-	const productRef = ref(db, `products/${productId}`);
-  
-	try {
-		await update(productRef, { hidden: !hidden });
-		return `Product visibility updated.`;
-	} catch (error) {
-		console.error("Error updating product visibility:", error);
-		throw new Error("An error occurred while updating product visibility. Please try again.");
-	}
-}
-  
-export async function suspendUser(userId, suspended) {
-	const db = getDatabase();
-	const productRef = ref(db, `users/${userId}`);
-  
-	try {
-		await update(productRef, { suspended: !suspended });
-		if (suspended) {
-			return `User has been unsuspended.`;
-		}
-		return `User has been suspended.`;
-	} catch (error) {
-		console.error("Error suspending user", error);
-		throw new Error("An error occurred while suspending user. Please try again.");
-	}
-}
   
 
   
@@ -665,9 +611,9 @@ export async function fetchAllPreorders() {
 }
 
 // Update preorder status in Firebase
-export async function updatePreorderStatus(preorderId, newStatus) {
+export async function updatePreorderStatus(preorder, newStatus) {
 	const db = getDatabase();
-	const preorderRef = ref(db, `preorders/${preorderId}`);
+	const preorderRef = ref(db, `preorders/${preorder.preordererId}/${preorder.preorderId}`);
 
 	try {
 	await update(preorderRef, { status: newStatus });
