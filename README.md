@@ -69,7 +69,7 @@ npm run lint
 For more details, visit the [Configuration Reference](https://cli.vuejs.org/config/).
 ---
 
-### 3. How to Use
+## 3. How to Use
 
 #### As a Resident:
 1. **Sign-Up**:
@@ -131,7 +131,7 @@ For more details, visit the [Configuration Reference](https://cli.vuejs.org/conf
 
 ---
 
-### 4. Credits
+## 4. Credits
 
 - **Tan Kee Xiang (Project Head)**: [GitHub](https://github.com/kee-x)  
 - **Lee Wei Kiat (DevOps Engineer)**: [GitHub](https://github.com/weikiatt)  
