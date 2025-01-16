@@ -2,15 +2,9 @@
 	<body id="app" class="main bg-lightgrey">
 		<!-- Desktop Navigation -->
 		<nav id="desktop-nav">
-			<router-link v-if="isLoggedIn && role === 'user'" to="/dashboard">
+			<router-link to="/">
 				<img src="@/assets/logo.png" class="logo">
 			</router-link>
-			<router-link v-else-if="isLoggedIn && role === 'admin'" to="/admin">
-				<img src="@/assets/logo.png" class="logo">
-			</router-link>
-			<div v-else>
-				<img src="@/assets/logo.png" class="logo">
-			</div>
 			<div class="nav-links" v-if="isLoggedIn && role === 'user'">
 				<router-link to="/dashboard">Dashboard</router-link>
 				<router-link to="/preorder">Pre-Orders</router-link>

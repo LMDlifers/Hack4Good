@@ -19,8 +19,10 @@
   import UserAuction from "@/components/UserAuction.vue";
   import VoucherTask from "@/components/VoucherTask.vue";
   import VoucherTaskAdmin from "@/components/VoucherTaskAdmin.vue";
+  import HomeView from "@/components/HomeView.vue";
 
   const routes = [
+    { path: '/', name: 'home', component: HomeView},
     { path: "/signup", name: "Signup", component: SignUp },
     { path: "/login", name: "Login", component: Login },
     { path: '/admin', name: "AdminPanel", component: AdminPanel },

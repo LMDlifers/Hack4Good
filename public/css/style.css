@@ -18,6 +18,10 @@ html {
   min-height: 95vh;
 }
 
+.background-image {
+  background-image: url('@/assets/mwh-background.jpeg');
+}
+
 footer {
   bottom: 0;
   width: 100%;

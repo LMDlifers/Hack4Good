@@ -77,8 +77,8 @@
 <script>
 import { getDatabase, ref, onValue, update, off, get, push, set} from "firebase/database";
 import { getStorage, ref as storageRef, getDownloadURL } from "firebase/storage";
-import { fetchUserData } from "@/script";
 import { getAuth } from "firebase/auth";
+import { getCurrentUserData } from "@/methods";
 
 export default {
   name: "UserAuction",
@@ -297,7 +297,7 @@ export default {
   },
   async mounted() {
     await this.loadAuctions();
-    const userData = await fetchUserData();
+    const userData = await getCurrentUserData();
     if (userData) {
       this.voucherPoints = userData.voucherPoints;
     }
