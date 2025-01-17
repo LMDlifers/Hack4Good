@@ -74,6 +74,7 @@ For more details, visit the [Configuration Reference](https://cli.vuejs.org/conf
 #### As a Resident:
 1. **Sign-Up**:
    - Create an account with your credentials to access all features on the dashboard.
+     ![image](https://github.com/user-attachments/assets/d9a5597c-6cd6-4000-81d3-a3462ae82131)
 3. **Dashboard Features**:  
    - Check your account balance and review transaction history.
    - Add items to your shopping cart seamlessly.
