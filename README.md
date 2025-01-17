@@ -6,7 +6,8 @@
 1. [Project Description](#1-project-description)  
 2. [Installation Guide](#2-installation-guide)  
 3. [How to Use](#3-how-to-use)  
-4. [Credits](#4-credits)  
+4. [Credits](#4-credits)
+5. [Licence](#5-licence)
 
 ---
 
