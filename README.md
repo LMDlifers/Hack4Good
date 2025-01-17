@@ -6,8 +6,7 @@
 1. [Project Description](#1-project-description)  
 2. [Installation Guide](#2-installation-guide)  
 3. [How to Use](#3-how-to-use)  
-4. [Credits](#4-credits)
-5. [License](#5-license)
+4. [Credits](#4-credits)  
 
 ---
 
@@ -116,34 +115,52 @@ For more details, visit the [Configuration Reference](https://cli.vuejs.org/conf
 1. **Administration**:
    ##### Admin Panel
       - Generate and download reports, including weekly requests and inventory summaries.
+        ![image](https://github.com/user-attachments/assets/988d12e1-ee51-4ff4-a021-25c799194adb)
+        ![image](https://github.com/user-attachments/assets/21ab3836-e5db-48b1-8ebf-e8d1c434e4f2)
    ##### Manage users
+      - View list of registered users
+        ![image](https://github.com/user-attachments/assets/5cb97314-53f2-465b-a6ba-204e1fbb7fd9)
       - Register new users with ease.
+        ![image](https://github.com/user-attachments/assets/2f685253-4a32-4450-a0a9-7f4de3895045)
       - Suspend users when necessary.
+        ![image](https://github.com/user-attachments/assets/3e79af2b-3a14-45fa-b0b0-f99e339ca448)
       - Reset user passwords via email for account recovery.
-2. **Operations**
+        ![image](https://github.com/user-attachments/assets/d86b7ae3-ddc2-4a65-a259-6a7555bc9328)
+3. **Operations**
    ##### Products
+      - View the list of available products, which also allows for easy searching of specific products. 
+        ![image](https://github.com/user-attachments/assets/76edc9f2-8a10-4eb1-9f25-35f6860fde6f)
       - Add new products to the inventory.
+        ![image](https://github.com/user-attachments/assets/f84a5dc2-c974-433a-b543-cc7e6b6eb8b9)
       - Update product details as needed.
+        ![image](https://github.com/user-attachments/assets/84c4e49e-1a6e-46ca-83d0-bd97fd1e15cd)
       - Adjust stock levels to ensure availability.
-      - Quickly search for specific products.
+        ![image](https://github.com/user-attachments/assets/97eb7f79-789b-4633-8134-d42c179846e9)
    ##### Pre Orders
       - Review and approve or reject preorder requests from residents.
+        ![image](https://github.com/user-attachments/assets/dbdbd13a-79bf-4ba1-b160-ea5fed9793b5)
    ##### Requests
       - Evaluate and approve or reject product requests submitted by residents.
+        ![image](https://github.com/user-attachments/assets/8c6df338-4e2d-420e-8b9c-1083db71f232)
    ##### Voucher Tasks
       - Manage voucher task claims by approving or rejecting submissions.
-3. **Audit**
+        ![image](https://github.com/user-attachments/assets/65a8c385-30c3-4078-8521-f0f3c0f80ab0)
+5. **Audit**
    ##### Audit Log
       - Monitor all administrative activities for transparency.
+        ![image](https://github.com/user-attachments/assets/a1f98390-2494-46b8-9337-4b9579f60a22)
       - Generate detailed audit reports.
-4. **Special Features**
+        ![image](https://github.com/user-attachments/assets/9e63f737-0d04-423f-ab2c-c874cc30f42c)
+6. **Special Features**
    ##### Auction
-      - Create new auctions for exclusive items.
       - Search and manage existing auctions effortlessly.
+        ![image](https://github.com/user-attachments/assets/b51f8468-5420-4145-8d63-e0b3a351442d)
+      - Create new auctions for exclusive items.
+        ![image](https://github.com/user-attachments/assets/5dd8ea58-d834-4ec3-a819-7e22f34341b1)
       - Edit auction details to reflect updates.
+        ![image](https://github.com/user-attachments/assets/c08c277b-2210-4305-b8c8-c2e0e18d7153)
       - Remove outdated or completed auctions.
-   
-
+        ![image](https://github.com/user-attachments/assets/ab5241f1-0ec2-4f6a-9d1a-09d4a2a79d61)
 ---
 
 ## 4. Credits
@@ -152,8 +169,3 @@ For more details, visit the [Configuration Reference](https://cli.vuejs.org/conf
 - **Lee Wei Kiat (DevOps Engineer)**: [GitHub](https://github.com/weikiatt)  
 - **Marcus Liang (Frontend Engineer)**: [GitHub](https://github.com/LiangMarcus)  
 - **Tony Koo (QA / Operations)**: [GitHub](https://github.com/LMDlifers)
-
-
-## 5. License
-
-Distributed under the MIT License. See [LICENSE](https://choosealicense.com/licenses/mit/) for more information.
