@@ -77,21 +77,34 @@ For more details, visit the [Configuration Reference](https://cli.vuejs.org/conf
      ![image](https://github.com/user-attachments/assets/d9a5597c-6cd6-4000-81d3-a3462ae82131)
 3. **Dashboard Features**:  
    - Check your account balance and review transaction history.
+     ![image](https://github.com/user-attachments/assets/2aefbfae-e19c-4b79-83b7-2efe72096157)
+     ![image](https://github.com/user-attachments/assets/dbf3f0f3-ce33-408c-bb6e-c00d94820d51)
    - Add items to your shopping cart seamlessly.
+     ![image](https://github.com/user-attachments/assets/d0a44356-4bb9-4e00-94b8-d6ce1239040d)
    - Preorder items that are currently out of stock.
+     ![image](https://github.com/user-attachments/assets/242818d1-35c1-4d60-b637-bb57c85daf96)
+     ![image](https://github.com/user-attachments/assets/e819b93b-8e71-4dde-8095-ef0d3709a2c8)
 4. **Pre-Orders Tab**:
    - Keep track of all your preordered items in one place.
+     ![image](https://github.com/user-attachments/assets/486ea14b-30a6-46db-8b36-6ed765388f4c)
 5. **Voucher Tasks Tab**:
-   - Submit tasks to earn reward points, pending admin approval.
    - Review details of submitted tasks, including descriptions and their current status.
+     ![image](https://github.com/user-attachments/assets/35d404c5-4816-4d00-b7a5-f4a0adcef994)
+   - Submit tasks to earn reward points, pending admin approval.
+     ![image](https://github.com/user-attachments/assets/61d8ba61-fd8d-4ed7-8c9b-dcd2fbb1a9e3)
 6. **Request Product Tab**:
-   - Suggest new products that are not yet available in the system.
    - View the status and details of all your submitted product requests.
+     ![image](https://github.com/user-attachments/assets/8527d8f6-0a1c-4024-9583-79d0b06429ed)
+   - Suggest new products that are not yet available in the system.
+     ![image](https://github.com/user-attachments/assets/d94cda82-6ebd-4ed7-abf8-ac6a4a9b601d)
 7. **Shopping Cart**:
    - Effortlessly proceed to checkout with your selected items.
+     ![image](https://github.com/user-attachments/assets/43378aef-e078-43b2-a33b-9099af37841d)
+     ![image](https://github.com/user-attachments/assets/32cc584f-f67d-4c3a-83a1-8cf6dcf930c1)
 8. **Auction House**:  
    - Participate in bidding for exclusive or limited-edition items.
-   - Promote engagement and strengthen the sense of community involvement.
+     ![image](https://github.com/user-attachments/assets/32dc24fe-9611-41cb-9e50-4879790890c5)
+     ![image](https://github.com/user-attachments/assets/7ea5506f-ab52-49ed-a431-3533f38102ab)
 ---
 
 #### As an Admin:
