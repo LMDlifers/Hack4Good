@@ -7,7 +7,7 @@
 2. [Installation Guide](#2-installation-guide)  
 3. [How to Use](#3-how-to-use)  
 4. [Credits](#4-credits)
-5. [Licence](#5-licence)
+5. [License](#5-license)
 
 ---
 
@@ -154,6 +154,6 @@ For more details, visit the [Configuration Reference](https://cli.vuejs.org/conf
 - **Tony Koo (QA / Operations)**: [GitHub](https://github.com/LMDlifers)
 
 
-## 5. Licence
+## 5. License
 
 Distributed under the MIT License. See [LICENSE](https://choosealicense.com/licenses/mit/) for more information.
